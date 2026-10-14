@@ -27,14 +27,31 @@ project_management:
   - { drive: "01 - Cadrage",            notion: "Cadrage" }
   - { drive: "02 - Gouvernance",        notion: "Gouvernance",        office: ["RACI_<MISSION>.xlsx"] }
   - { drive: "03 - Roadmap",            notion: "Roadmap",            office: ["Roadmap_<MISSION>.xlsx"] }
-  - { drive: "04 - Planning",           notion: "Planning",           office: ["Planning_<MISSION>.xlsx"] }
+  # Planning : la REFERENCE est la page Notion avec le GANTT (notion_db "planning"), PAS un Excel.
+  # Le dossier Drive "04 - Planning" n'est pas forcement utilise -> aucun fichier office attendu.
+  - { drive: "04 - Planning",           notion: "Planning",           notion_db: "planning" }
   - { drive: "05 - Perimetre",          notion: "Scope",              office: ["Scope_<MISSION>.xlsx"] }
   - { drive: "06 - Risques",            notion: "Risques",            office: ["Risks_<MISSION>.xlsx"] }
   - { drive: "07 - Architecture (DAT)", notion: "Architecture (DAT)" }
   - { drive: "08 - GATE",               notion: "GATE",               office: ["GATE1_<MISSION>.pptx"] }
   - { drive: "09 - Contacts",           notion: "Contacts",           office: ["Contacts_<MISSION>.xlsx"] }
 
-# Pages Notion sans dossier Drive (miroir incomplet, a arbitrer avec Maximilien, on NE touche a rien) :
-#   - "Hebdo"
-#   - "Mesures du SLA : latence, revisite, fiabilité des détections"
-#   - "RUN/infogérence/Cyber"
+# Pages Notion SANS dossier Drive. Le scaffold les cree sous Project Management (jamais a la racine).
+notion_only:
+  - { notion: "Hebdo",                  notion_db: "sujets" }   # porte la DB "Suivi des sujets"
+
+# Bases Notion portees par une page (notion_db). Le scaffold cree la page + la DB (bonnes proprietes +
+# la bonne vue) et y insere les EXEMPLES du sample. `rows_from` = la liste du sample a transformer en lignes.
+databases:
+  planning:
+    title: "Planning de build"
+    view: timeline            # Gantt (barres Debut->Fin)
+    sample: "framework/generators/notion-planning/planning.sample.yml"
+    rows_from: workstreams
+    properties: ["Workstream:title", "Pole:text", "Debut:date", "Fin:date", "Statut:select", "Avancement:number"]
+  sujets:
+    title: "Suivi des sujets"
+    view: table
+    sample: "framework/generators/notion-topics-audit/sujets.sample.yml"
+    rows_from: sujets
+    properties: ["Sujet:title", "Statut:select", "Priorite:select", "Responsable:text", "Suivi projet:select", "Action attendue:text"]

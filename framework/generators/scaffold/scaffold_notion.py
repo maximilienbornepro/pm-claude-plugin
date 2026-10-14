@@ -84,7 +84,8 @@ def _page_body(link, store_label):
     )
 
 
-def emit_plan(mission, rows, missing):
+def emit_plan(mission, rows, missing, databases=None):
+    databases = databases or {}
     """Spec de creation par page manquante, pour que Claude cree via le connecteur APRES le test jetable.
     Chaque page porte TOUJOURS un lien vers son dossier (Drive/SharePoint/OneDrive), un role placeholder
     et une checklist de ce qui manque pour etre legitime."""
@@ -94,14 +95,34 @@ def emit_plan(mission, rows, missing):
     except Exception:
         pass
     store_label = _store_label(mission)
-    drive_by_notion = {r['notion']: r['drive'] for r in rows if r.get('notion')}
+    drive_by_notion = {r['notion']: r.get('drive', '') for r in rows if r.get('notion')}
+    nb_by_title = {r['notion']: r.get('notion_db') for r in rows if r.get('notion')}
     plan = []
     for title in missing:
         folder = drive_by_notion.get(title, "")
         link = folder_link(mission, folder) if folder else None
-        plan.append({"title": title, "parent_root": root, "drive_folder": folder,
-                     "body_markdown": _page_body(link, store_label)})
+        entry = {"title": title, "parent_root": root, "drive_folder": folder,
+                 "body_markdown": _page_body(link, store_label)}
+        dbk = nb_by_title.get(title)
+        if dbk:
+            entry["database"] = _db_block(dbk, databases)   # page qui porte une base (Gantt, Suivi des sujets)
+        plan.append(entry)
     return plan
+
+
+def _db_block(db_key, databases):
+    """Spec d'une base Notion a creer dans la page (titre, vue, proprietes) + EXEMPLES du sample."""
+    spec = databases.get(db_key) or {}
+    rows = []
+    sample_path, rows_key = spec.get("sample"), spec.get("rows_from")
+    if sample_path:
+        try:
+            s = prof._load_yaml(ROOT / sample_path) or {}
+            rows = (s.get(rows_key) or [])[:5] if rows_key else []
+        except Exception:
+            rows = []
+    return {"title": spec.get("title", db_key), "view": spec.get("view"),
+            "properties": spec.get("properties", []), "exemples": rows}
 
 
 def main():
@@ -124,7 +145,10 @@ def main():
 
     tree = prof._load_yaml(ROOT / 'templates' / 'project-management-tree.yml')
     rows = tree['project_management']
-    wanted = [r['notion'] for r in rows if r.get('notion') and r['notion'] != ACONF]
+    notion_only = tree.get('notion_only') or []        # pages Notion sans dossier Drive (ex. Hebdo)
+    databases = tree.get('databases') or {}            # bases portees par une page (Planning Gantt, Sujets)
+    pages = rows + notion_only
+    wanted = [r['notion'] for r in pages if r.get('notion') and r['notion'] != ACONF]
     aconf = [r for r in rows if r.get('notion') == ACONF]
 
     if not args.pages:
@@ -166,7 +190,7 @@ def main():
             print(f"  ? {r['drive']}"
                   + ("  (une page type SPV semble exister)" if there else "  (aucune page evidente)"))
     if args.emit_plan and missing:
-        plan = emit_plan(args.mission, rows, missing)
+        plan = emit_plan(args.mission, pages, missing, databases)
         print("\n--- PLAN DE CREATION (pages manquantes) ---")
         print("Le script N'ECRIT PAS dans Notion. Claude cree ces pages via le connecteur UNIQUEMENT")
         print("apres : (1) validation du contenu, (2) test « page jetable » confirmant l'absence de")

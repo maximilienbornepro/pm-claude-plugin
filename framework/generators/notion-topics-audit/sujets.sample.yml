@@ -1,0 +1,17 @@
+# SAMPLE "Suivi des sujets" - exemples de sujets pour la DB Notion de la page Hebdo.
+# Le scaffold cree la page Hebdo + la base "Suivi des sujets" (vue table) et y insere ces exemples.
+# Chaque sujet suit le format du projet : corps **Contexte** puis **Action attendue** (voix du TPM).
+#
+# Note parseur : une map flow PAR LIGNE, pas de virgule dans les chaines (separer avec ; ou /).
+
+title: "Suivi des sujets"
+legende:
+  statuts: [a faire, en cours, en attente, fait]
+  priorites: [haute, moyenne, basse]
+  suivi_projet: [TPM, CDP]     # qui porte le sujet (on ne modifie que les sujets TPM)
+
+sujets:
+  - { sujet: "Aligner l'authentification OTAN avec le partenaire", statut: "en cours", priorite: "haute", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Le partenaire confirme le protocole (OIDC/SAML) cette semaine", contexte: "Le portail doit federer avec l'IdP du partenaire ; acces API d'abord / redirection ensuite." }
+  - { sujet: "Remplir la matrice de tracabilite (partenaire)", statut: "en attente", priorite: "moyenne", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Le partenaire remplit ses lignes d'ici fin de semaine", contexte: "La matrice est partagee dans l'espace du consortium ; chaque ligne attend un D ou un T." }
+  - { sujet: "Caler le pentest avant la MEP", statut: "a faire", priorite: "haute", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Fixer la fenetre de pentest et le prestataire (repli externe si besoin)", contexte: "Le pentest conditionne la MEP ; a planifier au Sprint 4 avant le durcissement." }
+  - { sujet: "Reduire le bruit d'alertes cote portail", statut: "en cours", priorite: "moyenne", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Etudier un filtre de confiance cote portail (seuil) en intermediaire ; dynamique en V2", contexte: "Les detections arrivent avec un score de confiance ; sans filtre le portail affiche trop d'alertes." }

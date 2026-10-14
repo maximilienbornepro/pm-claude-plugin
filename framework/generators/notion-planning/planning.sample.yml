@@ -1,25 +1,27 @@
-# SAMPLE Planning - exemple REMPLI (jalons + contenu custom).
-# But : qu'une mission fraiche (ou `pm demo`) parte d'un planning concret, pas d'un gabarit vide.
-# Ce n'est PAS la source de verite d'une vraie mission : on le copie et on l'adapte. La vraie source
-# reste le doc de la mission (04 - Planning / 03 - Roadmap), pointe par notion-planning.yml > source.
+# SAMPLE Planning - exemple REMPLI pour un GANTT Notion (la REFERENCE du planning).
+# Le planning de reference est une PAGE NOTION avec une vue timeline (Gantt) : une ligne = un workstream
+# avec debut/fin et un avancement. Ce n'est PAS un Excel, et le dossier Drive "04 - Planning" n'est pas
+# forcement utilise. Le generateur notion-planning construit/tient a jour cette page (connecteur Notion).
 #
-# Note parseur : une map flow par ligne, pas de virgule dans les chaines (le mini-YAML du framework
-# ne joint pas les lignes et coupe sur la virgule hors guillemets) - on separe avec ; ou /.
+# Note parseur : une map flow par ligne, pas de virgule dans les chaines (separer avec ; ou /).
 
-title: "Planning V1"
+title: "Planning de build (Gantt)"
 updated: 2026-10-13
 legende:
   statuts: [a venir, en cours, fait, a risque]
 
-# Phases (sprints) - les deux jalons durs sont le gel (fin S3) et la MEP (fin S4).
-phases:
-  - { phase: "Sprint 1", statut: "fait",    contenu: "Socle technique ; auth OTAN ; squelette du portail." }
-  - { phase: "Sprint 2", statut: "en cours", contenu: "Portail des events (tableau + carte) ; environnement de production." }
-  - { phase: "Sprint 3", statut: "a venir",  contenu: "Page d'un event ; configurations d'alerte. Fin = gel du code." }
-  - { phase: "Sprint 4", statut: "a venir",  contenu: "Recette (decalee) ; corrections ; durcissement ; pentest. Fin = MEP." }
+# Workstreams = les lignes du Gantt (barres debut->fin dans la vue timeline Notion)
+workstreams:
+  - { workstream: "Cadrage et specification", pole: "Produit / TPM", debut: 2026-10-06, fin: 2026-11-07, statut: "en cours", avancement: 60 }
+  - { workstream: "Architecture et socle",     pole: "SRE / CIP",     debut: 2026-10-19, fin: 2026-11-07, statut: "en cours", avancement: 50 }
+  - { workstream: "Developpement back",         pole: "Back",          debut: 2026-10-19, fin: 2026-11-15, statut: "en cours", avancement: 40 }
+  - { workstream: "Developpement front",        pole: "Front",         debut: 2026-10-20, fin: 2026-11-15, statut: "en cours", avancement: 35 }
+  - { workstream: "Recette (SPV)",              pole: "SPV",           debut: 2026-11-05, fin: 2026-11-27, statut: "a venir",  avancement: 0 }
+  - { workstream: "Securite et durcissement",   pole: "Cyber / SRE",   debut: 2026-11-24, fin: 2026-11-30, statut: "a venir",  avancement: 0 }
+  - { workstream: "Mise en production",         pole: "SRE",           debut: 2026-11-30, fin: 2026-11-30, statut: "a venir",  avancement: 0 }
 
-# Jalons (dates dures ; mises en gras dans le report)
+# Jalons (marqueurs sur la timeline)
 jalons:
-  - { jalon: "T0",          date: 2026-10-19, statut: "fait",   contenu: "Lancement officiel du developpement V1." }
-  - { jalon: "Gel du code", date: 2026-11-15, statut: "a venir", contenu: "Fin Sprint 3 : plus de feature ; corrections de recette uniquement." }
-  - { jalon: "MEP",         date: 2026-11-30, statut: "a venir", contenu: "Fin Sprint 4 (lundi) : mise en production de la V1." }
+  - { jalon: "T0",          date: 2026-10-19 }
+  - { jalon: "Gel du code", date: 2026-11-15 }
+  - { jalon: "MEP",         date: 2026-11-30 }
