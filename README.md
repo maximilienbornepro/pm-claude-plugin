@@ -10,6 +10,32 @@ pas modifié : on bâtit ici, à côté, par copies généralisées.
 - **Agents** : [framework/AGENTS.md](framework/AGENTS.md) · **Tons/rédaction** : [REDACTION.md](REDACTION.md)
 - **Garde-fous d'écriture** : [framework/HARNESS.md](framework/HARNESS.md), [framework/NOTIFICATIONS.md](framework/NOTIFICATIONS.md)
 
+## Installer le plugin Claude Code (et les mises à jour)
+
+Hébergé sur git : l'install et les mises à jour se font en **une commande**, **sans zip**.
+
+```bash
+# 1. une fois : ajouter le marketplace (le dépôt) puis installer
+claude plugin marketplace add maximilienbornepro/pm-claude-plugin
+claude plugin install pm-framework@pm-framework-market
+
+# 2. à chaque fois : récupérer les nouveautés
+claude plugin update pm-framework@pm-framework-market
+```
+
+> Dépôt **privé** → ce poste doit avoir un accès git au repo (clé SSH / compte autorisé).
+> Dépôt **public** → les commandes ci-dessus marchent partout, sans aucune auth (recommandé si
+> aucune donnée sensible, ce qui est le cas ici : le profil réel est exclu).
+
+Les commandes du plugin s'invoquent ensuite sous `/pm-framework:` : `list`, `demo`, `run`, `setup`.
+
+**Côté mainteneur** (livrer une nouvelle version) : depuis le dépôt de travail,
+```bash
+./publish.sh "ce qui a changé"
+```
+Il incrémente la version, synchronise le moteur **sans `profiles/sinbad`**, refuse de pousser s'il
+reste un identifiant interne, puis pousse. Les consommateurs n'ont plus qu'à `claude plugin update`.
+
 ## Utilisation
 
 ```

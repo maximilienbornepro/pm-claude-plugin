@@ -21,6 +21,23 @@ python3 framework/pm.py run setup <mission>
 La mission par défaut est `sinbad` (l'exemple de référence). Pour une nouvelle mission :
 `cp -r profiles/sinbad profiles/<mission>` puis onboarding.
 
+## Avant TOUTE écriture : preflight (bon Notion / SharePoint / Jira)
+
+Un même compte Claude peut avoir **plusieurs Notion/SharePoint connectés**. Risque réel d'écrire dans
+le **mauvais** espace. Donc, avant toute écriture externe sur une mission :
+
+```bash
+python3 framework/pm.py run preflight <mission>
+```
+
+Puis **vérifier côté Notion** : `notion-fetch` de la racine `project_management_root` du profil.
+- **404 / introuvable** ou **titre différent** de `expect_pm_title` → **MAUVAIS workspace connecté** :
+  **ne rien écrire**, demander à l'utilisateur de basculer la connexion Notion sur la bonne mission.
+- Trouvé **et** bon titre → workspace correct, écriture possible (sous les garde-fous ci-dessous).
+
+Idem : une écriture Office doit être **sous la racine Drive** attendue du profil (`drive.root`), et le
+`web_site` doit correspondre à la mission. Jira : `cloud_id` + `project_key` du profil font foi.
+
 ## Règles d'or (rappel)
 
 1. **On ne touche jamais au SINBAD d'origine** (`~/Documents/Sinbad`) : le framework se construit à côté.

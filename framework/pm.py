@@ -44,6 +44,7 @@ GEN = {
     "docs-coherence-audit":("framework/generators/docs-coherence-audit/check_coherence.py","coherence docs : une sortie est-elle a jour vs ses sources", True),
     "tones":               ("framework/lib/set_tone.py",                             "aligne le ton des agents sur pipeline.yml (dry-run)", True),
     "setup":               ("framework/generators/setup/setup.py",                   "onboarding : champs manquants d'un profil + suggestions (lecture seule)", True),
+    "preflight":           ("framework/generators/preflight/preflight.py",           "verifie qu'on est connecte aux BONS systemes (Notion/SharePoint/Jira) avant d'ecrire", True),
     "reset":               ("framework/generators/reset/reset.py",                   "TEST : remet a zero un dossier de projet (backup oblige ; dry-run ; --apply supprime)", False),
 }
 
