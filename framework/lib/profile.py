@@ -264,6 +264,41 @@ def load(mission):
     }
 
 
+# ---------------------------------------------------------------- comptes / routage
+def accounts_cfg():
+    """Registre des comptes (config/accounts.yml ou ~/.pm-accounts.yml). {} si absent (mono-compte)."""
+    for p in (ROOT / 'config' / 'accounts.yml', Path(os.path.expanduser('~')) / '.pm-accounts.yml'):
+        if p.exists():
+            try:
+                return _load_yaml(p) or {}
+            except Exception:
+                return {}
+    return {}
+
+
+def is_multi_account():
+    """Mode multi-compte = au moins 2 comptes declares dans le registre."""
+    return len((accounts_cfg().get('accounts') or {})) >= 2
+
+
+def account_for(mission, command):
+    """Compte a utiliser pour une commande, via la table de routage - UNIQUEMENT en mode multi-compte.
+    Mono-compte -> None (session courante). Routing/commande absents -> orchestration.default_account."""
+    if not is_multi_account():
+        return None
+    try:
+        p = load(mission)['profile']
+    except Exception:
+        p = {}
+    routing = {}
+    try:
+        r = _load_yaml(mission_dir(mission) / 'routing.yml') or {}
+        routing = r.get('routing') or {}
+    except Exception:
+        pass
+    return routing.get(command) or (p.get('orchestration') or {}).get('default_account')
+
+
 def board(mission):
     """Le board Jira, lu DEPUIS LE PROFIL (plus aucune constante en dur)."""
     return load(mission)['profile']['jira']['board']

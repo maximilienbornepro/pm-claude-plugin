@@ -1,0 +1,27 @@
+# Table de ROUTAGE des comptes (exemple generique). Copier/adapter par mission.
+# LUE UNIQUEMENT EN MODE MULTI-COMPTE (config/accounts.yml avec >= 2 comptes). Sinon ignoree.
+# Valeur = un nom de compte de config/accounts.yml. Commande absente -> orchestration.default_account.
+# Regle : une commande qui touche un connecteur (Notion/Drive/Jira) doit etre sur le compte qui l'a.
+
+routing:
+  # touche des connecteurs -> compte "pro" (celui qui a les connecteurs)
+  jira-images:           pro
+  jira-changes-audit:    pro
+  jira-sprints-audit:    pro
+  projection:            pro
+  notion-topics-audit:   pro
+  notion-scaffold:       pro
+  transcripts:           pro
+  drive-scaffold:        pro
+  risks:                 pro
+  raci:                  pro
+  deck-gate:             pro
+  activity:              pro
+  docs-coherence-audit:  pro
+  setup:                 pro
+  preflight:             pro
+  # LOCAL (aucun connecteur) -> editable vers "perso"
+  poc:                   perso
+  archi:                 perso
+  tones:                 perso
+  reset:                 perso

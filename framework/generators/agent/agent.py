@@ -49,6 +49,7 @@ def main():
     ap.add_argument("--account")
     ap.add_argument("--model")
     ap.add_argument("--agent")
+    ap.add_argument("--command", help="nom d'une commande -> compte via la table de routage (mode multi)")
     ap.add_argument("--mission", default="sinbad")
     ap.add_argument("--dry-run", action="store_true", help="montre la commande, ne lance rien")
     a = ap.parse_args()
@@ -66,7 +67,10 @@ def main():
         pass
 
     # --- compte -> config_dir ---
-    acct = a.account or orch.get("default_account")
+    # Ordre : --account explicite -> table de routage (commande, mode multi) -> defaut mission -> session.
+    cmd_name = a.command or a.agent
+    routed = prof.account_for(a.mission, cmd_name) if cmd_name else None
+    acct = a.account or routed or orch.get("default_account")
     explicit = bool(a.account)
     config_dir = None
     if acct:
