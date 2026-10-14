@@ -46,6 +46,7 @@ GEN = {
     "setup":               ("framework/generators/setup/setup.py",                   "onboarding : champs manquants d'un profil + suggestions (lecture seule)", True),
     "preflight":           ("framework/generators/preflight/preflight.py",           "verifie qu'on est connecte aux BONS systemes (Notion/SharePoint/Jira) avant d'ecrire", True),
     "reset":               ("framework/generators/reset/reset.py",                   "TEST : remet a zero un dossier de projet (backup oblige ; dry-run ; --apply supprime)", False),
+    "agent":               ("framework/generators/agent/agent.py",                   "lance une sous-tache sur un agent : --account (connecteurs) / --model / --agent (specialite)", True),
 }
 
 # Anciens noms -> nom canonique. Retro-compatibilite (routines, pipeline, habitudes).

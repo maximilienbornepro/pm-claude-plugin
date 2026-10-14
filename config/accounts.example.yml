@@ -1,0 +1,20 @@
+# Registre des COMPTES Claude (niveau POSTE, pas mission). A copier en config/accounts.yml
+# (ou ~/.pm-accounts.yml) et adapter aux chemins de ce poste. Jamais versionne avec de vrais chemins
+# sensibles si le depot est partage.
+#
+# Chaque compte = un CLAUDE_CONFIG_DIR distinct (login + connecteurs propres). Les connecteurs
+# (Notion, Microsoft 365, Figma, Jira...) suivent le COMPTE, pas le dossier : changer de compte change
+# tout le jeu de connecteurs. L'isolation est donc PHYSIQUE.
+#
+# Prerequis une fois par compte : se logger dans son config dir -
+#   CLAUDE_CONFIG_DIR=$HOME/.claude-safran claude      # login compte pro
+#   CLAUDE_CONFIG_DIR=$HOME/.claude-perso  claude      # login compte perso
+#
+# Mono-compte : ne pas creer ce fichier (ou un seul compte) -> `pm run agent` tourne sur la session
+# courante (choix du modele / de la specialite seulement, aucune bascule de compte).
+
+accounts:
+  safran: { config_dir: "~/.claude-safran", sensitivity: sensitive }   # connecteurs consortium
+  perso:  { config_dir: "~/.claude-perso",  sensitivity: public }      # non sensible
+
+default_model: sonnet
