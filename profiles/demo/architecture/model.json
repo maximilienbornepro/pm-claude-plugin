@@ -6,8 +6,9 @@
   },
   "logos": {},
   "zones": [
-    { "id": "cloud",    "label": "Cloud (région)",     "parent": null },
+    { "id": "cloud",    "label": "Cloud (région)",      "parent": null },
     { "id": "ns",       "label": "Namespace applicatif","parent": "cloud" },
+    { "id": "ops",      "label": "Exploitation / plateforme", "parent": null },
     { "id": "partners", "label": "Partenaires",         "parent": null }
   ],
   "entities": [
@@ -17,15 +18,29 @@
     { "id": "db",       "label": "Base",     "sub": "PostgreSQL", "zone": "ns",       "logo": null },
     { "id": "queue",    "label": "Bus",      "sub": "événements", "zone": "ns",       "logo": null },
     { "id": "partnerA", "label": "Partner A","sub": "données",    "zone": "partners", "logo": null },
-    { "id": "idp",      "label": "IdP",      "sub": "OIDC",       "zone": "partners", "logo": null, "link": "identite" }
+    { "id": "idp",      "label": "IdP",      "sub": "OIDC",       "zone": "partners", "logo": null, "link": "identite" },
+
+    { "id": "repo",       "label": "Dépôt de code",       "sub": "source",            "zone": "ops", "logo": null },
+    { "id": "ci",         "label": "CI / CD",             "sub": "build + tests",     "zone": "ops", "logo": null },
+    { "id": "registry",   "label": "Registre",            "sub": "images",            "zone": "ops", "logo": null },
+    { "id": "deploy",     "label": "Déploiement continu", "sub": "GitOps",            "zone": "ops", "logo": null, "link": "exploitation" },
+    { "id": "monitoring", "label": "Supervision",         "sub": "métriques/alertes", "zone": "ops", "logo": null },
+    { "id": "sre",        "label": "Exploitation",        "sub": "SRE",               "zone": "ops", "logo": null }
   ],
   "flows": [
-    { "from": "frontend", "to": "bff",   "label": "HTTPS",     "kind": "call" },
-    { "from": "bff",      "to": "api",   "label": "appelle",   "kind": "call" },
-    { "from": "api",      "to": "db",    "label": "récupère",  "kind": "pull" },
-    { "from": "api",      "to": "queue", "label": "publie",    "kind": "write" },
-    { "from": "partnerA", "to": "api",   "label": "dépose",    "kind": "write" },
-    { "from": "frontend", "to": "idp",   "label": "authentifie","kind": "auth" }
+    { "from": "frontend", "to": "bff",   "label": "HTTPS",      "kind": "call" },
+    { "from": "bff",      "to": "api",   "label": "appelle",    "kind": "call" },
+    { "from": "api",      "to": "db",    "label": "récupère",   "kind": "pull" },
+    { "from": "api",      "to": "queue", "label": "publie",     "kind": "write" },
+    { "from": "partnerA", "to": "api",   "label": "dépose",     "kind": "write" },
+    { "from": "frontend", "to": "idp",   "label": "authentifie","kind": "auth" },
+
+    { "from": "repo",       "to": "ci",       "label": "pousse",         "kind": "call" },
+    { "from": "ci",         "to": "registry", "label": "publie l'image", "kind": "write" },
+    { "from": "ci",         "to": "deploy",   "label": "déclenche",      "kind": "call" },
+    { "from": "deploy",     "to": "api",      "label": "déploie",        "kind": "write" },
+    { "from": "monitoring", "to": "api",      "label": "supervise",      "kind": "pull" },
+    { "from": "sre",        "to": "deploy",   "label": "opère",          "kind": "call" }
   ],
   "views": [
     { "id": "overview", "label": "Vue d'ensemble",
@@ -33,6 +48,8 @@
     { "id": "donnees",  "label": "Données",
       "members": ["partnerA", "api", "db", "queue"] },
     { "id": "identite", "label": "Identité",
-      "members": ["frontend", "idp", "bff"] }
+      "members": ["frontend", "idp", "bff"] },
+    { "id": "exploitation", "label": "Exploitation",
+      "members": ["repo", "ci", "registry", "deploy", "monitoring", "sre", "api"] }
   ]
 }

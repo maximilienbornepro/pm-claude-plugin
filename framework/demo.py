@@ -110,6 +110,8 @@ def main():
     note("  " + " · ".join(pages))
     if tbc: note("  a confirmer (pas de page evidente) : " + ", ".join(tbc))
     note("comparaison a un instantane Notion ; les pages deja presentes ne sont pas recreees.")
+    note("chaque page creee porte : un lien vers son dossier (Drive/SharePoint), le role en placeholder,")
+    note("le contenu en placeholder, et une checklist « a completer pour etre legitime ».")
 
     hdr(3, "Arborescence Drive (scaffold, miroir de Notion)")
     sim("je creerais", f"les dossiers racine sous « {droot} » : {', '.join(roots)}")

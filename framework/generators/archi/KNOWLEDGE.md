@@ -77,8 +77,8 @@ Comme l'encart porte le nom de l'équipe, les outils dedans n'ont ni suffixe ni 
 ## Où est publié (3 cibles, toujours synchronisées)
 
 - Source canonique : [`architecture_sinbad.html`](architecture_sinbad.html) (ce dossier).
-- Artefact Claude (thème original) : <artefact Claude - thème original de la mission>
-- Artefact Claude (Light) : <artefact Claude - variante Light de la mission>
+- Artefact Claude (thème original) : <artefact Claude de la mission>
+- Artefact Claude (Light) : <artefact Claude de la mission>
 - GitHub Pages : <URL GitHub Pages de la mission>
   (repo `<repo gh-pages de la mission>`, branche `gh-pages`, chemin `architecture/index.html`).
 

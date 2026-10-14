@@ -19,14 +19,25 @@ sys.path.insert(0, str(ROOT / 'framework' / 'lib'))
 import profile as prof                        # noqa: E402
 
 
+def _mission_name(mission):
+    """Nom de la mission pour le jeton <MISSION> des fichiers standard (profil.name sinon l'arg)."""
+    try:
+        return prof.load(mission)["profile"].get("name") or mission
+    except Exception:
+        return mission
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--pm', required=True, help="chemin du dossier '02 - Project Management'")
+    ap.add_argument('--mission', default='sinbad', help="mission (pour le jeton <MISSION> des fichiers standard)")
     ap.add_argument('--apply', action='store_true', help="cree les dossiers manquants (creer-si-absent)")
     args = ap.parse_args()
 
     tree = prof._load_yaml(ROOT / 'templates' / 'project-management-tree.yml')
-    wanted = [n['drive'] for n in tree['project_management']]
+    rows = tree['project_management']
+    wanted = [n['drive'] for n in rows]
+    mname = _mission_name(args.mission)
     pm = Path(args.pm)
 
     if not pm.is_dir():
@@ -44,22 +55,42 @@ def main():
         print(f"  [{'x' if w in existing else ' '}] {w}")
     print()
     if not missing:
-        print("Rien a creer : l'arborescence est deja complete. (idempotent)")
-        return
-    if not args.apply:
-        print("Dry-run : seraient CREES (relancer avec --apply pour creer, creer-si-absent) :")
+        print("Dossiers : arborescence deja complete. (idempotent)")
+    elif not args.apply:
+        print("Dry-run : dossiers qui seraient CREES (--apply pour creer, creer-si-absent) :")
         for m in missing:
             print(f"  + {m}")
+    else:
+        print("Creation des dossiers manquants (creer-si-absent, aucun ecrasement) :")
+        for m in missing:
+            d = pm / m
+            try:
+                d.mkdir(exist_ok=True)        # jamais parents : le PM doit deja exister
+                print(f"  + cree : {m}")
+            except OSError as e:
+                print(f"  ! echec : {m} ({e})")
+        print("Fait. Rien de supprime ni deplace.")
+
+    _report_office(rows, pm, mname)
+
+
+def _report_office(rows, pm, mname):
+    """Fichiers standard attendus par dossier (pas de dossier vide). PROPOSITION seulement :
+    un .xlsx/.pptx reel se cree par copie de modele sous le garde-fou Office (ecriture gardee),
+    jamais ici. <MISSION> est remplace par le nom de la mission."""
+    plan = [(r['drive'], [f.replace('<MISSION>', mname) for f in (r.get('office') or [])])
+            for r in rows if r.get('office')]
+    if not plan:
         return
-    print("Creation des dossiers manquants (creer-si-absent, aucun ecrasement) :")
-    for m in missing:
-        d = pm / m
-        try:
-            d.mkdir(exist_ok=True)            # jamais parents : le PM doit deja exister
-            print(f"  + cree : {m}")
-        except OSError as e:
-            print(f"  ! echec : {m} ({e})")
-    print("Fait. Rien de supprime ni deplace.")
+    print("\nFichiers standard attendus (pas de dossier vide) :")
+    for folder, files in plan:
+        here = pm / folder
+        for f in files:
+            present = (here / f).exists() if here.is_dir() else False
+            tag = 'x' if present else ' '
+            flag = '' if present else '   <- a proposer (creation gardee, jamais ici)'
+            print(f"  [{tag}] {folder}/{f}{flag}")
+    print("Dossiers sans fichier type (ex. Quality Management) : rien pour le moment.")
 
 
 if __name__ == '__main__':

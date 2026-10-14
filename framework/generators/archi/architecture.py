@@ -91,6 +91,18 @@ def do_render(mission):
     B.build_html_file(model_path, out)
     print(f"Écrit  : {out}   (scratchpad, source_html intacte)")
 
+    # draw.io PAR ECRAN : regenere a chaque rendu, dans le dossier configure (archi.yml > drawio_dir),
+    # surchargeable par PMF_ARCH_DRAWIO_DIR. Un fichier <vue>.drawio par ecran. N'ecrit que des .drawio.
+    ddir = (cfg.get("drawio_dir") if cfg else None) or os.environ.get("PMF_ARCH_DRAWIO_DIR")
+    if ddir:
+        import export_drawio as X  # noqa: E402
+        import json as _json
+        model = _json.load(open(model_path, encoding="utf-8"))
+        files = X.write_per_screen(model, ddir)
+        print(f"draw.io par écran ({len(files)}) -> {ddir}")
+        for f in files:
+            print(f"   . {Path(f).name}")
+
 
 def do_export(mission):
     fmt = None

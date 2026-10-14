@@ -18,25 +18,21 @@ root:
 
 # Zones de "02 - Project Management" : dossier Drive <-> titre de page Notion.
 # `notion: "à confirmer"` = pas de page evidente -> le scaffold la proposerait (dry-run d'abord).
+#
+# `office:` = FICHIER(S) STANDARD attendu(s) dans le dossier (pas de dossier vide). Noms derives de
+# SINBAD, avec le jeton <MISSION> remplace par le nom de la mission. Le scaffold les SIGNALE comme
+# manquants et PROPOSE de les creer (par copie de modele, ecriture gardee) ; il n'ecrase jamais.
+# Un dossier sans `office` n'a pas (encore) de fichier type - ex. Quality Management : rien pour le moment.
 project_management:
   - { drive: "01 - Cadrage",            notion: "Cadrage" }
-  - { drive: "02 - Gouvernance",        notion: "Gouvernance" }
-  - { drive: "03 - Roadmap",            notion: "Roadmap" }
-  - { drive: "04 - Planning",           notion: "Planning" }
-  - { drive: "05 - Perimetre",          notion: "Scope" }
-  - { drive: "06 - Risques",            notion: "Risques" }
-  - { drive: "07 - Quality Management", notion: "Quality Management" }
-  - { drive: "08 - Partenaires",        notion: "Partenaires" }
-  - { drive: "09 - Contacts",           notion: "Contacts" }
-  - { drive: "10 - Sources",            notion: "Sources" }
-  - { drive: "11 - Reference",          notion: "Référence" }
-  - { drive: "12 - Base documentaire",  notion: "Base documentaire" }
-  - { drive: "13 - Architecture (DAT)", notion: "Architecture (DAT)" }
-  - { drive: "14 - GATE",               notion: "GATE" }
-  - { drive: "15 - Livrables",          notion: "Livrables du projet" }
-  - { drive: "16 - Product Ownership",  notion: "Product Ownership" }
-  - { drive: "17 - Presentations",      notion: "Présentations" }
-  - { drive: "18 - SPV",                notion: "à confirmer" }
+  - { drive: "02 - Gouvernance",        notion: "Gouvernance",        office: ["RACI_<MISSION>.xlsx"] }
+  - { drive: "03 - Roadmap",            notion: "Roadmap",            office: ["Roadmap_<MISSION>.xlsx"] }
+  - { drive: "04 - Planning",           notion: "Planning",           office: ["Planning_<MISSION>.xlsx"] }
+  - { drive: "05 - Perimetre",          notion: "Scope",              office: ["Scope_<MISSION>.xlsx"] }
+  - { drive: "06 - Risques",            notion: "Risques",            office: ["Risks_<MISSION>.xlsx"] }
+  - { drive: "07 - Architecture (DAT)", notion: "Architecture (DAT)" }
+  - { drive: "08 - GATE",               notion: "GATE",               office: ["GATE1_<MISSION>.pptx"] }
+  - { drive: "09 - Contacts",           notion: "Contacts",           office: ["Contacts_<MISSION>.xlsx"] }
 
 # Pages Notion sans dossier Drive (miroir incomplet, a arbitrer avec Maximilien, on NE touche a rien) :
 #   - "Hebdo"

@@ -99,12 +99,59 @@ def _page(name, node_ids, ent, flows, page_id=None, links=None, page_ids=None):
             f'pageWidth="1169" pageHeight="826" math="0" shadow="0"><root>{body}</root></mxGraphModel></diagram>')
 
 
+def build_xml(m):
+    """model dict -> XML .drawio (mxfile multi-pages : une page par vue). Reutilisable (build_html)."""
+    ent, flows, views = _entities(m), m.get("flows", []), m.get("views", [])
+    links = _links(m)
+    pages, missing = [], []
+    new_style = bool(views) and isinstance(views[0], dict)
+    if new_style:
+        page_ids = {v.get("id") for v in views if v.get("members")}
+        for v in views:
+            vid, name, vmembers = v.get("id"), (v.get("label") or v.get("id")), v.get("members")
+            if vmembers:
+                pages.append(_page(name, vmembers, ent, flows, page_id=vid, links=links, page_ids=page_ids))
+            else:
+                missing.append(vid)
+        note = f"{len(pages)} vue(s) (views[].members)"
+    else:
+        members = m.get("view_members", {})
+        pages.append(_page("Overview (tous les flux)", list(ent.keys()), ent, flows, page_id="overview"))
+        for v in views:
+            (pages.append(_page(v, members[v], ent, flows, page_id=v)) if v in members else missing.append(v))
+        note = (f"1 overview ({len(ent)} noeuds, {len(flows)} flux)"
+                + (f" + {len(members)} vue(s)" if members else ""))
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<mxfile host="pm-framework">' + "".join(pages) + "</mxfile>"
+    return xml, note, missing
+
+
+def write_per_screen(m, out_dir):
+    """Un .drawio PAR ECRAN (une vue = un fichier <id>.drawio) dans out_dir. Regenere a chaque appel.
+    Cree le dossier si besoin ; n'ecrit QUE des .drawio. Retourne la liste des fichiers ecrits."""
+    ent, flows, views = _entities(m), m.get("flows", []), m.get("views", [])
+    links = _links(m)
+    page_ids = {v.get("id") for v in views if v.get("members")}
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    written = []
+    for v in views:
+        vid, name, members = v.get("id"), (v.get("label") or v.get("id")), v.get("members")
+        if not members:
+            continue
+        page = _page(name, members, ent, flows, page_id=vid, links=links, page_ids=page_ids)
+        xml = '<?xml version="1.0" encoding="UTF-8"?>\n<mxfile host="pm-framework">' + page + "</mxfile>"
+        f = out / f"{vid}.drawio"
+        f.write_text(xml, encoding="utf-8")
+        written.append(str(f))
+    return written
+
+
 def main():
     mission = sys.argv[1] if len(sys.argv) > 1 else "sinbad"
     out = None
     if "-o" in sys.argv:
         out = sys.argv[sys.argv.index("-o") + 1]
-    # PMF_ARCH_MODEL : rendu depuis un modèle direct, SANS exiger profiles/<mission>/architecture.yml
+    # PMF_ARCH_MODEL : rendu depuis un modèle direct, SANS exiger profiles/<mission>/archi.yml
     env_model = os.environ.get("PMF_ARCH_MODEL")
     if env_model:
         model_path = env_model
@@ -112,46 +159,16 @@ def main():
         cfg = prof._load_yaml(prof.mission_dir(mission) / "archi.yml")
         model_path = cfg["model_json"]
     m = json.load(open(model_path, encoding="utf-8"))
-    ent, flows, views = _entities(m), m.get("flows", []), m.get("views", [])
-    links = _links(m)
-
-    pages, missing = [], []
-    new_style = bool(views) and isinstance(views[0], dict)
-    if new_style:
-        # nouveau schéma : une page PAR ÉCRAN, dérivée de views[].members (SCHEMA.md)
-        page_ids = {v.get("id") for v in views if v.get("members")}
-        for v in views:
-            vid = v.get("id")
-            name = v.get("label") or vid
-            vmembers = v.get("members")
-            if vmembers:
-                pages.append(_page(name, vmembers, ent, flows,
-                                   page_id=vid, links=links, page_ids=page_ids))
-            else:
-                missing.append(vid)
-        overview_note = f"{len(pages)} vue(s) (views[].members)"
-    else:
-        # ancien schéma : overview synthétique (tous les flux) + éventuel view_members
-        members = m.get("view_members", {})  # optionnel : vue -> [ids]
-        pages.append(_page("Overview (tous les flux)", list(ent.keys()), ent, flows, page_id="overview"))
-        for v in views:
-            if v in members:
-                pages.append(_page(v, members[v], ent, flows, page_id=v))
-            else:
-                missing.append(v)
-        overview_note = (f"1 overview ({len(ent)} noeuds, {len(flows)} flux)"
-                         + (f" + {len(members)} vue(s)" if members else ""))
-
-    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<mxfile host="pm-framework">' + "".join(pages) + "</mxfile>"
+    xml, overview_note, missing = build_xml(m)
     out = out or str(ROOT.parent / "scratchpad" / f"architecture_{mission}.drawio")
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(xml, encoding="utf-8")
 
     print(f"Écrit : {out}")
-    print(f"Pages : {len(pages)}  ({overview_note})")
+    print(f"Pages : {overview_note}")
     if missing:
-        hint = "ajouter `members` à la vue" if new_style else "ajouter `view_members` au modèle"
-        print(f"Vues sans contenu ({hint}) : {', '.join(str(x) for x in missing)}")
+        print(f"Vues sans contenu (ajouter `members` à la vue, ou `view_members`) : "
+              f"{', '.join(str(x) for x in missing)}")
 
 
 if __name__ == "__main__":

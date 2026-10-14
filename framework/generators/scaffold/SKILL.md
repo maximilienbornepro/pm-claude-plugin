@@ -34,10 +34,20 @@ python3 scaffold_notion.py --pages pages.json --mission <m> --emit-plan     # + 
 ```
 L'instantané des pages (`--pages`) est produit par Claude via le connecteur (un script ne peut pas l'appeler).
 `--emit-plan` **n'écrit pas** : il rend, par page manquante, `{title, parent_root, drive_folder,
-body_markdown}` (lien SharePoint + description à compléter). **Claude crée ensuite les pages via le
-connecteur, UNIQUEMENT** après : (1) validation du contenu, (2) **test « page jetable »** confirmant
-qu'aucune notification ne part, (3) création **sous le parent** `project_management_root`, **jamais à la
-racine** de l'espace (sortir une page d'un conteneur partagé notifie tout l'espace).
+body_markdown}`. Le `body_markdown` est un **gabarit** que chaque page porte **à la création** :
+
+- **un lien vers le dossier** (Drive/SharePoint/OneDrive selon `file_store` du profil), **toujours présent** -
+  en tête, format `📁 Ouvrir le dossier dans <magasin>` ; s'il n'a pas pu être résolu, un placeholder de lien
+  et une entrée « à compléter » le signalent ;
+- **« À quoi sert cette page »** : le rôle de la page, en **placeholder** à remplir ;
+- **« Contenu attendu »** : placeholders (dont le tableau `Titre | Fichier | Dossier | Contenu`) ;
+- **« À compléter pour être legitime »** : une **checklist** de ce qui manque (lien, rôle réel, fichiers clés,
+  responsable). Rien n'est inventé : tout reste explicitement à renseigner.
+
+**Claude crée ensuite les pages via le connecteur, UNIQUEMENT** après : (1) validation du contenu,
+(2) **test « page jetable »** confirmant qu'aucune notification ne part, (3) création **sous le parent**
+`project_management_root`, **jamais à la racine** de l'espace (sortir une page d'un conteneur partagé
+notifie tout l'espace).
 
 ## Garde-fous (toujours)
 - Dry-run par défaut partout ; une écriture = un flag explicite + validation.

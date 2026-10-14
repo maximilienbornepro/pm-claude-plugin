@@ -47,21 +47,60 @@ def folder_link(mission, drive_folder):
     return links.folder_link(profile, f"02 - Project Management/{drive_folder}")
 
 
+def _store_label(mission):
+    """Nom lisible du magasin de fichiers du profil (SharePoint / OneDrive / Drive / local)."""
+    try:
+        s = (prof.load(mission)["profile"].get("file_store") or "sharepoint").lower()
+    except Exception:
+        s = "sharepoint"
+    return {"sharepoint": "SharePoint", "onedrive": "OneDrive",
+            "local": "le dossier local", "drive": "le Drive"}.get(s, "le Drive")
+
+
+def _page_body(link, store_label):
+    """Gabarit du corps d'une page creee : lien dossier (TOUJOURS), role, placeholders, et
+    une checklist 'ce qui manque pour etre complete'. Rien n'est invente : tout est a renseigner."""
+    if link:
+        head = f"📁 [Ouvrir le dossier dans {store_label}]({link})"
+        manque_lien = []
+    else:
+        head = f"📁 Ouvrir le dossier dans {store_label} : `<lien du dossier a renseigner>`"
+        manque_lien = [f"Ajouter le lien vers le dossier {store_label} (non resolu automatiquement)"]
+    checklist = manque_lien + [
+        "Decrire le role reel de la page (remplacer le placeholder ci-dessus)",
+        "Lister les fichiers cles du dossier en tableau (Titre | Fichier | Dossier | Contenu ; "
+        "lien par fichier : URL encodee + ?web=1)",
+        "Preciser le responsable / la frequence de mise a jour si pertinent",
+    ]
+    return (
+        f"{head}\n\n"
+        "**A quoi sert cette page**\n"
+        "<placeholder : role de la page en une phrase factuelle - ex. « Suivi de… », « Reference de… »>\n\n"
+        "**Contenu attendu**\n"
+        "- <placeholder : premier element attendu>\n"
+        "- <placeholder : documents lies, en tableau>\n\n"
+        "**A completer pour etre legitime**\n"
+        + "\n".join(f"- [ ] {c}" for c in checklist)
+    )
+
+
 def emit_plan(mission, rows, missing):
-    """Spec de creation par page manquante, pour que Claude cree via le connecteur APRES le test jetable."""
+    """Spec de creation par page manquante, pour que Claude cree via le connecteur APRES le test jetable.
+    Chaque page porte TOUJOURS un lien vers son dossier (Drive/SharePoint/OneDrive), un role placeholder
+    et une checklist de ce qui manque pour etre legitime."""
     root = ""
     try:
         root = prof.load(mission)["profile"]["notion"]["project_management_root"]
     except Exception:
         pass
+    store_label = _store_label(mission)
     drive_by_notion = {r['notion']: r['drive'] for r in rows if r.get('notion')}
     plan = []
     for title in missing:
         folder = drive_by_notion.get(title, "")
         link = folder_link(mission, folder) if folder else None
-        body = (f"📁 [Ouvrir le dossier dans OneDrive]({link})\n" if link else "") + \
-               "<description courte et factuelle a completer (conventions du generateur notion)>"
-        plan.append({"title": title, "parent_root": root, "drive_folder": folder, "body_markdown": body})
+        plan.append({"title": title, "parent_root": root, "drive_folder": folder,
+                     "body_markdown": _page_body(link, store_label)})
     return plan
 
 

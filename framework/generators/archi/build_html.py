@@ -21,6 +21,7 @@ Par vue (`views[]`) :
 import json
 import math
 import sys
+import base64
 from pathlib import Path
 
 # --------------------------------------------------------------- geometrie
@@ -378,6 +379,10 @@ padding:clamp(14px,3vw,34px)}
 #home{font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);
 background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:6px 11px;cursor:pointer}
 #trail{color:var(--ink2);font:12px ui-monospace,SFMono-Regular,Menlo,monospace}
+.tool{font:600 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);
+background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 11px;cursor:pointer;text-decoration:none}
+.tool:hover{border-color:var(--accent)}
+.spacer{flex:1}
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .navbtn{font:600 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2);
 background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 11px;cursor:pointer}
@@ -429,6 +434,16 @@ if(home){home.addEventListener("click",function(){hist=[];render("__OV__");});}
 try{var L=window.LOGOS||{};var im=document.querySelectorAll("image[data-logo]");
 for(var m=0;m<im.length;m++){var kk=im[m].getAttribute("data-logo");
 if(L[kk]){im[m].setAttributeNS("http://www.w3.org/1999/xlink","href",L[kk]);im[m].setAttribute("href",L[kk]);}}}catch(e){}
+var cp=document.getElementById("copy-drawio");
+if(cp){cp.addEventListener("click",function(){
+  try{var xml=decodeURIComponent(escape(window.atob(window.__DRAWIO_B64||"")));
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(xml).then(function(){cp.textContent="\\u2713 Copié";
+        setTimeout(function(){cp.textContent="\\u2317 Copier .drawio";},1500);},
+        function(){cp.textContent="Copie refusée";});
+    }else{cp.textContent="Copie indisponible";}
+  }catch(e){cp.textContent="Copie indisponible";}
+});}
 render("__OV__");
 })();
 """
@@ -479,14 +494,36 @@ def build_html(model):
 
     js = _JS.replace("__OV__", overview)
 
+    # draw.io (une page par vue) embarque : lien de telechargement + copie du XML.
+    # NB artefact Claude : le telechargement est bloque par le bac a sable -> le bouton Copier
+    # (presse-papier) est le fallback qui marche partout ; sur gh-pages / en local, le lien telecharge.
+    drawio_tools, drawio_script = "", ""
+    try:
+        import export_drawio as XDR  # sibling (archi/)
+        xml, _, _ = XDR.build_xml(model)
+        b64 = base64.b64encode(xml.encode("utf-8")).decode("ascii")
+        href = "data:application/xml;base64," + b64
+        drawio_tools = (
+            '<span class="spacer"></span>'
+            f'<a class="tool" download="{esc(title)}.drawio" href="{href}" '
+            'title="Telecharger le .drawio (actif sur gh-pages / en local ; bloque dans l\'artefact Claude)">'
+            '&#8681; .drawio</a>'
+            '<button class="tool" id="copy-drawio" '
+            'title="Copier le XML draw.io (fonctionne partout, artefact compris)">&#9143; Copier .drawio</button>'
+        )
+        drawio_script = f'<script>window.__DRAWIO_B64 = {json.dumps(b64)};</script>'
+    except Exception:
+        pass
+
     html = (
         '<!doctype html><html lang="fr"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f'<title>{esc(title)}</title>'
         f'<style>{root_css}{_CSS}</style></head><body>'
-        f'<div class="bar"><span id="home">&#8962; {esc(title)}</span><span id="trail"></span></div>'
+        f'<div class="bar"><span id="home">&#8962; {esc(title)}</span><span id="trail"></span>{drawio_tools}</div>'
         f'<nav class="nav">{nav}</nav>'
         f'<div class="stage">{"".join(sections)}</div>'
+        f'{drawio_script}'
         f'<script>window.LOGOS = {json.dumps(logos, ensure_ascii=False)};</script>'
         f'<script>var names = {json.dumps(names, ensure_ascii=False)};{js}</script>'
         '</body></html>'

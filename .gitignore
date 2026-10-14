@@ -27,5 +27,5 @@ scratch/
 missions/**/node_modules/
 profiles/demo/architecture/demo.html
 
-# Profil(s) de mission reels : donnees internes, hors depot partage
+# Profil(s) reel(s) : hors depot partage
 profiles/sinbad/
