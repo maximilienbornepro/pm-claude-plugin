@@ -21,22 +21,28 @@ python3 framework/pm.py run setup <mission>
 La mission par défaut est `sinbad` (l'exemple de référence). Pour une nouvelle mission :
 `cp -r profiles/sinbad profiles/<mission>` puis onboarding.
 
-## Avant TOUTE écriture : preflight (bon Notion / SharePoint / Jira)
+## Avant TOUTE écriture : preflight sur TOUS les connecteurs
 
-Un même compte Claude peut avoir **plusieurs Notion/SharePoint connectés**. Risque réel d'écrire dans
-le **mauvais** espace. Donc, avant toute écriture externe sur une mission :
+Un même compte Claude peut avoir **plusieurs Notion / SharePoint / Figma connectés**. Risque réel
+d'écrire au **mauvais** endroit. Donc, avant toute écriture externe sur une mission :
 
 ```bash
 python3 framework/pm.py run preflight <mission>
 ```
 
-Puis **vérifier côté Notion** : `notion-fetch` de la racine `project_management_root` du profil.
-- **404 / introuvable** ou **titre différent** de `expect_pm_title` → **MAUVAIS workspace connecté** :
-  **ne rien écrire**, demander à l'utilisateur de basculer la connexion Notion sur la bonne mission.
-- Trouvé **et** bon titre → workspace correct, écriture possible (sous les garde-fous ci-dessous).
+**Règle dure** : on n'écrit sur un connecteur **que si** son identité est **renseignée dans le profil**
+(`profile.connections`) **et** que le compte **réellement connecté correspond**. Pour chaque connecteur,
+confirmer l'identité connectée avec son outil :
+- **Notion** → `notion-get-self` : `workspace.id` + `workspace.name` == profil. (Un `notion-fetch` 404 sur la
+  racine = mauvais workspace.)
+- **Microsoft 365** (SharePoint/OneDrive/Outlook/Teams) → `get_me` : le `mail`/tenant == profil.
+- **Figma** → `whoami` : `email` + `team_key` == profil.
+- **Jira / Atlassian** → `getAccessibleAtlassianResources` : un `cloudId` == profil.
 
-Idem : une écriture Office doit être **sous la racine Drive** attendue du profil (`drive.root`), et le
-`web_site` doit correspondre à la mission. Jira : `cloud_id` + `project_key` du profil font foi.
+Si un connecteur est **non renseigné** dans le profil, **ou** si l'identité connectée **ne correspond
+pas**, ou si le preflight renvoie **BLOQUANT** → **on n'écrit pas** sur ce connecteur. On renseigne
+d'abord le profil (avec l'identité relevée) et/ou on demande de basculer la connexion, puis on re-preflight.
+Une écriture Office reste en plus **sous `drive.root`** et sur le bon `web_site`.
 
 ## Règles d'or (rappel)
 

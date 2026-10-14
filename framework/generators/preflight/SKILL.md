@@ -1,32 +1,36 @@
 ---
 name: preflight
-description: Vérifie qu'on est connecté aux BONS systèmes (Notion, SharePoint, Jira) d'une mission avant toute écriture. Évite d'écrire dans le mauvais Notion quand plusieurs espaces sont connectés sur le même compte. Lecture seule.
+description: Vérifie que TOUS les connecteurs de la session (Notion, Microsoft 365/SharePoint/OneDrive, Figma, Jira) pointent bien le compte de la mission avant toute écriture. On n'écrit sur un connecteur que s'il est renseigné dans le profil ET que l'identité connectée correspond. Lecture seule.
 ---
 
-# preflight (bon espace connecté avant d'écrire)
+# preflight (bons connecteurs avant d'écrire)
 
-Problème : un même compte Claude peut avoir **plusieurs Notion/SharePoint connectés**. Sans garde, un
-générateur peut écrire dans le **mauvais** espace. Le profil **ancre l'identité attendue** ; ce preflight
-la confronte au système réellement connecté.
+Problème : un même compte Claude peut avoir **plusieurs Notion / SharePoint / Figma connectés**. Sans
+garde, un générateur peut écrire au **mauvais** endroit. Le profil ancre l'identité attendue de chaque
+connecteur (`profile.connections`) ; ce preflight la confronte au compte réellement connecté.
 
 ## Usage
 ```
 python3 framework/pm.py run preflight <mission>
 ```
 
-## Ce qu'il vérifie
-- **Notion** (par Claude, via le connecteur - **obligatoire**) : `notion-fetch` de la racine
-  `project_management_root` du profil.
-  - **404 / introuvable** → mauvais workspace connecté (message Notion : « authenticated to the correct
-    workspace »). **Ne rien écrire.**
-  - **Titre ≠ `expect_pm_title`** → mauvais espace. **Ne rien écrire.**
-  - Trouvé + bon titre → workspace correct.
-- **Drive / SharePoint** (par script) : la racine locale `drive.root` existe ; le `web_site` doit
-  correspondre à la mission. Un fichier Office s'écrit **sous cette racine**, jamais ailleurs.
-- **Jira** (par script si identifiants en env) : le `project_key` du profil est accessible ; sinon
-  `cloud_id` + `project_key` du profil font foi.
+## Règle (stricte)
+On n'écrit sur un connecteur **que si** :
+1. son identité est **renseignée** dans `profile.connections.<connecteur>`, **et**
+2. le compte **réellement connecté correspond** (vérif par Claude avec l'outil d'identité).
 
-## Règle
-Tant que le preflight Notion n'est pas **vert** (racine trouvée + bon titre), **aucune écriture Notion**.
-À lancer au début d'une session d'écriture, et dès qu'on change de mission ou de connexion. En cas de
-mismatch : décrire le problème, demander de basculer la connexion, **ne pas écrire**.
+Sinon (non renseigné, champ manquant, ou identité différente) → **BLOQUANT** : aucune écriture sur ce
+connecteur. On renseigne d'abord le profil avec l'identité relevée, et/ou on demande de basculer la
+connexion, puis on relance le preflight.
+
+## Outils d'identité par connecteur
+- **Notion** → `notion-get-self` (workspace id + nom + compte). Backstop : `notion-fetch` de la racine
+  `project_management_root` ; un **404** = mauvais workspace.
+- **Microsoft 365** (SharePoint/OneDrive/Outlook/Teams) → `get_me` (mail + tenant) ; `get_granted_scopes`.
+- **Figma** → `whoami` (email + team).
+- **Jira / Atlassian** → `getAccessibleAtlassianResources` (cloudId + url).
+
+## Renseigner le profil
+Si un connecteur n'est pas renseigné, appeler son outil d'identité, **noter l'identité relevée** dans
+`profile.connections.<connecteur>`, puis re-preflight. Tant que ce n'est pas fait, pas d'écriture dessus.
+La racine Drive locale (`drive.root`) et le `web_site` sont vérifiés en plus pour toute écriture Office.
