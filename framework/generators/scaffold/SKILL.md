@@ -5,13 +5,17 @@ description: Monte l'arborescence d'une mission - dossiers Drive/SharePoint, pag
 
 # Générateur scaffold (structure d'une mission)
 
-L'arborescence d'une mission a **trois couches**, pas deux :
+Scaffolder une mission, c'est monter **toute sa structure** :
 
-1. **Dossiers Drive / SharePoint** - l'ossature (`00 - Conception`, `02 - Project Management/01..18`).
-2. **Pages Notion miroir** - une page par dossier de `02 - Project Management`, avec lien vers le dossier
-   SharePoint + description courte.
-3. **Fichiers Office dans chaque dossier** - les livrables eux-mêmes (le registre des risques, la roadmap,
-   le plan de charge, le deck GATE, le plan qualité…). **Ce ne sont pas des dossiers vides.**
+1. **Dossiers Drive / SharePoint** - l'ossature (`00 - Conception`, `02 - Project Management/01..09`).
+2. **Pages Notion miroir** - une page par dossier, avec lien vers le dossier SharePoint + description.
+   Les pages qui portent une **base** (`notion_db`) sont créées avec la DB, ses **vues** et des **exemples** :
+   Planning → base « Planning de build » (**vue Gantt** timeline) ; Hebdo → base « Suivi des sujets »
+   (table / kanban / filtre TPM).
+3. **Fichiers Office dans chaque dossier** - les livrables (registre des risques, roadmap, RACI, GATE…).
+   **Ce ne sont pas des dossiers vides.** (Planning → pas d'Excel, la référence est le Gantt Notion.)
+4. **Routines de la mission** (`routines.yml`) - les planifiées (cron) sont **à enregistrer** au scaffold
+   (après validation), les `manual` se lancent à la demande. `scaffold_drive` les liste.
 
 Le scaffold monte la **structure** (couches 1 et 2). Le **contenu Office** (couche 3) est produit et tenu
 par les **générateurs dédiés** (`risks` → registre xlsx, `gate-deck` → deck pptx, `projection`/`sprint_plan`,

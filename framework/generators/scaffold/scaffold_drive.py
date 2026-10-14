@@ -72,6 +72,29 @@ def main():
         print("Fait. Rien de supprime ni deplace.")
 
     _report_office(rows, pm, mname)
+    _report_routines(args.mission)
+
+
+def _report_routines(mission):
+    """Routines de la mission (routines.yml) a INSTALLER au scaffold : cron -> enregistrement (apres
+    validation), manual -> a la demande. Lecture seule : l'enregistrement reel se fait via le planificateur."""
+    try:
+        d = prof._load_yaml(prof.mission_dir(mission) / 'routines.yml') or {}
+    except Exception:
+        return
+    r = d.get('routines') or {}
+    items = [(n, c) for n, c in r.items() if isinstance(c, dict)] if isinstance(r, dict) else []
+    if not items:
+        return
+    cron = [(n, c) for n, c in items if (c.get('schedule') not in (None, 'manual'))]
+    man = [(n, c) for n, c in items if (c.get('schedule') in (None, 'manual'))]
+    print("\nRoutines a installer (scaffold de la mission) :")
+    for n, c in cron:
+        print(f"  [cron]   {n:32s} {c.get('schedule')}   -> a ENREGISTRER (apres validation)")
+    for n, c in man:
+        print(f"  [manuel] {n:32s} (lancee a la demande)")
+    print(f"  -> {len(cron)} routine(s) planifiee(s) a enregistrer ; {len(man)} manuelle(s). "
+          f"Enregistrement reel via le planificateur, apres validation.")
 
 
 def _report_office(rows, pm, mname):
