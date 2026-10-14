@@ -1,0 +1,36 @@
+# SAMPLE Roadmap - version LIGHT de la roadmap SINBAD (exemple rempli, volontairement peu precis).
+# But : qu'une mission fraiche (ou `pm demo`) parte d'une roadmap concrete, pas d'un gabarit vide.
+# Ce n'est PAS la source de verite : on le copie et on l'adapte (la vraie roadmap vit dans 03 - Roadmap).
+#
+# Forme = la roadmap par CHANTIERS (flux d'activite), avec une periode grossiere et un statut.
+# On reste general : pas de dates fines par chantier, pas de details techniques - ca, c'est le backlog.
+
+produit: "Portail d'analyse d'alertes geospatiales"
+contexte:
+  domaines: [Site, Maritime, Change]
+updated: 2026-10-13
+legende:
+  statuts: [a venir, en cours, fait]
+  periodes: [debut, coeur, fin]        # situe grossierement le chantier dans la V1
+
+# Chantiers = les flux d'activite de la roadmap
+chantiers:
+  - { chantier: "Specification fonctionnelle", periode: "debut",  statut: "en cours" }
+  - { chantier: "Architecture et socle",        periode: "debut",  statut: "en cours" }
+  - { chantier: "Developpement",                periode: "coeur",  statut: "en cours" }
+  - { chantier: "Recette",                      periode: "coeur",  statut: "a venir" }
+  - { chantier: "Test de securite",             periode: "fin",    statut: "a venir" }
+  - { chantier: "Durcissement",                 periode: "fin",    statut: "a venir" }
+  - { chantier: "Mise en production",           periode: "fin",    statut: "a venir" }
+
+# Jalons (les seules dates dures)
+jalons:
+  - { jalon: "T0",          date: 2026-10-19 }
+  - { jalon: "Gel du code", date: 2026-11-15 }
+  - { jalon: "MEP",         date: 2026-11-30 }
+
+# Trajectoire produit (reste general)
+versions:
+  - { version: "V1",   objectif: "Premier portail operationnel (events, qualification, alertes)." }
+  - { version: "V1.1", objectif: "Consolidation post-MEP." }
+  - { version: "V2",   objectif: "Design complet et couverture elargie." }

@@ -1,0 +1,14 @@
+{
+  "name": "pm-framework-market",
+  "owner": { "name": "Maximilien Borne" },
+  "metadata": {
+    "description": "Marketplace du pm-framework : le moteur de gestion de projet portable (generateurs, onboarding, garde-fous)."
+  },
+  "plugins": [
+    {
+      "name": "pm-framework",
+      "source": "./",
+      "description": "Framework de gestion de projet portable : generateurs de livrables, onboarding guide, garde-fous d'ecriture. Une mission = un profil."
+    }
+  ]
+}

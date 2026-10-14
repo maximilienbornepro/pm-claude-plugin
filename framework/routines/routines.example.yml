@@ -1,0 +1,47 @@
+# Gabarit des routines planifiees - a copier en profiles/<mission>/routines.yml.
+# Les SKILL.md generiques de framework/routines/<nom>/ lisent ce fichier : aucun identifiant
+# ni chemin propre a une mission n'est en dur dans un SKILL. Changer de mission = remplir
+# ce fichier, pas toucher aux SKILL ni au code.
+#
+# Regles permanentes (valent pour TOUTE routine, non negociables) :
+#   - notifies: none sur chaque routine ; aucune ne declenche mail/mention/partage/commentaire/Teams.
+#   - toute ecriture est GARDEE : un champ `guard` dit la condition imperative avant d'ecrire.
+#     Sans validation (formulaire, oui en seance) et sans la garde, on ne touche a rien.
+#   - aucune routine n'ecrit hors de son perimetre decrit ici.
+#   - jamais de chemin propre a un poste : la racine projet se resout par env puis repli.
+#
+# `chains` ne liste que des generateurs du framework (voir `python3 framework/pm.py list`) :
+#   projection, sprint-audit, risks, jira-image, architecture, scaffold-drive, tone.
+# Une routine peut aussi enchainer une autre routine (son nom), qui enchaine ses propres generateurs.
+
+# Resolution portable de la racine projet, commune a toutes les routines :
+#   1) variable d'env ci-dessous (chemin absolu force) ;
+#   2) $HOME/Documents/<profile.name> ;
+#   3) repli : dossier contenant un marqueur connu du projet.
+project_root_env: PMF_PROJECT_ROOT
+
+routines:
+
+  <nom-de-routine>:                       # nom = nom du dossier framework/routines/<nom>/
+    title: "<resume court de ce que fait la routine>"
+    schedule: "<cron>"                    # ex. "0 8,11,18 * * *" ; ou `manual` pour un lancement a la main
+    chains: [<generateur>, ...]           # generateurs du framework enchaines, dans l'ordre (liste vide si aucun)
+    reads:                                # d'ou la routine tire ses entrees (cles de profil/pipeline ou ids)
+      profile: [<cle.du.profil>, ...]
+      pipeline: [<cle.du.pipeline>, ...]
+      # <source>_data_source: "collection://<id>"   # base de suivi, planning... selon la routine
+      # <generateur>_yml: profiles/<mission>/<generateur>.yml
+    # commands:                           # optionnel : commandes de mission equivalentes aux generateurs,
+    #   <etape>: "<commande, depuis la racine projet>"   # tant que le generateur ne porte pas l'etape
+    writes:                               # ce que la routine ecrit - CHAQUE ligne porte sa garde
+      - { target: <gh-pages|jira|notion|office>, scope: "<perimetre precis>", guard: "<condition imperative avant d'ecrire>" }
+    notifies: none                        # invariant : jamais autre chose que none
+
+# Exemple minimal d'une routine en lecture seule stricte (aucune ecriture) :
+#   audit-sprints:
+#     title: "Audit du plan de sprints vs Jira"
+#     schedule: "0 7 * * 1-5"
+#     chains: [sprint-audit]
+#     reads: { profile: [jira.board] }
+#     writes: []                          # rien n'est ecrit : la routine ne fait que proposer
+#     notifies: none

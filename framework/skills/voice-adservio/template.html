@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TITRE DU DOCUMENT</title>
+<!--
+  Gabarit charte Adservio. Pour un fichier AUTONOME à partager :
+  1. remplacer ce <link> par le contenu de charte.css inliné dans un <style> ;
+  2. coller AVANT, dans le même <style>, les @font-face 'Adservio' depuis
+     reference/rapport-aidlc.html (base64) pour le rendu de police exact.
+  Sans la police, le fallback system-ui s'applique : la mise en page tient.
+-->
+<link rel="stylesheet" href="charte.css">
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <p class="avant-titre">CONTEXTE - TYPE DE DOCUMENT</p>
+    <h1>Titre court et fort</h1>
+    <p class="sous-titre">Une phrase légère qui pose le périmètre et l'intention du document.</p>
+    <div class="colophon">
+      <span>relevé : JJ mois AAAA</span>
+      <span>corpus : …</span>
+      <span>…</span>
+    </div>
+  </header>
+
+  <nav class="sommaire">
+    <p class="sommaire-titre">Sommaire</p>
+    <ol>
+      <li><a href="#s1">Première section</a></li>
+      <li><a href="#s2">Deuxième section</a></li>
+    </ol>
+  </nav>
+
+  <section id="s1">
+    <div class="tete-section"><span class="numero-section">01</span><h2>Première section</h2></div>
+    <p class="chapeau">Chapeau : une phrase qui cadre la section avant d'entrer dans le détail.</p>
+
+    <p>Paragraphe de corps. On affirme, on définit par contraste, on cite les chiffres avec leur source.
+      Les termes clés sont en <strong>gras</strong> ; <em>l'emphase forte</em> est en medium noir.</p>
+
+    <h3>Une sous-partie</h3>
+    <ul class="liste">
+      <li><strong>Nom du point</strong> - explication en une phrase.</li>
+      <li><strong>Autre point</strong> - explication.</li>
+    </ul>
+
+    <div class="encadre">
+      <p class="encadre-titre">À retenir</p>
+      <p>Mise en exergue sur fond neige : une idée qu'on veut isoler.</p>
+    </div>
+
+    <div class="grille-3">
+      <div class="tuile-chiffre"><div class="valeur en-accent">00 %</div><div class="legende">ce que mesure le chiffre</div><div class="source-mini">source</div></div>
+      <div class="carte"><h5><span class="point point-accent"></span>Titre de carte</h5><p>Contenu bref.</p></div>
+      <div class="carte"><h5><span class="point point-attenue"></span>Autre carte</h5><p>Contenu bref.</p></div>
+    </div>
+
+    <div class="bloc-table">
+      <table>
+        <thead><tr><th>Colonne</th><th>Définition</th><th>Équivalent</th></tr></thead>
+        <tbody>
+          <tr><td class="fort">Terme</td><td>Définition crisp.</td><td class="mono-cell">hérité</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="diagramme">
+      <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg"><!-- schéma à la charte : trait noir, accent royal, coins 12px --></svg>
+      <figcaption class="diagramme-legende">Légende du schéma.</figcaption>
+    </figure>
+  </section>
+
+  <footer class="pied">
+    <p>Note de pied, mentions, date.</p>
+  </footer>
+
+</div>
+</body>
+</html>

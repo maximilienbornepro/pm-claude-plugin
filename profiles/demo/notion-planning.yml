@@ -1,0 +1,8 @@
+# Config DEMO - generateur notion-planning. Branche sur le SAMPLE livre par le framework,
+# pour que `pm demo` montre un vrai planning (jalons + contenu) sans toucher a aucun systeme.
+planning_tracker: "collection://demo-planning-0000"
+tone: voice-maximilien
+guard: demander-avant
+# Source de verite des dates : le sample du framework (a remplacer par le vrai doc d'une mission).
+source: "framework/generators/notion-planning/planning.sample.yml"
+roadmap: "framework/generators/projection/roadmap.sample.yml"

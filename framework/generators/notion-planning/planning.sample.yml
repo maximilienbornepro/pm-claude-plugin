@@ -1,0 +1,25 @@
+# SAMPLE Planning - exemple REMPLI (jalons + contenu custom).
+# But : qu'une mission fraiche (ou `pm demo`) parte d'un planning concret, pas d'un gabarit vide.
+# Ce n'est PAS la source de verite d'une vraie mission : on le copie et on l'adapte. La vraie source
+# reste le doc de la mission (04 - Planning / 03 - Roadmap), pointe par notion-planning.yml > source.
+#
+# Note parseur : une map flow par ligne, pas de virgule dans les chaines (le mini-YAML du framework
+# ne joint pas les lignes et coupe sur la virgule hors guillemets) - on separe avec ; ou /.
+
+title: "Planning V1"
+updated: 2026-10-13
+legende:
+  statuts: [a venir, en cours, fait, a risque]
+
+# Phases (sprints) - les deux jalons durs sont le gel (fin S3) et la MEP (fin S4).
+phases:
+  - { phase: "Sprint 1", statut: "fait",    contenu: "Socle technique ; auth OTAN ; squelette du portail." }
+  - { phase: "Sprint 2", statut: "en cours", contenu: "Portail des events (tableau + carte) ; environnement de production." }
+  - { phase: "Sprint 3", statut: "a venir",  contenu: "Page d'un event ; configurations d'alerte. Fin = gel du code." }
+  - { phase: "Sprint 4", statut: "a venir",  contenu: "Recette (decalee) ; corrections ; durcissement ; pentest. Fin = MEP." }
+
+# Jalons (dates dures ; mises en gras dans le report)
+jalons:
+  - { jalon: "T0",          date: 2026-10-19, statut: "fait",   contenu: "Lancement officiel du developpement V1." }
+  - { jalon: "Gel du code", date: 2026-11-15, statut: "a venir", contenu: "Fin Sprint 3 : plus de feature ; corrections de recette uniquement." }
+  - { jalon: "MEP",         date: 2026-11-30, statut: "a venir", contenu: "Fin Sprint 4 (lundi) : mise en production de la V1." }

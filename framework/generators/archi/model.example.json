@@ -1,0 +1,38 @@
+{
+  "meta": { "project": "Exemple", "owner": "équipe", "theme": "dark" },
+  "palette": {
+    "bg": "#000000", "surface": "#171b22", "ink": "#e8ebf0", "ink2": "#a2abba",
+    "accent": "#6fa2d6", "border": "#2a303b"
+  },
+  "logos": {},
+  "zones": [
+    { "id": "cloud",    "label": "Cloud (région)",     "parent": null },
+    { "id": "ns",       "label": "Namespace applicatif","parent": "cloud" },
+    { "id": "partners", "label": "Partenaires",         "parent": null }
+  ],
+  "entities": [
+    { "id": "frontend", "label": "Frontend", "sub": "SPA",        "zone": null,       "logo": null },
+    { "id": "bff",      "label": "BFF",      "sub": "API façade", "zone": "ns",       "logo": null },
+    { "id": "api",      "label": "Service",  "sub": "métier",     "zone": "ns",       "logo": null, "link": "donnees" },
+    { "id": "db",       "label": "Base",     "sub": "PostgreSQL", "zone": "ns",       "logo": null },
+    { "id": "queue",    "label": "Bus",      "sub": "événements", "zone": "ns",       "logo": null },
+    { "id": "partnerA", "label": "Partner A","sub": "données",    "zone": "partners", "logo": null },
+    { "id": "idp",      "label": "IdP",      "sub": "OIDC",       "zone": "partners", "logo": null, "link": "identite" }
+  ],
+  "flows": [
+    { "from": "frontend", "to": "bff",   "label": "HTTPS",     "kind": "call" },
+    { "from": "bff",      "to": "api",   "label": "appelle",   "kind": "call" },
+    { "from": "api",      "to": "db",    "label": "récupère",  "kind": "pull" },
+    { "from": "api",      "to": "queue", "label": "publie",    "kind": "write" },
+    { "from": "partnerA", "to": "api",   "label": "dépose",    "kind": "write" },
+    { "from": "frontend", "to": "idp",   "label": "authentifie","kind": "auth" }
+  ],
+  "views": [
+    { "id": "overview", "label": "Vue d'ensemble",
+      "members": ["frontend", "bff", "api", "db", "queue", "partnerA", "idp"] },
+    { "id": "donnees",  "label": "Données",
+      "members": ["partnerA", "api", "db", "queue"] },
+    { "id": "identite", "label": "Identité",
+      "members": ["frontend", "idp", "bff"] }
+  ]
+}

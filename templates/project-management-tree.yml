@@ -1,0 +1,44 @@
+# Arborescence standard d'une mission + miroir Notion <-> Drive/SharePoint.
+# Sert de reference au generateur `scaffold` : creer-si-absent uniquement, jamais recreer/ecraser,
+# jamais de doublon (on matche par la correspondance ci-dessous, PAS par nom a l'identique).
+
+# --- REGLE DU MIROIR (Notion <-> SharePoint) --------------------------------
+# Pour chaque zone : une page Notion sous notion.project_management_root, dont le corps porte
+#   1) un LIEN vers le dossier SharePoint correspondant (lien navigateur AllItems.aspx, jamais
+#      un lien de telechargement) ;
+#   2) une DESCRIPTION courte et factuelle de son contenu (conventions skill sinbad-notion).
+# Le scaffold ne cree une page que si elle manque ; si elle existe, il peut proposer d'ajouter
+# le lien/description manquants, jamais de remplacer l'existant. Aucune action qui notifie.
+
+# Niveau racine du Drive de mission
+root:
+  - "00 - Conception"
+  - "01 - Cadrage"
+  - "02 - Project Management"
+
+# Zones de "02 - Project Management" : dossier Drive <-> titre de page Notion.
+# `notion: "à confirmer"` = pas de page evidente -> le scaffold la proposerait (dry-run d'abord).
+project_management:
+  - { drive: "01 - Cadrage",            notion: "Cadrage" }
+  - { drive: "02 - Gouvernance",        notion: "Gouvernance" }
+  - { drive: "03 - Roadmap",            notion: "Roadmap" }
+  - { drive: "04 - Planning",           notion: "Planning" }
+  - { drive: "05 - Perimetre",          notion: "Scope" }
+  - { drive: "06 - Risques",            notion: "Risques" }
+  - { drive: "07 - Quality Management", notion: "Quality Management" }
+  - { drive: "08 - Partenaires",        notion: "Partenaires" }
+  - { drive: "09 - Contacts",           notion: "Contacts" }
+  - { drive: "10 - Sources",            notion: "Sources" }
+  - { drive: "11 - Reference",          notion: "Référence" }
+  - { drive: "12 - Base documentaire",  notion: "Base documentaire" }
+  - { drive: "13 - Architecture (DAT)", notion: "Architecture (DAT)" }
+  - { drive: "14 - GATE",               notion: "GATE" }
+  - { drive: "15 - Livrables",          notion: "Livrables du projet" }
+  - { drive: "16 - Product Ownership",  notion: "Product Ownership" }
+  - { drive: "17 - Presentations",      notion: "Présentations" }
+  - { drive: "18 - SPV",                notion: "à confirmer" }
+
+# Pages Notion sans dossier Drive (miroir incomplet, a arbitrer avec Maximilien, on NE touche a rien) :
+#   - "Hebdo"
+#   - "Mesures du SLA : latence, revisite, fiabilité des détections"
+#   - "RUN/infogérence/Cyber"

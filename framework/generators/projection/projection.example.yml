@@ -1,0 +1,59 @@
+# Projection <MISSION> - gabarit du generateur `projection`.
+# Copier vers profiles/<mission>/projection.yml et remplir. Tout se pilote ici :
+# aucune valeur de mission n'est en dur dans project.py. Lecture seule.
+#
+# Listes : une liste sur une seule ligne s'ecrit en flow (["A", "B"]) ; une liste
+# longue ou commentee s'ecrit en blocs (- A puis - B), les deux formes sont lues
+# par le loader (mini-parseur integre ou PyYAML).
+
+# Estimation et rythme ------------------------------------------------------
+estimate:
+  hours_per_day: 8        # 1 jour-homme = combien d'heures
+  days_per_week: 5        # jours ouvres par semaine
+
+# Capacite de l'equipe ------------------------------------------------------
+# Un poste par ligne. Ne nommez personne si le rapport est publie.
+#   pole                : identifiant de pole (doit correspondre a back/front/sre ci-dessous)
+#   dispo               : quotite de temps (1.0 = temps plein, 0.5 = mi-temps)
+#   off                 : jours-homme d'indisponibilite sur la fenetre de projection
+#   off_after_deadline  : true si l'absence tombe APRES l'echeance (optionnel, defaut false) :
+#                         elle ne reduit pas la capacite nette d'ici le gel, mais compte
+#                         dans la date de fin projetee si la projection depasse l'echeance
+#   when                : note libre sur la periode (non utilisee par le calcul)
+capacity:
+  staff:
+    - { pole: front, dispo: 1.0, off: 0.0, when: "a confirmer" }
+    # - { pole: back,  dispo: 1.0, off: 0.0, off_after_deadline: true, when: "..." }
+
+# Affectation des epics aux poles -------------------------------------------
+# Un ticket herite du pole de son epic (summary du parent). Defaut : front.
+# Les trois poles reconnus par le calcul sont back, front et sre.
+poles:
+  back_epics: []          # ex. ["API Gateway", "Auth"]  - a confirmer
+  sre_epics: []           # ex. ["Platform & Environments"] - a confirmer
+
+# Regles de version ---------------------------------------------------------
+# Un ticket sort du perimetre V1 (= version suivante) si l'une des regles s'applique.
+versions:
+  next_version: ""        # nom exact de la fixVersion a exclure du reste V1 (ex. "v1.1") - a confirmer
+  v2_epics: []            # epics projetes en version suivante par hypothese
+  forced_v11: []          # cles de tickets forcees hors V1 (decidees hors Jira)
+
+# Workflow Jira -------------------------------------------------------------
+workflow:
+  issue_types: ["Story", "Task"]   # types pris dans la charge
+  excluded_statuses: ["Canceled"]  # statuts ignores
+  done_statuses: ["Closing", "Closed"]  # statuts consideres termines (realise 100 %)
+  # Part realisee estimee par statut. Un statut absent compte 0 %.
+  status_weights:
+    In Progress: 0.40
+    Dev Review: 0.70
+    Testing: 0.85
+    Closing: 1.0
+    Closed: 1.0
+
+# Dates clefs ---------------------------------------------------------------
+# A reprendre de profiles/<mission>/profile.yml > key_dates.
+dates:
+  code_freeze: 0000-00-00   # gel du code - a confirmer
+  mep: 0000-00-00           # mise en production - a confirmer

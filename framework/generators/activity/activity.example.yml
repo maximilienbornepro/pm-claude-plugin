@@ -1,0 +1,24 @@
+# Gabarit de config du generateur de suivi - a copier en profiles/<mission>/suivi.yml.
+# Le generateur (suivi.py) ne lit QUE ce fichier : changer de mission = remplir ce fichier.
+
+# Store d'activites (JSONL, source de verite), relatif a la racine du framework.
+store: profiles/<mission>/suivi/activites.jsonl
+
+# Dossier des transcripts Claude Code de la mission (source des prompts pertinents).
+project_dir: "~/.claude/projects/<slug-du-projet>"
+
+# Libelle de projet ajoute aux candidats collectes (optionnel, = select "Projet" cote Notion).
+# projet: MISSION
+
+# Tete de la section "Activites realisees" du Weekly report (base "Suivi des sujets").
+suivi_link: "<url Notion>"
+
+# Page Weekly report ou le bloc hebdo est ajoute (a la main ou via le connecteur, apres validation).
+weekly_report_page: "<page id>"
+
+# DB Notion PRIVEE de stockage (ne notifie personne).
+notion_db: "<database id>"
+notion_db_url: "<url Notion>"
+
+# Themes autorises (= options du select "Theme" cote Notion) ; `check` les verifie.
+themes: [Archi, Sprints, Pilotage]

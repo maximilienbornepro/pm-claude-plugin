@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "architecture",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5179",
+        "--directory",
+        "profiles/demo/architecture"
+      ],
+      "port": 5179
+    }
+  ]
+}

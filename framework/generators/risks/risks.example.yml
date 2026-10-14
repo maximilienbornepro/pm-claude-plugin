@@ -1,0 +1,48 @@
+# Gabarit de config du generateur de risques - a copier en profiles/<mission>/risks.yml.
+# Le generateur (risks.py) ne lit QUE ce fichier pour localiser le classeur, mapper les
+# colonnes et connaitre l'echelle : aucune coordonnee de cellule n'est en dur dans le code.
+# Changer de mission = remplir ce fichier, pas toucher au code.
+
+file:
+  # Chemin du classeur des risques, relatif a la racine Drive de la mission (profile.yml > drive.root).
+  path: "<dossier>/<Risques>/<Risks_MISSION>.xlsx"
+  sheet: 1                         # 1re feuille (indice 1) ; "a confirmer" si plusieurs onglets
+  # Resolution du chemin local, portable (ne jamais cabler un chemin propre a un poste) :
+  #   1) variable d'env nommee ci-dessous (chemin absolu force) ;
+  #   2) $PMF_DRIVE_ROOT + file.path ;
+  #   3) repli : recherche de file.glob sous ~/Library/CloudStorage et $HOME.
+  abs_override_env: PMF_RISKS_FILE
+  glob: "<Risks_MISSION>.xlsx"     # motif de repli pour retrouver le classeur
+
+layout:
+  header_row: 6                    # ligne des en-tetes de colonnes
+  first_data_row: 7                # 1re ligne de donnees
+  last_data_row: 99                # derniere ligne (optionnel) ; sans valeur, lecture jusqu'a la 1re ligne vide
+
+# Mapping champ logique -> lettre de colonne. Seuls les champs avec une vraie lettre sont lus ;
+# mettre "a confirmer" (commente) pour un champ absent du registre de la mission.
+columns:
+  label:        A                  # intitule du risque
+  probability:  B
+  impact:       C
+  detail:       D
+  # id:          E                 # colonne identifiant, si elle existe
+  # description: F                 # description distincte du libelle, si elle existe
+  # owner:       G                 # responsable, categorie, statut... : ajouter au besoin
+
+scale:
+  levels: [Low, Medium, High]      # libelles reels de l'echelle, dans l'ordre croissant
+  labels_fr: { Low: Faible, Medium: Moyen, High: Fort }  # equivalents d'affichage (optionnel)
+
+# Sources annexees lors de la mise a jour (lecture seule).
+annexe:
+  notion_sujets_data_source: "collection://<id de la base de suivi>"
+  jira_projection: "<chemin de la projection de livrabilite>"
+  absences: "a confirmer"
+
+# Chemin d'ecriture - GARDE derriere ce flag. false = le generateur lit et propose, n'ecrit jamais.
+write:
+  enabled: false
+  backup_dir_env: CLAUDE_SCRATCHPAD
+  # Garde-fous Office (onedrive_xlsx.py) : fraicheur distante avant ecriture, sauvegarde horodatee,
+  # ecriture chirurgicale cellule par cellule, une seule ecriture en place, controle de taille apres.

@@ -1,0 +1,6 @@
+# Mission DEMO - prouve la portabilité : le même moteur, un autre profil.
+model_json:  "profiles/demo/architecture/model.json"
+source_html: "profiles/demo/architecture/demo.html"
+theme_html:  "profiles/demo/architecture/demo.html"
+golden_html: "profiles/demo/architecture/demo.html"
+logos: profiles/demo/logos

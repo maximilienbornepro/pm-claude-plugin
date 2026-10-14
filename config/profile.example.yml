@@ -1,0 +1,29 @@
+# Profil de mission - GABARIT.
+# Copier vers profiles/<mission>/profile.yml et remplir. C'est la SEULE chose qui change
+# d'une mission a l'autre. Inconnu -> "à confirmer" (on n'invente rien).
+
+name: <NOM DE LA MISSION>
+lang: fr                      # langue par defaut des livrables
+
+jira:
+  instance: <xxx.atlassian.net>
+  cloud_id: <uuid>
+  project_key: <CLE>          # ex. SIN
+  board: <id numerique>
+
+notion:
+  project_management_root: "à confirmer"   # id de la page racine Project Management
+
+drive:
+  kind: sharepoint-onedrive | gdrive | local
+  root: "<chemin local synchronise>"
+  web_site: "<url du site SharePoint, si applicable>"
+  sync: onedrive | gdrive | none
+
+identity:
+  palette: profiles/<mission>/palette.json
+  logos: profiles/<mission>/logos
+
+team: []                      # [{ nom, role }] - pour le RACI
+
+key_dates: {}                 # { t0: AAAA-MM-JJ, code_freeze: ..., mep: ... }

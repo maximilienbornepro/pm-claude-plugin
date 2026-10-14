@@ -1,0 +1,67 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/onboarding_hint.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/garde_office.py\"",
+            "timeout": 10,
+            "statusMessage": "Garde-fou ecriture Office synchronisee"
+          },
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/garde_suppression.py\"",
+            "timeout": 10,
+            "statusMessage": "Garde-fou suppression/deplacement (Drive synchronise)"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.*__editJiraIssue",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/pas_ecraser_jira.py\"",
+            "timeout": 30,
+            "statusMessage": "Controle anti-ecrasement (description Jira)"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.*__notion-move-pages",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/garde_suppression.py\"",
+            "timeout": 10,
+            "statusMessage": "Garde-fou deplacement de page Notion (notifie)"
+          }
+        ]
+      },
+      {
+        "matcher": "Skill|Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_usage.py\"",
+            "timeout": 10,
+            "statusMessage": "Journal d'usage (skills/agents)"
+          }
+        ]
+      }
+    ]
+  }
+}

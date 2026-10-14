@@ -1,0 +1,64 @@
+# Pipeline - GABARIT.
+# Le fichier de config central : pour chaque type de livrable, QUEL generateur, QUEL ton,
+# QUEL style de schema, QUELLE cible. Plus : quel ton chaque agent utilise par defaut.
+# Copier vers profiles/<mission>/pipeline.yml et ajuster.
+
+# Tons disponibles : sinbad-redaction | redaction-casual | redaction-maximilien | redaction-adservio
+# Styles de schema : none | adservio
+
+deliverables:
+
+  notion_sujets:            # base "Sujets" (suivi hebdo) : Contexte + Action attendue
+    generator: notion-sujets
+    target: notion
+    tone: redaction-maximilien
+    format: contexte-action      # 2 blocs en gras, phrases avec un verbe, pas de mention @
+    schema_style: none
+
+  notion_planning:          # planning projet dans Notion
+    generator: notion-planning
+    target: notion
+    tone: sinbad-redaction
+    schema_style: none
+    guard: demander-avant        # jamais d'ecriture sans accord
+
+  cr_partenaire:            # mail de suivi apres weekly KSAT / point Airbus
+    generator: cr-partenaire
+    tone: sinbad-redaction
+    lang: { ksat: en, airbus: fr }
+    schema_style: none
+
+  gate_deck:                # deck GATE
+    generator: gate-deck
+    output: pptx
+    tone: redaction-adservio
+    schema_style: adservio
+
+  rapport_projection:       # rapport de projection (gh-pages)
+    generator: projection-report
+    source: jira
+    tone: sinbad-redaction
+    schema_style: adservio
+
+  plan_sprints:             # plan de sprints S+4/5/6 (gh-pages)
+    generator: sprint-plan
+    source: jira
+    schema_style: none
+
+  architecture:             # schema d'archi interactif (stack-imagery)
+    generator: stack-imagery
+    schema_style: adservio
+    targets: [artifact, artifact-light, gh-pages]
+
+  ticket_jira:              # tickets front : modele page/bloc/composant
+    generator: jira-ticket
+    tone: sinbad-redaction
+    images: [figma, poc]
+    schema_style: none
+
+# Quel ton chaque agent utilise par defaut (precable aussi via : set-tone <agent> <ton>)
+agents:
+  sinbad-qap-redaction: sinbad-redaction
+  redaction-adservio: redaction-adservio
+  sinbad-architecture: null
+  stack-imagery: null

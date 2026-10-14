@@ -1,0 +1,44 @@
+# Gabarit de la config de mission du generateur jira-ticket.
+# Copier dans profiles/<mission>/jira_ticket.yml et adapter a la mission.
+#
+# Le generateur jira-ticket porte le pattern DEUX OUTILS :
+#   - le connecteur Jira ecrit le TEXTE des tickets (sous garde-fou anti-ecrasement) ;
+#   - l'API REST (helper jira_image.py) UPLOADE et RETABLIT les images, ce que le connecteur
+#     ne sait pas faire.
+# Ce fichier ne porte QUE le propre-a-la-mission du cote image. Le Jira lui-meme (base, projet,
+# board, identifiants) vient du profil (profiles/<mission>/profile.yml) + de l'env, comme
+# framework/lib/jira.py. On ne remet AUCUN identifiant ici.
+
+image:
+  # Titre de la section sous laquelle l'image est posee. Cree s'il n'existe pas.
+  section_title: "Figma / Prototype"
+
+  # Sous-chaine (minuscule) servant a RETROUVER un titre de section deja present, meme reformule.
+  # Ex. "figma" reconnait "Figma / Prototype", "Figma", "Maquette Figma"...
+  section_match: "figma"
+
+  # Dossier racine des images, parcouru recursivement. Chemin absolu (ou ~).
+  # Convention : une image par ticket, rangee dans un sous-dossier au nom du ticket.
+  #   <images_root>/<CLE>/<CLE>_<slug>.png
+  images_root: "~/chemin/vers/les/images"
+
+  # Motif d'images cherchees sous images_root (glob).
+  file_glob: "*.png"
+
+  # Expression reguliere qui lit la CLE du ticket dans le PREFIXE du nom de fichier.
+  # Le nom DOIT commencer par la cle. Ex. "ABC-123_home.png" -> ABC-123.
+  # (apostrophes + backslash simple : portable PyYAML comme mini-parseur du framework)
+  key_pattern: '[A-Z]+-\d+'
+
+  # Choix quand plusieurs fichiers existent pour un meme ticket.
+  #   most_recent_mtime : le plus recent par date de modification gagne (recommande).
+  # Corollaire : une NOUVELLE version doit porter un NOUVEAU nom (horodate), sinon le ticket est
+  # juge a jour et l'ancienne piece jointe du meme nom est reutilisee.
+  pick: most_recent_mtime
+
+  # Type MIME envoye a l'upload.
+  content_type: image/png
+
+  # Garde-fou « l'image ne saute jamais » : avant un PUT de description, on verifie que le nombre
+  # de mediaSingle (images) ne BAISSE pas par rapport a la version lue. Sinon l'ecriture est refusee.
+  guard_media_single: true
