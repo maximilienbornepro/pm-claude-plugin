@@ -45,13 +45,19 @@ notion_only:
 databases:
   planning:
     title: "Planning de build"
-    view: timeline            # Gantt (barres Debut->Fin)
     sample: "framework/generators/notion-planning/planning.sample.yml"
     rows_from: workstreams
     properties: ["Workstream:title", "Pole:text", "Debut:date", "Fin:date", "Statut:select", "Avancement:number"]
+    views:
+      - { name: "Gantt", type: timeline, date_start: "Debut", date_end: "Fin", group_by: "Pole" }   # LA vue Gantt
+      - { name: "Table", type: table, sort: "Debut" }
+      - { name: "Par pole", type: board, group_by: "Pole" }
   sujets:
     title: "Suivi des sujets"
-    view: table
     sample: "framework/generators/notion-topics-audit/sujets.sample.yml"
     rows_from: sujets
     properties: ["Sujet:title", "Statut:select", "Priorite:select", "Responsable:text", "Suivi projet:select", "Action attendue:text"]
+    views:
+      - { name: "Tous les sujets", type: table, sort: "Priorite" }
+      - { name: "Par statut", type: board, group_by: "Statut" }     # kanban
+      - { name: "Mes sujets (TPM)", type: table, filter: "Suivi projet = TPM" }

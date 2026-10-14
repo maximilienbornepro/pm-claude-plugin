@@ -121,7 +121,7 @@ def _db_block(db_key, databases):
             rows = (s.get(rows_key) or [])[:5] if rows_key else []
         except Exception:
             rows = []
-    return {"title": spec.get("title", db_key), "view": spec.get("view"),
+    return {"title": spec.get("title", db_key), "views": spec.get("views", []),
             "properties": spec.get("properties", []), "exemples": rows}
 
 
