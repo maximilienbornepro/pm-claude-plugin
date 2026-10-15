@@ -3,12 +3,15 @@
 Schéma d'architecture interactif + export draw.io, **générés depuis un modèle unique**. On ne dessine
 plus de HTML à la main : on déclare le modèle, le framework rend et valide.
 
-## Point de départ : l'exemple SINBAD
+## Point de départ : l'exemple de référence
 
 Avant d'écrire un modèle, **partir de l'exemple de référence** - un vrai schéma, pas un gabarit vide :
 
-- **Modèle SINBAD** : `profiles/sinbad/architecture/model.json` (entités, zones, flux, vues réelles).
-  Donne au prompt un contexte pertinent : on copie, on adapte à la nouvelle mission.
+- **Modèle d'exemple** : `profiles/demo/architecture/model.json` (entités, zones, flux, vues, entités
+  d'exploitation). On copie, on adapte. Une mission a son propre modèle dans
+  `profiles/<mission>/architecture/model.json`, pointé par sa config.
+- **Style visuel cible** : `showcase.html` (dans ce dossier) - un schéma complet et rendu, qui montre le
+  niveau de finition attendu (mise en page, sélecteur de vues, logos). On s'en inspire pour le rendu.
 - **Logos techno communs** (AWS, Kubernetes, Keycloak, Prometheus, Redis, Terraform, ArgoCD, FluxCD,
   React, shadcn...) : bibliothèque **partagée** `framework/assets/logos/`, réutilisable telle quelle.
   Les technos sont les mêmes d'un projet à l'autre. Seuls les logos de **marque** (Safran, partenaires)
@@ -17,7 +20,7 @@ Avant d'écrire un modèle, **partir de l'exemple de référence** - un vrai sch
 
 ## Deux façons de déclarer le modèle
 
-1. **Éditer le modèle** : partir de l'exemple SINBAD (ou copier `model.example.json`), le remplir selon
+1. **Éditer le modèle** : partir de l'exemple démo (ou copier `model.example.json`), le remplir selon
    `SCHEMA.md` (entités, flux, zones, **vues + membres + layout**).
 2. **Dicter en prompt** : décrire l'archi en langage naturel (« un frontend qui appelle un BFF,
    qui appelle un service métier, qui lit une base… vues : overview, données, identité »). L'agent
