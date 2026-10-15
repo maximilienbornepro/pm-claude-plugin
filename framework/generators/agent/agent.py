@@ -32,6 +32,15 @@ MODELS = {"opus": "opus", "sonnet": "sonnet", "haiku": "haiku",
           "opus-5.5": "claude-opus-5-5", "sonnet-5.5": "claude-sonnet-5-5",
           "haiku-5.5": "claude-haiku-5-5", "fable-5.1": "claude-fable-5-1"}
 
+# Variables que l'app desktop injecte pour fournir l'auth de la session HOTE aux process enfants.
+# Un `claude -p` enfant les herite et utilise le compte de l'app (PAS le CLAUDE_CONFIG_DIR).
+# On les retire quand on delegue a un autre compte, sinon le worker facture le compte de l'app.
+HOST_ENV = ["ANTHROPIC_BASE_URL", "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_CODE_OAUTH_TOKEN",
+            "CLAUDE_CODE_ACCOUNT_UUID", "CLAUDE_CODE_ORGANIZATION_UUID", "CLAUDE_CODE_USER_EMAIL",
+            "CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH", "CLAUDE_CODE_MESSAGING_SOCKET",
+            "CLAUDE_CODE_MESSAGING_TOKEN", "CLAUDE_CODE_HOST_SESSION_ID", "CLAUDE_CODE_SESSION_ID",
+            "CLAUDE_CODE_CHILD_SESSION", "CLAUDE_CODE_ENTRYPOINT", "CLAUDECODE"]
+
 
 def _accounts():
     for p in (ROOT / "config" / "accounts.yml", Path.home() / ".pm-accounts.yml"):
@@ -110,11 +119,23 @@ def main():
         cmd += ["--model", model_id]
     cmd += ["-p", prompt]
     env = dict(os.environ)
+    stripped = False
     if config_dir:
         env["CLAUDE_CONFIG_DIR"] = config_dir
+        # On ne bascule vraiment de compte que si ce config dir a son PROPRE login (.claude.json)
+        # ET qu'on retire l'auth heritee de l'app. Un config dir sans login autonome (ex. ~/.claude
+        # gere par l'app) tourne alors sur le compte de la session hote.
+        if Path(os.path.join(os.path.expanduser(config_dir), ".claude.json")).exists():
+            for k in HOST_ENV:
+                env.pop(k, None)
+            stripped = True
+        else:
+            print(f"(config dir sans login autonome -> tourne sur le compte de la session hote ; "
+                  f"se logger une fois : CLAUDE_CONFIG_DIR={config_dir} claude)")
 
     if a.dry_run:
-        shown = f"CLAUDE_CONFIG_DIR={config_dir} " if config_dir else ""
+        pre = (f"env -u {' -u '.join(HOST_ENV)} " if stripped else "")
+        shown = pre + (f"CLAUDE_CONFIG_DIR={config_dir} " if config_dir else "")
         shown += "claude " + (f"--model {model_id} " if model_id else "") + '-p "<tache>"'
         print("\nDRY-RUN. Commande equivalente :\n  " + shown); return 0
 
