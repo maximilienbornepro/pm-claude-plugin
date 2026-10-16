@@ -134,6 +134,17 @@ def main():
             for k in HOST_ENV:
                 env.pop(k, None)
             stripped = True
+            # Bascule reelle de compte : bandeau visible (compte qui execute / facture).
+            _email = ""
+            try:
+                import json as _json
+                _email = ((_json.load(open(os.path.join(os.path.expanduser(config_dir), ".claude.json")))
+                           .get("oauthAccount") or {}).get("emailAddress") or "")
+            except Exception:
+                pass
+            _bar = "=" * 64
+            print(f"\n{_bar}\n  /!\\  SWITCHING -> {str(acct).upper()} CLAUDE"
+                  + (f"  ({_email})" if _email else "") + f"\n{_bar}\n")
         else:
             print(f"(config dir sans login autonome -> tourne sur le compte de la session hote ; "
                   f"se logger une fois : CLAUDE_CONFIG_DIR={config_dir} claude)")

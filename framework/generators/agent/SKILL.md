@@ -57,3 +57,12 @@ tâches dont la sûreté tient à leur **logique** (ex. une routine aux garde-fo
 **Faire tourner une routine sur un autre compte** : la déclarer dans `routing.yml`, puis en **Étape 0**
 du SKILL déléguer la routine entière à ce compte via `pm run agent --command <routine> --exec`, avec un
 drapeau (`PMF_ON_SAFRAN`) pour éviter la boucle et un **repli** sur le compte courant si le login manque.
+
+## Bandeau de bascule de compte
+
+Dès qu'une délégation bascule **effectivement** de compte (config dir avec login autonome, auth hôte
+retirée), `pm run agent` imprime un **bandeau** `/!\ SWITCHING -> <COMPTE> CLAUDE (email)` avant de
+lancer le worker. Côté **orchestrateur** (la session qui délègue), afficher le **même avertissement
+bien visible dans la conversation**, avant le lancement et au retour sur le compte courant, en nommant
+le compte cible. Objectif : voir sans ambiguïté quel compte **exécute et facture**, puisque la session
+interactive reste sur le compte de l'app et que seules les délégations basculent.
