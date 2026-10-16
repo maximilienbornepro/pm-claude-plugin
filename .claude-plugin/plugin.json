@@ -1,6 +1,6 @@
 {
   "name": "pm-framework",
-  "version": "0.1.12",
+  "version": "0.1.15",
   "description": "Framework de gestion de projet portable : generateurs de livrables (projection, plan, RACI, risques, deck GATE, schema d'archi, POC...), onboarding guide d'un profil, garde-fous d'ecriture. Une mission = un profil ; les donnees vivent dans <projet>/profiles, le moteur ici.",
   "author": {
     "name": "Maximilien Borne"

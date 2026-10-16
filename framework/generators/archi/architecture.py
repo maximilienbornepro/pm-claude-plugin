@@ -98,7 +98,7 @@ def do_render(mission):
         import export_drawio as X  # noqa: E402
         import json as _json
         model = _json.load(open(model_path, encoding="utf-8"))
-        files = X.write_per_screen(model, ddir)
+        files = X.write_per_screen(model, ddir, prof.mission_dir(mission) / "logos")
         print(f"draw.io par écran ({len(files)}) -> {ddir}")
         for f in files:
             print(f"   . {Path(f).name}")
