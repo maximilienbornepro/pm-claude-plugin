@@ -61,6 +61,9 @@ def main():
     ap.add_argument("--command", help="nom d'une commande -> compte via la table de routage (mode multi)")
     ap.add_argument("--mission", default="sinbad")
     ap.add_argument("--dry-run", action="store_true", help="montre la commande, ne lance rien")
+    ap.add_argument("--exec", dest="run_exec", action="store_true",
+                    help="passe --dangerously-skip-permissions au worker : pour qu'il EXECUTE (scripts, "
+                         "ecritures) en headless. Sans ce flag, un worker delegue ne fait que lire/raisonner.")
     a = ap.parse_args()
 
     task = " ".join(a.task).strip()
@@ -117,6 +120,8 @@ def main():
     cmd = ["claude"]
     if model_id:
         cmd += ["--model", model_id]
+    if a.run_exec:
+        cmd += ["--dangerously-skip-permissions"]
     cmd += ["-p", prompt]
     env = dict(os.environ)
     stripped = False
@@ -136,7 +141,8 @@ def main():
     if a.dry_run:
         pre = (f"env -u {' -u '.join(HOST_ENV)} " if stripped else "")
         shown = pre + (f"CLAUDE_CONFIG_DIR={config_dir} " if config_dir else "")
-        shown += "claude " + (f"--model {model_id} " if model_id else "") + '-p "<tache>"'
+        shown += "claude " + (f"--model {model_id} " if model_id else "") + \
+                 ("--dangerously-skip-permissions " if a.run_exec else "") + '-p "<tache>"'
         print("\nDRY-RUN. Commande equivalente :\n  " + shown); return 0
 
     r = subprocess.run(cmd, env=env, text=True, capture_output=True)

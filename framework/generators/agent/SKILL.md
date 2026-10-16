@@ -36,3 +36,24 @@ pm run agent --dry-run "..."                                      # montre la co
 - **Défense en profondeur** : chaque worker fait tourner `preflight` dans sa session.
 - Ce générateur **n'écrit rien** lui-même : il délègue à `claude -p`. Le worker reste soumis à ses propres
   permissions et au preflight.
+
+## Règle : le compte se déclare dans `routing.yml` (pas en dur)
+
+Le **compte Claude** d'une commande ou d'une routine se déclare dans `profiles/<mission>/routing.yml`
+(lu par `account_for`, en mode multi-compte). On route **dans la config**, jamais en dur dans un SKILL.
+
+**Depuis l'app desktop** : la session tourne toujours sur le compte de l'app. L'app **injecte son auth
+dans l'environnement** (`ANTHROPIC_BASE_URL`, `CLAUDE_CODE_ACCOUNT_UUID`, socket de messagerie…),
+qu'un `claude -p` enfant hérite - il utiliserait donc le compte de l'app, **pas** le `CLAUDE_CONFIG_DIR`.
+`pm run agent` **retire ces variables** (`HOST_ENV`) quand le config dir cible a son propre login
+(`.claude.json`) : le worker bascule alors **vraiment** sur ce compte (vérifié : env strippé + config dir
+safran → OK ; + config dir vide → « Not logged in »). Un config dir sans login autonome (ex. `~/.claude`,
+géré par l'app) reste sur le compte hôte.
+
+**`--exec`** : par défaut un worker délégué ne fait que lire/raisonner. `--exec` passe
+`--dangerously-skip-permissions` pour qu'il **exécute** (scripts, écritures) en headless - à réserver aux
+tâches dont la sûreté tient à leur **logique** (ex. une routine aux garde-fous internes).
+
+**Faire tourner une routine sur un autre compte** : la déclarer dans `routing.yml`, puis en **Étape 0**
+du SKILL déléguer la routine entière à ce compte via `pm run agent --command <routine> --exec`, avec un
+drapeau (`PMF_ON_SAFRAN`) pour éviter la boucle et un **repli** sur le compte courant si le login manque.
