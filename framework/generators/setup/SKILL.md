@@ -1,6 +1,12 @@
 ---
 name: setup
 description: Onboarding guidé d'un profil de mission. Détecte les champs manquants ou `à confirmer` (équipe/RACI, racine Drive, source du planning, carte de cohérence, variables d'env) et propose une valeur en sondant le disque. À utiliser au PREMIER prompt sur une mission dont le profil n'est pas complet : on accompagne l'utilisateur champ par champ, par formulaire cliquable, puis on écrit le profil après validation.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: [jira, notion, m365]
+  cost: light
+  status: stable
 ---
 
 # Onboarding d'un profil (setup)

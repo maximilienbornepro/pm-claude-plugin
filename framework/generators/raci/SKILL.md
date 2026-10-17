@@ -1,6 +1,12 @@
 ---
 name: raci
 description: Génère la matrice RACI et un extrait par rôle à partir de données (profiles/<mission>/raci.yml). Rendu markdown / JSON, et plan de cellules pour l'onglet matrice. Lecture seule ; l'écriture Office reste une étape gardée.
+meta:
+  produces: raci-xlsx
+  consumes: []
+  mcp_deps: [m365]
+  cost: light
+  status: stable
 ---
 
 # Générateur raci

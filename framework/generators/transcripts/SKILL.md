@@ -1,6 +1,12 @@
 ---
 name: transcripts
 description: Lecteur de transcriptions / CR de reunion, lecture seule, sources pluggables. Normalise vers {date, title, url, text} et filtre sur une fenetre de dates ; alimente les generateurs aval (sujets, CR partenaires, revue des risques, synthese d'appel). N'ecrit rien.
+meta:
+  produces: transcripts
+  consumes: []
+  mcp_deps: [notion]
+  cost: light
+  status: stable
 ---
 
 Entree **imposee par le framework** pour tout ce qui part d'une reunion : sujets, CR partenaires, revue

@@ -1,6 +1,12 @@
 ---
 name: notion-sujets
 description: Cree / met a jour des sujets dans la base Sujets (Notion), au format Contexte / Action attendue, a la voix du profil. Ecriture via le connecteur, sous garde-fous Notion, RIEN sans validation. check_sujet.py valide le format avant d'ecrire.
+meta:
+  produces: null
+  consumes: [notion]
+  mcp_deps: [notion]
+  cost: light
+  status: stable
 ---
 
 Gere les **sujets de suivi** (base Sujets Notion) : format **Contexte / Action attendue**, voix du profil

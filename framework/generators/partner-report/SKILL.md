@@ -1,6 +1,12 @@
 ---
 name: cr-partenaire
 description: Rend le mail de suivi apres un call partenaire (KSAT en anglais, Airbus en francais), au format valide. RENDU TEXTE uniquement, JAMAIS d'envoi ni de brouillon. Le fond vient d'un JSON (transcription + sujets) ; ce generateur ne fait que la mise en forme.
+meta:
+  produces: partner-mail
+  consumes: [transcripts]
+  mcp_deps: [notion]
+  cost: light
+  status: stable
 ---
 
 Mail de suivi apres un call partenaire. **Langue par partenaire** (config de mission) : KSAT **anglais**,

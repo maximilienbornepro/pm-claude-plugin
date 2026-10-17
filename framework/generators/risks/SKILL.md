@@ -1,6 +1,12 @@
 ---
 name: risks
 description: Générateur de registre des risques du pm-framework, générique et piloté par la config. Lit le classeur des risques (lecture seule, mapping de colonnes dans profiles/<mission>/risks.yml), rend le registre courant, et définit le flux de mise à jour piloté par formulaire — proposition d'abord, écriture chirurgicale unique ensuite, seulement après validation. Aucune notification.
+meta:
+  produces: risks-xlsx
+  consumes: []
+  mcp_deps: [m365]
+  cost: light
+  status: stable
 ---
 
 Générateur **risques** du pm-framework. Il porte, en version générique et pilotée par la config, le

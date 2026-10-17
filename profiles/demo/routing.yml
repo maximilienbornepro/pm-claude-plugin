@@ -1,27 +1,18 @@
-# Table de ROUTAGE des comptes (exemple generique). Copier/adapter par mission.
-# LUE UNIQUEMENT EN MODE MULTI-COMPTE (config/accounts.yml avec >= 2 comptes). Sinon ignoree.
-# Valeur = un nom de compte de config/accounts.yml. Commande absente -> orchestration.default_account.
-# Regle : une commande qui touche un connecteur (Notion/Drive/Jira) doit etre sur le compte qui l'a.
+# Table de ROUTAGE des comptes - EXCEPTIONS a la derivation automatique (A1).
+#
+# Depuis A1, le compte d'un generateur se DERIVE de ses metadonnees (bloc `meta` du SKILL.md),
+# selon `orchestration.routing_policy` du profil :
+#   - by-connector : touche un connecteur (mcp_deps non vide) -> default_account ; sinon -> heavy_account.
+#   - by-cost      : gros fichiers (cost: heavy-local) -> heavy_account ; sinon -> default_account.
+# `routing.yml` ne garde donc que les EXCEPTIONS et les commandes non derivables.
+# Une exception EXPLICITE ici gagne toujours sur la derivation.
+#   Controle : python3 framework/harness/routing_check.py <mission>
+#
+# Pour demo (by-connector), la derivation reproduit TOUT le routage : aucune exception de generateur
+# (16/17 entrees redondantes retirees). Ne restent que les commandes qui partagent un dossier
+# (le dossier `scaffold` sert 2 commandes, non derivable par dossier) et une entree historique.
 
 routing:
-  # touche des connecteurs -> compte "pro" (celui qui a les connecteurs)
-  jira-images:           pro
-  jira-changes-audit:    pro
-  jira-sprints-audit:    pro
-  projection:            pro
-  notion-topics-audit:   pro
-  notion-scaffold:       pro
-  transcripts:           pro
-  drive-scaffold:        pro
-  risks:                 pro
-  raci:                  pro
-  deck-gate:             pro
-  activity:              pro
-  docs-coherence-audit:  pro
-  setup:                 pro
-  preflight:             pro
-  # LOCAL (aucun connecteur) -> editable vers "perso"
-  poc:                   perso
-  archi:                 perso
-  tones:                 perso
-  reset:                 perso
+  notion-scaffold:  pro     # dossier `scaffold` partage (besoin du connecteur Notion)
+  drive-scaffold:   perso   # dossier `scaffold` partage (local, aucun connecteur)
+  tones:            perso   # commande historique sans generateur dedie

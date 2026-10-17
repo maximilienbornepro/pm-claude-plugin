@@ -1,6 +1,12 @@
 ---
 name: preflight
 description: Vérifie que TOUS les connecteurs de la session (Notion, Microsoft 365/SharePoint/OneDrive, Figma, Jira) pointent bien le compte de la mission avant toute écriture. On n'écrit sur un connecteur que s'il est renseigné dans le profil ET que l'identité connectée correspond. Lecture seule.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: [jira, notion, m365]
+  cost: light
+  status: stable
 ---
 
 # preflight (bons connecteurs avant d'écrire)

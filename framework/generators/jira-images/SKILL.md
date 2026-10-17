@@ -1,6 +1,12 @@
 ---
 name: jira-ticket
 description: Generateur de tickets Jira du pm-framework - pilote par la config, deux outils ensemble (connecteur = texte, API = images). Poser, verifier ou retablir l'image d'un ticket sans jamais la perdre, sur n'importe quelle mission, en lecture seule / dry-run par defaut.
+meta:
+  produces: jira-images
+  consumes: []
+  mcp_deps: [jira]
+  cost: light
+  status: stable
 ---
 
 # Generateur jira-ticket : le pattern deux outils

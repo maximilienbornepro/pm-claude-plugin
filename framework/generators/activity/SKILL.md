@@ -1,3 +1,14 @@
+---
+name: activity
+description: suivi d'activite : collect / check / weekly / sync (dry-run).
+meta:
+  produces: activity-report
+  consumes: []
+  mcp_deps: [notion]
+  cost: light
+  status: stable
+---
+
 # Générateur `suivi` — suivi d'activité à partir des requêtes Claude Code
 
 Transforme les requêtes quotidiennes (prompts Claude Code) en un suivi d'activité, rendu au **modèle

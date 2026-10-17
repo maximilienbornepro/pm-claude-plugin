@@ -290,13 +290,27 @@ def account_for(mission, command):
         p = load(mission)['profile']
     except Exception:
         p = {}
+    orch = p.get('orchestration') or {}
     routing = {}
     try:
         r = _load_yaml(mission_dir(mission) / 'routing.yml') or {}
         routing = r.get('routing') or {}
     except Exception:
         pass
-    return routing.get(command) or (p.get('orchestration') or {}).get('default_account')
+    if command in routing:                      # exception EXPLICITE : elle gagne toujours
+        return routing[command]
+    # sinon : DERIVATION depuis les metadonnees du generateur (A1), ALIAS et multi-commande resolus,
+    # selon la politique de la mission (by-connector | by-cost)
+    try:
+        import generator_meta as _gm
+        acc = _gm.derive_for(command, orch.get('default_account'),
+                             orch.get('heavy_account') or 'perso',
+                             orch.get('routing_policy') or 'by-connector')
+        if acc:
+            return acc
+    except Exception:
+        pass
+    return orch.get('default_account')
 
 
 def board(mission):

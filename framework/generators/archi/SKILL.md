@@ -1,3 +1,14 @@
+---
+name: archi
+description: harness du schema d'archi interactif (model-first) : rend, valide, exporte draw.io.
+meta:
+  produces: architecture-schema
+  consumes: []
+  mcp_deps: []
+  cost: heavy-local
+  status: stable
+---
+
 # Générateur : architecture (stack-imagery, model-first)
 
 Schéma d'architecture interactif + export draw.io, **générés depuis un modèle unique**. On ne dessine

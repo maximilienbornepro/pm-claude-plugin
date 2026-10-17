@@ -1,6 +1,12 @@
 ---
 name: gate-deck
 description: Rend le contenu du deck GATE d'une mission (slides en markdown/JSON, ton du profil) depuis profiles/<mission>/gate_deck.yml. Le slide « jalons » se remplit depuis key_dates. Ne produit pas le .pptx : l'assemblage sur le template reste une étape gardée.
+meta:
+  produces: deck-gate
+  consumes: []
+  mcp_deps: [m365]
+  cost: heavy-local
+  status: stable
 ---
 
 # Générateur gate-deck (contenu du deck GATE)

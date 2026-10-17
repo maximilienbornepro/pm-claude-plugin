@@ -1,6 +1,12 @@
 ---
 name: reset
 description: Remet à zéro ce que le framework a créé dans un dossier de projet de TEST (sous-dossiers standard + artefacts générés). Commande à fort risque : dry-run par défaut, backup horodaté obligatoire avant toute suppression, refus des chemins sensibles (OneDrive/SharePoint/SINBAD) sans --force.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: []
+  cost: light
+  status: stable
 ---
 
 # reset (remise à zéro d'un projet de test)

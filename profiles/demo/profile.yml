@@ -34,3 +34,8 @@ team:
   - { name: "B. Demo",  role: "Lead back" }
   - { name: "C. Demo",  role: "Lead front" }
   - { name: "D. Demo",  role: "SRE" }
+
+orchestration:
+  routing_policy:  by-connector   # demo : comptes differencies par connecteur (SINBAD utiliserait by-cost)
+  default_account: pro      # connecteurs / coordination
+  heavy_account:   perso    # generation de gros fichiers locaux (gourmand en tokens)

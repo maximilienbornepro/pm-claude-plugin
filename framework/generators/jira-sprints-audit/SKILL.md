@@ -1,6 +1,12 @@
 ---
 name: sprint-audit
 description: Audit en lecture seule des sprints d'un board Jira (charge estimée, tickets sans estimation, Done resté dans un sprint, blocages inversés, dates). Projet/board/identifiants viennent du profil de mission. N'écrit jamais.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: [jira]
+  cost: light
+  status: stable
 ---
 
 # Générateur sprint-audit (audit des sprints Jira)

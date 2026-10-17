@@ -1,6 +1,12 @@
 ---
 name: coherence
 description: Contrôle de cohérence des documents (lecture seule) : vérifie qu'une sortie dérivée est à jour vis-à-vis de ses sources (cas GATE deck ← Excel ← PNG dérivés, ou tout artefact généré depuis d'autres). La carte des dépendances vit dans profiles/<mission>/coherence.yml. N'écrit rien.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: [m365]
+  cost: light
+  status: stable
 ---
 
 # Générateur coherence (cohérence des documents)

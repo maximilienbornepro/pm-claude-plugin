@@ -1,6 +1,12 @@
 ---
 name: ticket-changes
 description: Dit qui a modifié quels tickets du tracker, quand et quoi, sur une fenêtre de temps, et repère les écrasements de description (une version enregistrée par-dessus une autre). Config-driven par le profil. Lecture seule.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: [jira]
+  cost: light
+  status: stable
 ---
 
 # Générateur ticket-changes (modifications et écrasements de tickets)

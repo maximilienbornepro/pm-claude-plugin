@@ -1,6 +1,12 @@
 ---
 name: poc
 description: Génère un POC React (Vite + TypeScript + Material UI) à partir des récits d'une mission. Un écran-stub par écran déclaré, une nav + un routeur, et la .claude/launch.json de la mission mise à jour (launcher auto). Dry-run par défaut ; étape suivante possible : scaffold Figma.
+meta:
+  produces: poc-react
+  consumes: [tickets]
+  mcp_deps: []
+  cost: heavy-local
+  status: stable
 ---
 
 # Générateur poc (prototype d'interface)

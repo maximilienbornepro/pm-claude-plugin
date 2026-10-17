@@ -1,6 +1,12 @@
 ---
 name: agent
 description: Lance une sous-tâche sur l'agent choisi selon 3 axes - compte Claude (connecteurs isolés via CLAUDE_CONFIG_DIR), modèle (opus/sonnet/haiku/fable), et spécialité (framework/agents). Permet, dans un même projet, de router du travail vers un compte/un modèle/une spécialité différents, avec isolation physique des connecteurs.
+meta:
+  produces: null
+  consumes: []
+  mcp_deps: []
+  cost: light
+  status: stable
 ---
 
 # agent (router compte / modèle / spécialité)

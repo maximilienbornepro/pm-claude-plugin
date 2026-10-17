@@ -1,6 +1,12 @@
 ---
 name: projection
 summary: Calcul generique du rapport de projection - charge Jira restante par pole vs capacite, date de fin projetee par pole et date de fin V1 confrontee au gel/MEP. Lecture seule, pilote par la config.
+meta:
+  produces: projection-report
+  consumes: [jira]
+  mcp_deps: [jira]
+  cost: light
+  status: stable
 ---
 
 # Generateur `projection`
