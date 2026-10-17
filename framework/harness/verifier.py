@@ -49,11 +49,25 @@ def main():
         if canon not in GEN:
             err(f"ALIAS[{a}] vise une commande inconnue : {canon}")
 
-    # 3. dossiers de generateurs orphelins (non atteints par une commande)
+    # 3. dossiers de generateurs orphelins (non atteints par une commande). Exception : un generateur
+    # SKILL-ONLY (meta `exec: skill`, ex. notion-planning : pur connecteur, aucun script `pm run`) est
+    # legitime sans entree GEN ; on valide quand meme sa meta.
     dirs_utilises = {Path(t[0]).parent.name for t in GEN.values()}
     for sk in (ROOT / "framework" / "generators").glob("*/SKILL.md"):
-        if sk.parent.name not in dirs_utilises:
-            warn(f"dossier generateur non atteint par GEN : {sk.parent.name}")
+        d = sk.parent.name
+        if d in dirs_utilises:
+            continue
+        meta = (metas.get(d) or {}).get("meta") or {}
+        if meta.get("exec") == "skill":
+            if meta.get("cost") not in COSTS:
+                err(f"{d} (skill) : cost invalide '{meta.get('cost')}'")
+            if meta.get("status") not in STATUTS:
+                err(f"{d} (skill) : status invalide '{meta.get('status')}'")
+            inc = set(meta.get("mcp_deps") or []) - CONNECTEURS
+            if inc:
+                err(f"{d} (skill) : mcp_deps inconnu(s) {sorted(inc)}")
+        else:
+            warn(f"dossier generateur non atteint par GEN (ni skill-only) : {d}")
 
     # 4. + 5. meta bien formees + completude
     cmd_dir = {cmd: Path(t[0]).parent.name for cmd, t in GEN.items()}
@@ -77,6 +91,11 @@ def main():
         inconnus = set(meta.get("mcp_deps") or []) - CONNECTEURS
         if inconnus:
             err(f"{cmd} : mcp_deps inconnu(s) {sorted(inconnus)} (admis : {sorted(CONNECTEURS)})")
+        # A2 : un generateur qui ecrit de l'Office doit renvoyer au DEROULE COMMUN (pointeur, pas copie)
+        if meta.get("writes") == "office":
+            txt = (ROOT / "framework" / "generators" / d / "SKILL.md").read_text(encoding="utf-8")
+            if "_deroule-office" not in txt:
+                err(f"{cmd} : writes=office mais ne renvoie pas au deroule commun (_deroule-office.md)")
 
     # 6. routing.yml de chaque mission -> commandes reelles. On lint les profils LIVRES AVEC LE
     # FRAMEWORK (ROOT/profiles), pas ceux du projet courant (qui peuvent router des generateurs de

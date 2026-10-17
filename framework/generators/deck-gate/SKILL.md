@@ -6,6 +6,7 @@ meta:
   consumes: []
   mcp_deps: [m365]
   cost: heavy-local
+  writes: office
   status: stable
 ---
 
@@ -30,9 +31,9 @@ python3 framework/pm.py run gate-deck <mission> --json   # le deck en JSON (pour
 ```
 
 ## Assemblage pptx (étape gardée, hors de ce générateur)
-Le contenu validé s'applique sur le **template pptx** via la **cohérence des docs** (skill
-`sinbad-coherence-docs`) : préparation sur une copie, **une seule écriture** OneDrive (fichier fermé),
-sauvegarde horodatée, contrôle de taille, après validation. Les slides `schema` reçoivent les PNG
+Le contenu validé s'applique sur le **template pptx** en suivant le **déroulé commun Office**
+(`framework/generators/_deroule-office.md`) : copie, sauvegarde horodatée, fraîcheur SharePoint, une
+seule écriture en place, contrôle de taille, après validation. Les slides `schema` reçoivent les PNG
 dérivés du schéma d'archi (stack-imagery).
 
 ## Garde-fous

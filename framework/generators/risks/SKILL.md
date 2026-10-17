@@ -6,6 +6,7 @@ meta:
   consumes: []
   mcp_deps: [m365]
   cost: light
+  writes: office
   status: stable
 ---
 
@@ -49,20 +50,12 @@ et le rendu, puis s'arrête. Le flag `write.enabled` de la config vaut `false` ;
 refuse de partir tant qu'il est à `false`, et même à `true` la fonction s'arrête (garde-fou en dur)
 parce que l'écriture se fait en session, pas en autonomie.
 
-## Garde-fous Office (chemin d'écriture, quand il sera activé)
+## Écriture (gardée, en session)
 
-L'écriture passe **toujours** par `framework/harness/onedrive_xlsx.py` (écriture chirurgicale dans le
-XML du zip, jamais openpyxl qui détruirait images et mise en forme). Dans l'ordre, en session :
-
-1. **Contrôle de fraîcheur distant** (`lastModifiedDateTime` via le connecteur du Drive) **avant**
-   toute écriture : date du jour ou postérieure à la copie locale = quelqu'un est dans le fichier,
-   **on n'écrit pas**, on transmet les changements à la personne qui a la main. Ce contrôle n'est pas
-   porté par le helper : il se fait en session.
-2. **Sauvegarde horodatée** (`backup`) dans le dossier de `write.backup_dir_env` (scratchpad de session).
-3. **Écriture chirurgicale** : `set_cells` ne touche que les cellules Probabilité / Impact / Détail,
-   `append_row` ajoute une ligne de risque ; styles, fusions et images sont préservés.
-4. **Une seule écriture en place** (`save`, inode préservé, jamais `rm`/`mv`), fichier fermé dans Excel.
-5. **Comparaison des tailles** locale vs SharePoint quelques minutes après, et alerte en cas d'écart.
+L'écriture suit le **déroulé commun Office** (`framework/generators/_deroule-office.md`) : fraîcheur
+SharePoint, copie, sauvegarde horodatée, montrer-avant, une seule écriture en place, contrôle de taille.
+Spécifique ici, via `framework/harness/onedrive_xlsx.py` : `set_cells` ne touche que les cellules
+Probabilité / Impact / Détail, `append_row` ajoute une ligne de risque (styles, fusions et images préservés).
 
 Rappels : l'échelle part telle quelle dans le deck GATE (libellés réels du fichier, voir `scale`) ;
 pas de référence à des tickets dans les libellés ; détails factuels au présent.

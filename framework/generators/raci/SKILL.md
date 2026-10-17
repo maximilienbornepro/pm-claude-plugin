@@ -6,6 +6,7 @@ meta:
   consumes: []
   mcp_deps: [m365]
   cost: light
+  writes: office
   status: stable
 ---
 
@@ -30,14 +31,15 @@ python3 framework/pm.py run raci <mission> --cells    # plan de cellules pour l'
 ```
 
 ## Écriture dans le classeur (gardée, en session)
-Le générateur **n'écrit pas** dans le fichier Office. Pour appliquer :
+Le générateur **n'écrit pas** dans le fichier Office. L'application suit le **déroulé commun Office**
+(`framework/generators/_deroule-office.md`), via le helper `framework/harness/onedrive_xlsx.py`.
+Spécifique ici :
 - `--cells` donne, par activité, la **colonne → lettre R/A/C/I** + le libellé en colonne A, pour l'onglet
-  `matrix_sheet`. On l'applique **chirurgicalement** via le helper `onedrive_xlsx.py` (fraîcheur SharePoint,
-  sauvegarde, une seule écriture en place), aux lignes libres après `first_activity_row`.
+  `matrix_sheet`, aux lignes libres après `first_activity_row`.
 - Les **onglets de rôle** sont des extraits : on les régénère depuis le rendu `--role` (mêmes sections
   R/A/C/I). Tant qu'il n'y a pas de rebuild complet du classeur stylé en session (openpyxl indisponible),
   on met à jour l'onglet matrice et on régénère les onglets de rôle à la main depuis la sortie.
 
 ## Garde-fous
 Rien n'est écrit sans validation ; jamais d'écriture Office hors du helper ; fraîcheur SharePoint vérifiée
-avant toute écriture (date du jour = quelqu'un est dedans, on ne touche pas).
+avant toute écriture (voir le déroulé commun).
