@@ -45,6 +45,7 @@ GEN = {
     "gate":                ("framework/generators/gate/gate.py",                     "score les portes (gates) d'une mission et RECOMMANDE ; franchissement = acte humain", True),
     "method":              ("framework/generators/method/method.py",                 "montre la methode de la mission en donnee (baremes, seuils, trames, tracabilite)", True),
     "templates":           ("framework/generators/templates/templates.py",           "registre des templates (objet x solution : sujets/planning/raci/risks, notion/excel)", True),
+    "office":              ("framework/generators/office/office.py",                 "cree un xlsx depuis un template excel si absent, l'edite chirurgicalement si present (OneDrive)", False),
     "trace-audit":         ("framework/generators/trace-audit/trace_audit.py",       "ruptures de la chaine de tracabilite (besoin->ticket->POC->test) ; dit ou aller (lecture seule)", True),
     "cockpit":             ("framework/generators/cockpit/cockpit.py",               "porte d'entree : ou en est la mission, que fait-on ? (etat calcule + suite priorisee)", True),
     "tones":               ("framework/lib/set_tone.py",                             "aligne le ton des agents sur pipeline.yml (dry-run)", True),

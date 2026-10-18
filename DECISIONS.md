@@ -137,3 +137,15 @@ pointent le barème `method.yaml > baremes.risque` (A4). **Générique** : les v
 dans son profil. Lecteur `framework/lib/templates.py` ; générateur `templates` (matrice + détail) ; le
 `notion-scaffold` lit le template (`_db_block` → `trackers/<pm_tracker>/<objet>.yml`, repli sur l'ancien bloc
 inline). Lint : le `verifier` valide chaque template ; tests `framework/harness/test_templates.py` (7 cas).
+
+## DM-021 - Écrire des fichiers Office : disque OneDrive, pas le connecteur M365 ; create-si-absent + chirurgical  *(18/10/2026)*
+Le connecteur Microsoft 365 est **lecture seule** : il ne crée ni ne modifie de fichier. Écrire dans
+SharePoint passe par le **disque OneDrive synchronisé** (le fichier posé localement remonte sur SharePoint).
+Nouveau générateur `office` (+ `framework/lib/xlsx_write.py`, writer xlsx **stdlib**, sans openpyxl) : **crée**
+un xlsx depuis `trackers/excel/<objet>.yml` s'il est **absent**, l'**édite chirurgicalement** (`--append`,
+cellules) via `onedrive_xlsx` s'il est **présent** - sauvegarde horodatée d'abord, **une seule écriture**,
+images/mises en forme préservées. **Pourquoi :** le plugin savait éditer un xlsx existant et décrire la
+structure Excel, mais n'avait **aucun moyen de créer** un fichier Office ; et il fallait clarifier que
+l'écriture Office = disque synchronisé, jamais le connecteur. Stdlib → compatible avec le garde-fou
+`garde_office` (qui refuse openpyxl / `.save()` / `rm`/`mv`). `writes: office` → renvoie au `_deroule-office`
+(fraîcheur, écriture unique). Tests `framework/harness/test_office.py` (4 cas), ajoutés à `publish.sh`.
