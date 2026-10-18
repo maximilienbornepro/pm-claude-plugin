@@ -6,6 +6,10 @@ changeant qu'**un profil**.
 
 > Statut : squelette (phase 0). Document de référence, à valider puis à faire évoluer.
 
+> **Décisions de conception** : [DECISIONS.md](DECISIONS.md) - journal numéroté `DM-xxx`, cité dans les
+> commits et les commentaires de code. Le lint (`framework/harness/verifier.py`) et les tests tournent à
+> chaque publication (`publish.sh`).
+
 ## Principe directeur : deux couches
 
 - **Le moteur (générique, versionné)** : skills, agents, hooks, générateurs, harness, templates.
