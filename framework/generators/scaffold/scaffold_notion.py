@@ -212,6 +212,9 @@ def main():
         print("Le script N'ECRIT PAS dans Notion. Claude cree ces pages via le connecteur UNIQUEMENT")
         print("apres : (1) validation du contenu, (2) test « page jetable » confirmant l'absence de")
         print("notification, (3) creation sous le parent, jamais a la racine de l'espace.")
+        print("Pour une page qui porte une base (`database`), Claude cree AUSSI ses `views` lui-meme,")
+        print("via `notion-create-view` (timeline pour le Gantt, board, filtre...), dans la foulee de la")
+        print("base : une vue d'un template ne se laisse JAMAIS en etape manuelle a l'utilisateur.")
         print(json.dumps(plan, ensure_ascii=False, indent=2))
 
     print("\nLecture seule : ce script ne cree, ne deplace et ne supprime rien.")

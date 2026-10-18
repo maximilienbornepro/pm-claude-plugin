@@ -12,6 +12,11 @@ Scaffolder une mission, c'est monter **toute sa structure** :
    Les pages qui portent une **base** (`notion_db`) sont créées avec la DB, ses **vues** et des **exemples** :
    Planning → base « Planning de build » (**vue Gantt** timeline) ; Hebdo → base « Suivi des sujets »
    (table / kanban / filtre TPM).
+   **Règle (ne pas déroger) :** créer une base Notion, c'est créer **aussi ses vues soi-même**, dans la
+   foulée, via `notion-create-view` : `type: timeline` + `TIMELINE BY "Debut" TO "Fin"` pour le Gantt,
+   `board` + `GROUP BY` pour un kanban, `table`/filtre pour le reste. Les `views` du template sont la
+   liste à créer ; **une vue ne se laisse jamais en étape manuelle** à l'utilisateur. (Pièges Notion :
+   pas de couleur `teal` (brown à la place), `is_datetime` d'une date = **0/1 numérique**.)
 3. **Fichiers Office dans chaque dossier** - les livrables (registre des risques, roadmap, RACI, GATE…).
    **Ce ne sont pas des dossiers vides.** (Planning → pas d'Excel, la référence est le Gantt Notion.)
 4. **Routines de la mission** (`routines.yml`) - les planifiées (cron) sont **à enregistrer** au scaffold
