@@ -67,10 +67,10 @@ la matière).
 Semaine du JJ/MM - CR du JJ/MM
 
 Synthèse
-<5-10 lignes : les grandes lignes de la semaine.>
+<5-10 lignes de PROSE, dans la voix du porteur. Une lecture de la semaine, pas un inventaire.>
 
 Activités réalisées
-- <thème> : <ce qui a été fait> — <lien artefact si pertinent>
+- <thème> : <ce qui a été fait> <lien artefact si pertinent>
 
 Difficultés / Points d'attention
 - <ce qui n'est pas clair / ce qui manque / arbitrage en attente>
@@ -78,6 +78,12 @@ Difficultés / Points d'attention
 Plan d'action semaine prochaine
 - <item non clos, prochaine étape>
 ```
+
+**La Synthèse a une âme, ce n'est pas un listing.** C'est de la **prose**, dans la **voix du porteur**
+(`redaction-maximilien` pour SINBAD) : elle dit ce qui a compté, l'enjeu, où ça va - pas « côté X, côté Y,
+côté Z », qui n'est qu'une énumération déguisée. Phrases courtes, un point de vue, les chiffres qui comptent,
+« on » / « je ». On n'invente pas de bonne nouvelle s'il n'y en a pas. Les **sections** (Activités,
+Difficultés, Plan) restent en puces ; seule la Synthèse est narrative.
 
 ## Sources (exactement)
 
