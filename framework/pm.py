@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GEN = {
     # --- livrables (le dossier porte le meme nom que la commande) ---
     "projection":          ("framework/generators/projection/project.py",            "charge restante vs capacite -> date de fin V1", True),
+    "plan":                ("framework/generators/plan/from_jira.py",                 "plan de sprints (page « Avancement et sprints ») depuis Jira, config-driven ; design reutilisable (template + contrat + render + validate)", True),
     "risks":               ("framework/generators/risks/risks.py",                   "registre des risques (lecture ; ecriture gardee)", True),
     "raci":                ("framework/generators/raci/raci.py",                     "matrice RACI + extraits par role (depuis raci.yml)", True),
     "poc":                 ("framework/generators/poc/poc.py",                       "POC React + Material UI depuis les recits (launcher auto)", True),

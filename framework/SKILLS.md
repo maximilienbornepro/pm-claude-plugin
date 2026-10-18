@@ -13,6 +13,7 @@ Catalogues liés : tons -> `framework/REDACTION.md` · agents -> `framework/AGEN
 |---|---|---|
 | `architecture` (stack-imagery) | schéma d'archi interactif (modèle -> HTML validé, export draw.io, 3 cibles) | archi, publication |
 | `projection` (projection-report) | rapport de projection (charge/réalisé/reste, par version) | jira, publication |
+| `plan` (plan-sprints) | page « Avancement et sprints » : design réutilisable (gabarit + contrat + render + validate) + pipeline Jira config-driven, burn-downs réels | jira, publication |
 | `sprint-plan` / `sprint-audit` | plan de sprints + audit plan vs board (lecture seule) | jira, publication |
 | `jira-ticket` | tickets Jira : texte (garde-fou) + image via API | jira |
 | `risks` (risks-register) | registre des risques (formulaire -> écriture Office gardée) | office |

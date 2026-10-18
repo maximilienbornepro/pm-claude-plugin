@@ -1,0 +1,45 @@
+# Plan de sprints <MISSION> - gabarit du pipeline `plan` (from_jira.py).
+# Copier vers profiles/<mission>/plan.yml. Les chiffres (charge/reste/capacite)
+# viennent de projection.yml ; ici : cadence des sprints, marque, liens, editorial.
+# Lecture seule : rien n'est ecrit hors du fichier de sortie.
+
+# Champ Jira qui porte le sprint d'un ticket (souvent customfield_10020).
+sprint_field: customfield_10020
+# Prefixe d'URL d'un ticket (concatene a la cle : <jira_browse>SIN-123).
+jira_browse: "https://votre-instance.atlassian.net/browse/"
+
+cadence:
+  second_sprint_start: 0000-00-00   # date de debut du SPRINT 2 (le S1 est le sprint en cours)
+  length_days: 14                   # duree d'un sprint
+  v11_from_sprint: 5                # a partir de quel sprint on place le backlog version suivante
+  bug_reserve_pct: 0.20             # reserve de bugs ajoutee (part de l'estime, poles dev)
+  caps: { back: 17, front: 15, sre: 10 }   # cible de capacite par pole et par sprint (jours)
+
+# Statuts "en cours" qui comptent deja comme brules dans le burn-down (dev fini, en recette).
+# Les statuts termines (workflow.done_statuses de projection.yml) brulent toujours.
+burn_wip: ["Testing"]
+
+# Marque affichee (tout optionnel).
+brand:
+  title: "Avancement et sprints <Mission>"
+  sub: "Projection V1 et plan de sprints, sur les memes chiffres du board."
+  logo_file: ""                     # chemin d'un fichier contenant un data-URI (data:image/png;base64,...)
+  app_url: ""                       # lien du bouton d'en-tete
+  app_label: "Ouvrir l'application"
+
+# Liens des jalons (en haut de la carte "Jalons du programme").
+links:
+  - { label: "Planning", url: "" }
+  - { label: "Board", url: "" }
+
+# Lien optionnel sur la carte de chaque sprint.
+release_link: { label: "Suivi release", url: "" }
+
+# Editorial maintenu a la main (chemins relatifs au dossier du profil, ou absolus).
+#   objectifs : { "objectifs": { "1": "...", "2": "..." } } ou { "1": "...", ... }
+#   narratif  : { "sprints": { "1": {"fres": "...", "fout": "..."}, ... } }
+#   poles     : { "poles": { "1": {"back": "...", "front": "...", "sre": "..."}, ... } }
+editorial:
+  objectifs: objectifs_sprints.json
+  narratif: plan_narratif.json
+  poles: plan_poles_objectifs.json
