@@ -365,7 +365,13 @@ def build_datajson(mission, cfg, pcfg, rows, alloc, nsp):
             "timeline": {"v1_end": v1_end.isoformat(),
                          "overshoot_weeks": round(P._biz_days(freeze, v1_end) / dpw, 1)},
             "avail_weeks": avail_weeks, "freeze": freeze.isoformat(),
-            "burn_v1": burn_v1(),
+            "burn_v1": burn_v1(), "epics": _epics(rows),
+            # Différentiel (tickets traités depuis la dernière publication) : spécifique
+            # à la mission (nécessite un état persistant entre deux publications). Vide
+            # ici ; la carte est masquée. SINBAD le renseigne via sa propre chaîne.
+            "delta": {"ref": None, "pct_avant": None, "pct_apres": None, "gain": 0,
+                      "jours_termines": 0, "termine": [], "avance": [], "recul": [],
+                      "nouveau": [], "disparu": []},
         },
         "sprints": sprints,
     }
@@ -375,6 +381,24 @@ def _detag(s):
     if not s:
         return s
     return s.replace("&#8594;", "").replace("&#8217;", "'").replace("&#183;", "·").strip()
+
+
+def _epics(rows):
+    """Reste à faire par epic (V1 / V1.1), pour la carte « Reste par epic »."""
+    ep = {}
+    for t in rows:
+        e = ep.setdefault(t["e"], {"pole": t["p"], "rV1": 0, "rV11": 0, "cV1": 0, "cV11": 0})
+        if t["ph"] == "V1.1":
+            e["rV11"] += t["r"]; e["cV11"] += (t.get("est") or 0)
+        else:
+            e["rV1"] += t["r"]; e["cV1"] += (t.get("est") or 0)
+    out = []
+    for name, e in ep.items():
+        phase = "V1" if e["cV11"] == 0 else ("V1.1" if e["cV1"] == 0 else "V1 + V1.1")
+        out.append({"epic": name, "pole": e["pole"], "rV1": r1(e["rV1"]),
+                    "rV11": r1(e["rV11"]), "charge": r1(e["cV1"] + e["cV11"]), "phase": phase})
+    out.sort(key=lambda x: -(x["rV1"] + x["rV11"]))
+    return out
 
 
 def main(argv):

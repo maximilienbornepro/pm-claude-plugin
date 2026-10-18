@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Avancement et sprints</title>
+<title>Avancement projet Jira</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -47,9 +47,10 @@ a{color:inherit}
 .head h1{font-size:19px;letter-spacing:-.01em}
 .head .sub{font-size:12.5px;color:var(--ink-2)}
 .kpi-mini{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:7px 13px 7px 9px;box-shadow:var(--shadow)}
-.kpi-mini .mring{position:relative;width:42px;height:42px;flex:none}
+.kpi-mini{padding:8px 15px 8px 10px;gap:12px}
+.kpi-mini .mring{position:relative;width:54px;height:54px;flex:none}
 .kpi-mini .mring svg{transform:rotate(-90deg)}
-.kpi-mini .mring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;letter-spacing:-.02em}
+.kpi-mini .mring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;letter-spacing:-.02em}
 .kpi-mini .mtx{display:flex;flex-direction:column;line-height:1.25}
 .kpi-mini .mtx .l{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
 .kpi-mini .mtx .v{font-size:12.5px;font-weight:600}
@@ -74,6 +75,21 @@ a{color:inherit}
 .v11body{margin-top:12px}
 .bnote{margin-top:10px;font-size:11px;line-height:1.5;color:var(--ink-3);border-top:1px dashed var(--line);padding-top:9px}
 .bnote b{color:var(--ink-2);font-weight:600}
+.muted{font-size:12.5px;color:var(--ink-3)}
+.pdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.erow{margin:9px 0}
+.erow .et{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;margin-bottom:4px}
+.erow .et .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.erow .et .rv{font-family:var(--mono);font-size:11px;color:var(--ink-2);flex:none}
+.erow .ebar{display:flex;height:8px;border-radius:5px;overflow:hidden;background:var(--surface-2);min-width:3%}
+.erow .ebar i{display:block;height:100%}
+.dgrp{margin:0 0 12px}.dgrp:last-child{margin-bottom:0}
+.dgh{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
+.dk{display:flex;gap:9px;align-items:baseline;padding:2px 0;font-size:12.5px}
+.dk .id{font-family:var(--mono);font-size:11px;color:var(--accent);text-decoration:none;flex:none}
+.dk .id:hover{text-decoration:underline}
+.dk .s{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.dk .mv{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);flex:none}
 .obj-lab{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:5px}
 
 .jal svg{width:100%;height:auto;display:block;overflow:visible}
@@ -195,7 +211,7 @@ details.pole[open] .caret{transform:rotate(90deg)}
  <nav class="xnav" id="xnav" aria-label="Pages" hidden></nav>
  <div class="head">
   <img class="logo" id="brandLogo" alt="" hidden>
-  <div class="htxt"><h1 id="brandTitle">Avancement et sprints</h1><div class="sub" id="brandSub"></div></div>
+  <div class="htxt"><h1 id="brandTitle">Avancement projet Jira</h1><div class="sub" id="brandSub"></div></div>
   <div class="kpi-mini" id="kpiMini"></div>
   <a class="applink" id="appLink" target="_blank" rel="noopener" hidden></a>
  </div>
@@ -245,6 +261,8 @@ details.pole[open] .caret{transform:rotate(90deg)}
    '<div class="card"><div class="c-h"><h3>Jalons du programme</h3><span class="jlinks" id="jlinks"></span></div><div class="jal" id="jal"></div><div class="jkey" id="jkey"></div></div>',
    '<div class="card"><div class="c-h"><h3>Avancement par pôle <span class="phtag">V1.0</span></h3></div><div id="poles"></div><div id="polesV11"></div></div>',
    '<div class="card"><div class="c-h"><h3>Burn-down du plan <span class="phtag">V1.0</span></h3><span class="sub">reste à faire V1 (charge réelle), tickets fermés ou en Testing, vs descente idéale au gel</span></div><div class="cv"><canvas id="cvMacro"></canvas></div><div class="bnote">Un ticket descend la courbe le jour où il passe <b>en Testing ou fermé</b> (Testing, Closing, Closed) - dev considéré fini. Le travail <b>encore en cours</b> (In Progress, Dev Review) n\'est décompté qu\'à ce moment : le reste affiché ici reste <b>supérieur au reste pondéré par statut</b> du bandeau V1.0 (qui crédite aussi l\'avancement en cours). Pour un Testing non fermé, la date retenue est sa dernière modification.</div></div>',
+   '<div class="card" id="deltaCard" hidden><div class="c-h"><h3>Depuis la dernière publication</h3><span class="sub" id="deltaSub"></span></div><div id="delta"></div></div>',
+   '<div class="card"><div class="c-h"><h3>Reste à faire par epic</h3><span class="sub">V1.0 et V1.1, par pôle</span></div><div id="epics"></div></div>',
    '<div class="tl"><div class="tl-h"><span class="lab">Choisir un sprint</span><span class="hint" id="tlHint"></span></div><div class="nodes" id="nodes"></div></div>',
    '<div class="card" id="objCard"></div>',
    '<div class="pobj" id="pobj"></div>',
@@ -307,11 +325,11 @@ details.pole[open] .caret{transform:rotate(90deg)}
  }
  function renderReport(){
   renderJalons();
-  var r=DATA.report,k=r.kpi||{},m=DATA.meta,pct=k.v1_pct||0,C=94.248,off=C*(1-pct/100);
+  var r=DATA.report,k=r.kpi||{},m=DATA.meta,pct=k.v1_pct||0,C=119.38,off=C*(1-pct/100);
   document.getElementById("kpiMini").innerHTML=
-   '<div class="mring"><svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15" fill="none" stroke="var(--surface-2)" stroke-width="5"/>'+
-   '<circle cx="21" cy="21" r="15" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/></svg><b>'+pct+'%</b></div>'+
-   '<div class="mtx"><span class="l">V1.0 réalisé</span><span class="v"><b>'+rj(k.v1_real)+'</b>/'+rj(k.v1_charge)+' j · reste <b>'+rj(k.v1_reste)+' j</b></span></div>';
+   '<div class="mring"><svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="19" fill="none" stroke="var(--surface-2)" stroke-width="5"/>'+
+   '<circle cx="27" cy="27" r="19" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/></svg><b>'+pct+'%</b></div>'+
+   '<div class="mtx"><span class="l">Avancement V1.0</span><span class="v"><b>'+rj(k.v1_real)+'</b> / '+rj(k.v1_charge)+' j · reste <b>'+rj(k.v1_reste)+' j</b></span></div>';
   var jl=(m.links||[]).map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+' <span aria-hidden="true">↗</span></a>';});
   var jln=document.getElementById("jlinks"); if(jln) jln.innerHTML=jl.join("");
   document.getElementById("poles").innerHTML=POLES.map(function(p){var g=r.poles[p];
@@ -321,6 +339,43 @@ details.pole[open] .caret{transform:rotate(90deg)}
    '<details class="v11det"><summary><span class="phtag v11tag">V1.1</span> après le gel · reste <b>'+fmt(r.v11.reste)+' j</b> <span class="more">voir par pôle</span></summary>'+
    '<div class="v11body">'+POLES.map(function(p){var g=v11[p]||{};
      return prow(p,null,g.charge||0,null,null,g.pct||0,g.reste||0,true);}).join("")+'</div></details>';
+  renderEpics(); renderDelta();
+ }
+
+ function renderEpics(){
+  var eps=(DATA.report.epics||[]).filter(function(e){return (e.rV1+e.rV11)>0.05;});
+  if(!eps.length){document.getElementById("epics").innerHTML='<div class="muted">Aucun reste à faire.</div>';return;}
+  var mx=Math.max.apply(null,eps.map(function(e){return e.rV1+e.rV11;}))||1;
+  document.getElementById("epics").innerHTML=eps.map(function(e){
+   var tot=e.rV1+e.rV11,w=Math.max(3,tot/mx*100);
+   var seg=e.rV1>0?'<i style="width:'+(e.rV1/tot*100)+'%;background:var(--'+e.pole+')"></i>':'';
+   seg+=e.rV11>0?'<i style="width:'+(e.rV11/tot*100)+'%;background:var(--ink-3)"></i>':'';
+   var det=[]; if(e.rV1>0)det.push('V1.0 '+fmt(e.rV1)+' j'); if(e.rV11>0)det.push('V1.1 '+fmt(e.rV11)+' j');
+   return '<div class="erow"><div class="et"><span class="nm"><span class="pdot" style="background:var(--'+e.pole+')"></span>'+esc(e.epic)+'</span>'+
+     '<span class="rv">'+det.join(' · ')+'</span></div>'+
+     '<div class="ebar" style="width:'+w+'%">'+seg+'</div></div>';
+  }).join("");
+ }
+
+ function renderDelta(){
+  var d=DATA.report.delta||{};
+  var groups=[["termine","Terminés","var(--ok)"],["avance","Avancés","var(--accent)"],
+              ["nouveau","Entrés au périmètre","var(--warn)"],["recul","Reculs","var(--crit)"],
+              ["disparu","Sortis du périmètre","var(--ink-3)"]];
+  var any=groups.some(function(g){return (d[g[0]]||[]).length;});
+  if(!any){document.getElementById("deltaCard").hidden=true;return;}
+  document.getElementById("deltaCard").hidden=false;
+  var sub=[]; if(d.ref)sub.push("depuis le "+dfr(d.ref));
+  if(d.jours_termines)sub.push(fmt(d.jours_termines)+" j terminés");
+  if(d.pct_avant!=null)sub.push(d.pct_avant+" % → "+d.pct_apres+" %");
+  document.getElementById("deltaSub").textContent=sub.join(" · ");
+  function tk(t,g){var mv=g==="avance"?' +'+fmt(t.gain)+' j':(g==="recul"?' '+fmt(t.gain)+' j':(t.st_avant&&t.st_avant!==t.st?' '+esc(t.st_avant)+' → '+esc(t.st):''));
+   return '<div class="dk"><a class="id" href="'+JIRA+t.k+'" target="_blank" rel="noopener">'+t.k+'</a>'+
+     '<span class="s" title="'+esc(t.s)+'">'+esc(t.s)+'</span><span class="mv">'+esc(t.st||"")+mv+'</span></div>';}
+  document.getElementById("delta").innerHTML=groups.filter(function(g){return (d[g[0]]||[]).length;}).map(function(g){
+   return '<div class="dgrp"><div class="dgh" style="color:'+g[2]+'">'+g[1]+' ('+d[g[0]].length+')</div>'+
+     d[g[0]].map(function(t){return tk(t,g[0]);}).join("")+'</div>';
+  }).join("");
  }
 
  function select(n){if(n<1||n>DATA.sprints.length)return;cur=n;renderPlan();

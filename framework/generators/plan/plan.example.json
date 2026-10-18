@@ -37,6 +37,14 @@
     "v11": { "reste": 40.0 },
     "timeline": { "v1_end": "2026-03-27", "overshoot_weeks": 1.0 },
     "avail_weeks": 5,
+    "epics": [
+      { "epic": "API", "pole": "back", "rV1": 25.0, "rV11": 8.0, "charge": 45.0, "phase": "V1 + V1.1" },
+      { "epic": "Détail", "pole": "front", "rV1": 13.0, "rV11": 0.0, "charge": 22.0, "phase": "V1" },
+      { "epic": "Exports", "pole": "front", "rV1": 0.0, "rV11": 10.0, "charge": 10.0, "phase": "V1.1" },
+      { "epic": "Plateforme", "pole": "sre", "rV1": 6.0, "rV11": 0.0, "charge": 15.0, "phase": "V1" }
+    ],
+    "delta": { "ref": null, "pct_avant": null, "pct_apres": null, "gain": 0, "jours_termines": 0,
+               "termine": [], "avance": [], "recul": [], "nouveau": [], "disparu": [] },
     "burn_v1": {
       "scope": 120.0, "start": "2026-01-12",
       "freeze": "2026-03-20", "freeze_d": 67,

@@ -35,6 +35,11 @@ jalons ; l'omettre la retire.
 - `timeline` : `{v1_end, overshoot_weeks}` pour le bandeau (optionnels).
 - `avail_weeks` : nombre (semaines avant le gel).
 - `burn_v1` : burn-down du plan (voir ci-dessous).
+- `epics` : reste par epic, `[{epic, pole, rV1, rV11, charge, phase}]` (carte « Reste par epic »).
+- `delta` : différentiel depuis la dernière publication (optionnel ; carte masquée si tout est vide).
+  `{ref, pct_avant, pct_apres, gain, jours_termines, termine[], avance[], recul[], nouveau[], disparu[]}` ;
+  chaque item : `{k, s, e, p, st, st_avant}` (+ `gain` pour avance/recul). Nécessite un état persistant
+  entre deux publications, donc propre à la mission.
 
 ### `report.burn_v1` (burn-down du plan, réel)
 
