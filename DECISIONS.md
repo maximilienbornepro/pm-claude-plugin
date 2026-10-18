@@ -106,3 +106,19 @@ et détecter les trous tôt, sans qu'un modèle « décide » - il mesure sur un
 `tracabilite.yml` est **produit par la synchro** (matrice + `perimetre_scope.json` + Jira), l'audit reste le même.
 Dépend de A4 (lit `method.section(..., "tracabilite")`). Tests : `framework/harness/test_trace.py` (8 cas),
 ajoutés à `publish.sh`.
+
+## DM-019 - Orchestrateur `cockpit` OPTIONNEL + `init` classique d'amorçage (A8)  *(18/10/2026)*
+Deux générateurs, un choix laissé à l'utilisateur :
+- **`cockpit`** (lecture seule) : « où en est la mission, que fait-on ? ». Il **calcule** l'état depuis la
+  donnée (portes A6, traçabilité A5) et en **déduit** une suite d'actions priorisées (bloquant → acte humain →
+  critères → ruptures → porte suivante), chacune avec sa commande `pm run` et, en multi-compte, le compte routé
+  (A1). Il ne décide ni n'exécute rien.
+- **`init`** (écriture gardée) : amorce une mission en posant les fichiers **manquants** de `profiles/<mission>/`
+  depuis les gabarits (profile/pipeline/gate/method/tracabilite/routing). Create-si-absent, idempotent, dry-run
+  par défaut (`--apply` écrit).
+
+**Décision (demande utilisateur du 18/10) :** le cockpit est **une option, pas la porte unique**. On NE met PAS
+les autres générateurs en `disable-model-invocation` (contrairement à l'inspiration IRIS) ; `init` reste le
+**point de départ classique** d'un projet, et chaque générateur reste appelable directement. Sur une mission
+vierge, le cockpit n'invente pas d'état : il renvoie vers `init` → `setup` → scaffold. Tests :
+`framework/harness/test_cockpit.py` (5 cas, dont `init.plan` sans écriture), ajoutés à `publish.sh`.
