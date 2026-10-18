@@ -82,8 +82,13 @@ Plan d'action semaine prochaine
 **La Synthèse a une âme, ce n'est pas un listing.** C'est de la **prose**, dans la **voix du porteur**
 (`redaction-maximilien` pour SINBAD) : elle dit ce qui a compté, l'enjeu, où ça va - pas « côté X, côté Y,
 côté Z », qui n'est qu'une énumération déguisée. Phrases courtes, un point de vue, les chiffres qui comptent,
-« on » / « je ». On n'invente pas de bonne nouvelle s'il n'y en a pas. Les **sections** (Activités,
-Difficultés, Plan) restent en puces ; seule la Synthèse est narrative.
+« on » / « je ». On n'invente pas de bonne nouvelle s'il n'y en a pas.
+
+**Deux registres, jamais mélangés (règle figée) :**
+- **Synthèse = prose** (le seul bloc narratif).
+- **Activités réalisées / Difficultés / Plan d'action = puces, TOUJOURS.** Une puce par item, une idée par
+  puce, jamais fondues en un paragraphe séparé par des virgules. Cela vaut aussi quand on **restitue** ou
+  **résume** le CR en conversation : on garde les puces, on n'aplatit jamais une section en prose.
 
 ## Sources (exactement)
 
