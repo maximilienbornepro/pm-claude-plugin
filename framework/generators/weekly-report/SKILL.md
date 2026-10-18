@@ -39,6 +39,24 @@ collecte**, le **modèle synthétise** - chaque ligne traçable, rien d'inventé
   4. **Synthèse** : regrouper la matière en **grandes lignes** (thèmes), croiser prompts ↔ artefacts
      pour distinguer **demandé** de **fait**, sortir difficultés (blocages, questions ouvertes) et plan
      (items non clos).
+
+## Couverture : ne RIEN oublier (règle dure)
+
+C'est l'erreur à ne jamais refaire : **rédiger de tête** et **rater un gros sujet** (le 18/10, l'optique
+CO3D/PNEO - 13 prompts - a été oubliée parce que le CR a été écrit depuis la revue des sujets au lieu de
+la matière).
+
+- **On rédige depuis la MATIÈRE, jamais de mémoire.** On lit les prompts collectés, on ne suppose pas.
+- **La `couverture_themes` de la matière est contractuelle** : chaque thème **au-dessus du seuil (≥ 5
+  prompts)** DOIT apparaître dans le CR, **ou** être écarté avec une raison explicite (« rien de neuf »).
+  Les thèmes sont déclarés dans `profile.yml > weekly_themes` ; le script compte, le CR couvre.
+- **On pondère par le réel** : un thème à 13 prompts pèse plus qu'un sujet à 1 prompt. Ne pas gonfler un
+  point parce qu'il est saillant dans la revue des sujets s'il n'a pas été travaillé cette semaine.
+- **Contrôle final (obligatoire)** : avant de rendre le CR, relister la `couverture_themes` et cocher
+  chaque thème ≥ seuil → présent dans le CR ou écarté avec raison. Si un thème notable manque, le CR
+  n'est pas fini.
+- Si le profil n'a **pas** de `weekly_themes` : clusteriser les prompts soi-même et appliquer la même
+  exigence (chaque groupe notable couvert).
   5. **Rédaction** dans le format exact (ci-dessous), **voix du porteur** (ex. `redaction-maximilien`
      pour SINBAD). « à confirmer » pour tout ce qui n'est pas sourcé.
   6. **Archiver** : écrire `weekly-reports/<AAAA-Www>.md`. C'est l'historique, source de vérité.

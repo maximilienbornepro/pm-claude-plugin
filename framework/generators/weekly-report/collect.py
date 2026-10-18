@@ -25,6 +25,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "framework" / "lib"))
+try:
+    import yamlmin               # noqa: E402  - pour lire weekly_themes du profil
+    import profile as prof       # noqa: E402
+except Exception:
+    yamlmin = prof = None
+
 # --- bruit : prompts à écarter (confirmations, itérations, réponses de formulaire) ---
 NOISE = re.compile(r"^(oui|non|ok|go|vas[- ]?y|continue|parfait|merci|stop|c'est bon|nickel|yes|"
                    r"oui\s+(go|ok|et continue|ommit|commit)|du coup|voila|svp|stp)[\s.!]*$", re.I)
@@ -118,6 +126,31 @@ def history_dir():
     return Path.cwd() / "weekly-reports"
 
 
+def load_themes(mission):
+    """`weekly_themes` du profil : {label: [mots-clés]}. Rend un dict, {} si absent."""
+    if not (yamlmin and prof):
+        return {}
+    try:
+        p = Path(prof.mission_dir(mission)) / "profile.yml"
+        if not p.exists():
+            return {}
+        data = yamlmin.load(p.read_text(encoding="utf-8")) or {}
+        wt = data.get("weekly_themes") or {}
+        return {k: (v if isinstance(v, list) else [v]) for k, v in wt.items()}
+    except Exception:
+        return {}
+
+
+def themes_freq(prompts, themes):
+    """Pour chaque thème déclaré : combien de prompts le mentionnent (mot-clé, insensible à la casse)."""
+    out = collections.Counter()
+    low = [p["text"].lower() for p in prompts]
+    for label, kws in themes.items():
+        kws = [str(k).lower() for k in kws]
+        out[label] = sum(1 for t in low if any(k in t for k in kws))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mission", default="sinbad")
@@ -152,21 +185,33 @@ def main():
         print(f"[!] semaine {wk} sans prompts. Dispo : {', '.join(sorted(weeks, reverse=True)[:8])}"); return 2
     mo, su = _week_bounds(wk)
     W = weeks[wk]
+    themes = themes_freq(W["prompts"], load_themes(args.mission))
     matiere = {
         "semaine": wk, "du": mo.isoformat(), "au": su.isoformat(), "mission": args.mission,
         "prompts_bruts": W["n_raw"], "prompts_retenus": len(W["prompts"]),
+        # CARTE DE COUVERTURE : chaque thème >= seuil DOIT se retrouver dans le CR (sinon trou).
+        "couverture_themes": themes.most_common(),
         "prompts": W["prompts"],
         "fichiers_touches": W["files"].most_common(30),
         "git": git_week(args.project_root, mo, su),
         "cr_existant": (wk in done),
         "note": "Matière LOCALE (prompts + fichiers + git). Les mails et le suivi des sujets s'ajoutent "
-                "en session via safran. Le skill synthétise le CR et l'archive dans weekly-reports/.",
+                "en session via safran. Le skill synthétise le CR et l'archive dans weekly-reports/. "
+                "COUVERTURE : chaque thème de `couverture_themes` au-dessus du seuil doit apparaître "
+                "dans le CR, ou être écarté avec une raison. Ne jamais rédiger de mémoire.",
     }
     if args.json:
         Path(args.json).write_text(json.dumps(matiere, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"matière écrite : {args.json}  ({len(W['prompts'])} prompts retenus sur {W['n_raw']} bruts)")
     else:
         print(json.dumps(matiere, ensure_ascii=False, indent=2))
+    if themes:
+        print("\nCARTE DE COUVERTURE (thèmes du profil, par nb de prompts) - le CR doit couvrir chaque thème notable :")
+        for lab, c in themes.most_common():
+            print(f"  {c:3}  {lab}")
+    else:
+        print("\n[i] pas de `weekly_themes` dans le profil : la couverture n'est pas mécanisée (le skill "
+              "doit clusteriser les prompts lui-même, sans rien oublier).")
     if wk in done:
         print(f"\n[i] un CR existe déjà : {hist / (wk + '.md')} (le skill le rend tel quel, ou régénère sur demande).")
     return 0
