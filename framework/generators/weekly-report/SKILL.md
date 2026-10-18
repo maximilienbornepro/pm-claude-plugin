@@ -57,6 +57,21 @@ la matière).
   n'est pas fini.
 - Si le profil n'a **pas** de `weekly_themes` : clusteriser les prompts soi-même et appliquer la même
   exigence (chaque groupe notable couvert).
+
+## C'est un rapport de STATUT, pas un journal d'activité
+
+Vérifié le 18/10 contre le vrai CR : sur les semaines récentes le fit est bon, mais sur les plus anciennes
+l'écart vient d'une confusion de **nature**. Le CR partagé à l'équipe est un **statut tourné vers l'avant** :
+ce qui bloque, ce qui manque, ce qui est prévu. Les prompts, eux, racontent l'**activité**. Deux conséquences :
+
+- **Les Activités viennent des prompts + artefacts** ; les **Difficultés et le Plan viennent surtout du
+  suivi des sujets (ouverts / bloqués) et des mails**, pas des prompts. Un sujet reporté chaque semaine
+  (SRE, OIDC, IADT, SPV, QAP…) doit apparaître même s'il n'a pas été « prompté » cette semaine-là.
+- **Ne pas laisser un thème très prompté (itérations, outillage, rédaction) chasser un item de statut.**
+  Le nombre de prompts sert à ne rien RATER, pas à décider de l'importance au COPIL : un blocage à 1 mention
+  pèse plus qu'une itération de mise en forme à 20.
+- **Croiser le suivi des sujets** avant de figer Difficultés et Plan : c'est la source que le vrai CR
+  utilise le plus. Un point de 1o1 (Greg) peut compléter, sans le recopier.
   5. **Rédaction** dans le format exact (ci-dessous), **voix du porteur** (ex. `redaction-maximilien`
      pour SINBAD). « à confirmer » pour tout ce qui n'est pas sourcé.
   6. **Archiver** : écrire `weekly-reports/<AAAA-Www>.md`. C'est l'historique, source de vérité.
