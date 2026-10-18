@@ -1,0 +1,27 @@
+# Template "Registre des risques" - solution NOTION.
+# Les options Probabilite / Impact / Niveau viennent du barème method.yaml > baremes.risque (A4) ;
+# les valeurs ci-dessous ne sont qu'un DEFAUT générique, repris si la mission n'a pas de barème.
+# Note parseur : une map flow PAR LIGNE, pas de virgule DANS une chaîne.
+
+object: risks
+solution: notion
+title: "Registre des risques"
+bareme_ref: "method.yaml > baremes.risque"     # source des options de cotation (A4)
+
+properties: ["Risque:title", "Probabilite:select", "Impact:select", "Niveau:select", "Mitigation:text", "Responsable:text", "Statut:select"]
+
+options:
+  Probabilite: [faible, moyen, eleve, critique]
+  Impact: [faible, moyen, eleve, critique]
+  Niveau: [faible, moyen, eleve, critique]
+  Statut: [ouvert, en traitement, maitrise, clos]
+
+views:
+  - { name: "Tous les risques", type: table, sort: "Niveau" }
+  - { name: "Par niveau", type: board, group_by: "Niveau" }
+  - { name: "Risques ouverts", type: table, filter: "Statut = ouvert" }
+
+risques:
+  - { risque: "Le partenaire ne confirme pas le protocole d'authentification à temps", probabilite: "eleve", impact: "critique", niveau: "critique", mitigation: "Relance hebdo ; prévoir un repli OIDC par défaut", responsable: "TPM", statut: "ouvert" }
+  - { risque: "La fenêtre de pentest glisse au-delà de la date de MEP", probabilite: "moyen", impact: "eleve", niveau: "eleve", mitigation: "Caler la fenêtre dès maintenant ; prestataire externe en repli", responsable: "SRE", statut: "en traitement" }
+  - { risque: "Le bruit d'alertes dégrade l'adoption du portail", probabilite: "moyen", impact: "moyen", niveau: "moyen", mitigation: "Filtre de confiance intermédiaire côté portail", responsable: "Produit", statut: "ouvert" }

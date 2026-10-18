@@ -1,0 +1,31 @@
+# Template "Suivi des sujets" - solution NOTION. Base portée par une page (ex. Hebdo).
+# GENERIQUE : aucune valeur de mission. Une mission redéfinit ses options dans son profil.
+# Note parseur : une map flow PAR LIGNE, pas de virgule DANS une chaîne (séparer avec ; ou /).
+
+object: sujets
+solution: notion
+title: "Suivi des sujets"
+
+# Propriétés de la base. type : title | text | select | date | number | person
+properties: ["Sujet:title", "Statut:select", "Thematique:select", "Section:select", "Priorite:select", "Responsable:text", "Suivi projet:select", "Action attendue:text"]
+
+# Options des selects. Statut = les ETATS par sujet ; Thematique = les THEMATIQUES. Génériques.
+options:
+  Statut: [a faire, en cours, en attente, en revue, fait]
+  Thematique: [Authentification, Donnees, Deploiement, Partenaires, Securite, Qualite]
+  Section: [Interne, Partenaire, Externe]
+  Priorite: [haute, moyenne, basse]
+  Suivi projet: [TPM, CDP]
+
+views:
+  - { name: "Tous les sujets", type: table, sort: "Priorite" }
+  - { name: "Par statut", type: board, group_by: "Statut" }
+  - { name: "Par thematique", type: board, group_by: "Thematique" }
+  - { name: "Mes sujets (TPM)", type: table, filter: "Suivi projet = TPM" }
+
+# Exemples insérés à la création (corps : Contexte puis Action attendue).
+sujets:
+  - { sujet: "Aligner l'authentification avec le partenaire", statut: "en cours", thematique: "Authentification", section: "Partenaire", priorite: "haute", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Le partenaire confirme le protocole cette semaine", contexte: "Le portail doit fédérer avec l'IdP du partenaire ; accès API d'abord / redirection ensuite." }
+  - { sujet: "Remplir la matrice de traçabilité", statut: "en attente", thematique: "Partenaires", section: "Partenaire", priorite: "moyenne", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Le partenaire remplit ses lignes d'ici fin de semaine", contexte: "La matrice est partagée dans l'espace du consortium ; chaque ligne attend un D ou un T." }
+  - { sujet: "Caler le pentest avant la mise en production", statut: "a faire", thematique: "Securite", section: "Interne", priorite: "haute", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Fixer la fenêtre de pentest et le prestataire", contexte: "Le pentest conditionne la MEP ; à planifier avant le durcissement." }
+  - { sujet: "Réduire le bruit d'alertes côté portail", statut: "en cours", thematique: "Donnees", section: "Interne", priorite: "moyenne", responsable: "TPM", suivi_projet: "TPM", action_attendue: "Étudier un filtre de confiance côté portail en intermédiaire", contexte: "Les détections arrivent avec un score de confiance ; sans filtre le portail affiche trop d'alertes." }

@@ -1,0 +1,37 @@
+# Template "RACI" - solution EXCEL. Structure calquee sur le RACI SINBAD (RACI_SINBAD.xlsx) :
+# une feuille matrice "RACI" (Activity x roles, cellules R/A/C/I + combos comme A/R, colonnes
+# Comment / To review), plus UNE FEUILLE D'EXTRAIT PAR ROLE. Tenu en ANGLAIS.
+# GENERIQUE : roles et activites neutres. Note parseur : pas de virgule DANS une chaine (/ ou ;).
+
+object: raci
+solution: excel
+title: "RACI"
+main_sheet: "RACI"
+lang: en
+
+# Lignes de titre + legende au-dessus de la matrice (L1..L7 chez SINBAD).
+header_rows: ["<Projet> · RACI", "Purpose: who does what on each activity.", "Confidential · <Projet>"]
+legend: "R = Responsible (does the work) · A = Accountable (owns the decision) · C = Consulted · I = Informed · A/R = both · — = not applicable"
+
+# La matrice : colonne A = activites, en-tetes de colonnes = roles, puis Comment / To review.
+layout: matrix
+row_header: "Activity"
+columns_from: roles
+extra_columns: [Comment, "To review"]
+cell_values: [R, A, C, I, "A/R"]
+
+# Une feuille d'extrait par role (comme SINBAD), avec ces sections.
+per_role_sheets: true
+role_sheet_sections: ["What they do (R)", "What they are accountable for (A)", "Consulted (C)", "Informed (I)"]
+
+legende:
+  roles: [Sales, Project Manager, TPM, Lead Dev, QA, SRE, Security, AI Lead, Solution Eng]
+
+exemples:
+  - { Activity: "Client relationship and negotiation", "Project Manager": "A/R", TPM: "C", Sales: "A" }
+  - { Activity: "Technical exchanges with the client", "Project Manager": "A", TPM: "R", "Lead Dev": "C" }
+  - { Activity: "Functional specs", TPM: "A", "Lead Dev": "R" }
+  - { Activity: "Application technical specs", TPM: "A", "Lead Dev": "R" }
+  - { Activity: "Acceptance criteria", "Lead Dev": "A/R", QA: "R" }
+  - { Activity: "Go / no-go for deployment", SRE: "R", "Project Manager": "A" }
+  - { Activity: "Roadmap and planning", "Project Manager": "A/R", TPM: "A/R" }

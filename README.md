@@ -71,6 +71,7 @@ Chaque générateur lit le **profil** (où est le Jira, le Drive, les dates…) 
 | `coherence` | une sortie est-elle à jour vs ses sources | `coherence.yml` |
 | `gate` | score les portes (GTF : 7 gates) et recommande ; franchissement = acte humain | `gate.yml` |
 | `method` | montre la méthode en donnée (barèmes, seuils, trames, traçabilité) | `method.yaml` |
+| `templates` | registre des templates (objet × solution : sujets/planning/raci/risks, notion/excel) | `templates/trackers/` |
 | `trace-audit` | ruptures de la chaîne besoin → ticket → POC → test ; dit où aller | `method.yaml` + `tracabilite.yml` |
 | `init` | amorce une mission : profil depuis les gabarits (create-si-absent ; dry-run) | `config/*.example.yml` |
 | `cockpit` | (option) où en est la mission, que fait-on ? état calculé + suite priorisée | `gate.yml` + `tracabilite.yml` |

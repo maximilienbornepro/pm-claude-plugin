@@ -28,6 +28,7 @@ ROOT = HERE.parents[3]                        # .../pm-framework
 sys.path.insert(0, str(ROOT / 'framework' / 'lib'))
 import profile as prof                         # noqa: E402
 import links                                    # noqa: E402
+import templates as TPL                         # noqa: E402  - registre trackers/<solution>/<objet>.yml
 
 ACONF = "à confirmer"
 
@@ -84,7 +85,7 @@ def _page_body(link, store_label):
     )
 
 
-def emit_plan(mission, rows, missing, databases=None):
+def emit_plan(mission, rows, missing, databases=None, solution="notion"):
     databases = databases or {}
     """Spec de creation par page manquante, pour que Claude cree via le connecteur APRES le test jetable.
     Chaque page porte TOUJOURS un lien vers son dossier (Drive/SharePoint/OneDrive), un role placeholder
@@ -105,13 +106,25 @@ def emit_plan(mission, rows, missing, databases=None):
                  "body_markdown": _page_body(link, store_label)}
         dbk = nb_by_title.get(title)
         if dbk:
-            entry["database"] = _db_block(dbk, databases)   # page qui porte une base (Gantt, Suivi des sujets)
+            entry["database"] = _db_block(dbk, databases, solution)   # page qui porte une base (Gantt, Suivi des sujets)
         plan.append(entry)
     return plan
 
 
-def _db_block(db_key, databases):
-    """Spec d'une base Notion a creer dans la page (titre, vue, proprietes) + EXEMPLES du sample."""
+_EX_KEYS = ("sujets", "workstreams", "activites", "risques", "exemples")
+
+
+def _db_block(db_key, databases, solution="notion"):
+    """Spec d'une base a creer dans la page. D'abord le template du registre
+    (templates/trackers/<solution>/<db_key>.yml : titre, proprietes, OPTIONS des selects, vues,
+    exemples) ; a defaut, l'ancien bloc `databases` inline du tree (retro-compat)."""
+    tpl = TPL.load(solution, db_key)
+    if tpl:
+        ex_key = next((k for k in _EX_KEYS if isinstance(tpl.get(k), list)), None)
+        rows = (tpl.get(ex_key) or [])[:5] if ex_key else []
+        return {"title": tpl.get("title", db_key), "views": tpl.get("views", []),
+                "properties": tpl.get("properties", []), "options": tpl.get("options", {}),
+                "exemples": rows, "solution": solution}
     spec = databases.get(db_key) or {}
     rows = []
     sample_path, rows_key = spec.get("sample"), spec.get("rows_from")
@@ -190,7 +203,11 @@ def main():
             print(f"  ? {r['drive']}"
                   + ("  (une page type SPV semble exister)" if there else "  (aucune page evidente)"))
     if args.emit_plan and missing:
-        plan = emit_plan(args.mission, pages, missing, databases)
+        try:
+            solution = (prof.load(args.mission)["profile"].get("pm_tracker") or "notion").lower()
+        except Exception:
+            solution = "notion"
+        plan = emit_plan(args.mission, pages, missing, databases, solution)
         print("\n--- PLAN DE CREATION (pages manquantes) ---")
         print("Le script N'ECRIT PAS dans Notion. Claude cree ces pages via le connecteur UNIQUEMENT")
         print("apres : (1) validation du contenu, (2) test « page jetable » confirmant l'absence de")

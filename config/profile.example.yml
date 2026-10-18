@@ -4,6 +4,7 @@
 
 name: <NOM DE LA MISSION>
 lang: fr                      # langue par defaut des livrables
+pm_tracker: notion            # solution de suivi : notion | excel (| clickup...) -> templates/trackers/<pm_tracker>/
 
 jira:
   instance: <xxx.atlassian.net>

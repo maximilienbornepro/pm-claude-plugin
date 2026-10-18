@@ -1,0 +1,23 @@
+# Template "Planning de build" - solution NOTION. Base portée par une page Planning (vue Gantt).
+# GENERIQUE. Note parseur : une map flow PAR LIGNE, pas de virgule DANS une chaîne.
+
+object: planning
+solution: notion
+title: "Planning de build"
+
+properties: ["Workstream:title", "Pole:select", "Debut:date", "Fin:date", "Statut:select", "Avancement:number"]
+
+options:
+  Pole: [Front, Back, SRE, Qualite, Produit]
+  Statut: [a faire, en cours, en retard, fait]
+
+views:
+  - { name: "Gantt", type: timeline, date_start: "Debut", date_end: "Fin", group_by: "Pole" }
+  - { name: "Table", type: table, sort: "Debut" }
+  - { name: "Par pole", type: board, group_by: "Pole" }
+
+workstreams:
+  - { workstream: "Cadrage et architecture", pole: "Produit", debut: "2026-01-05", fin: "2026-01-30", statut: "fait", avancement: 100 }
+  - { workstream: "Socle & authentification", pole: "Back", debut: "2026-02-02", fin: "2026-03-13", statut: "en cours", avancement: 45 }
+  - { workstream: "Écrans portail", pole: "Front", debut: "2026-02-16", fin: "2026-04-10", statut: "en cours", avancement: 30 }
+  - { workstream: "Déploiement & durcissement", pole: "SRE", debut: "2026-04-13", fin: "2026-05-15", statut: "a faire", avancement: 0 }

@@ -114,6 +114,30 @@ def main():
     except Exception as e:
         warn(f"profils illisibles : {e}")
 
+    # 7. REGISTRE de templates (trackers/<solution>/<objet>.yml) : bien formes, coherents (DM-020).
+    try:
+        import templates as TPL
+        n = 0
+        for sol in TPL.solutions():
+            for obj in TPL.catalog().get(sol, []):
+                n += 1
+                tpl = TPL.load(sol, obj)
+                if not tpl:
+                    err(f"template {sol}/{obj} : illisible"); continue
+                if tpl.get("object") != obj or tpl.get("solution") != sol:
+                    err(f"template {sol}/{obj} : object/solution ne collent pas au chemin")
+                if not tpl.get("title"):
+                    err(f"template {sol}/{obj} : pas de title")
+                for k, v in (tpl.get("options") or {}).items():
+                    if not isinstance(v, list):
+                        err(f"template {sol}/{obj} : option '{k}' n'est pas une liste")
+                for k, v in (tpl.get("legende") or {}).items():
+                    if not isinstance(v, list):
+                        err(f"template {sol}/{obj} : legende '{k}' n'est pas une liste")
+        print(f"{n} templates (objet x solution) verifies.")
+    except Exception as e:
+        warn(f"registre de templates illisible : {e}")
+
     # rapport
     for w in warns: print(f"  AVERT  {w}")
     for e in errors: print(f"  ERREUR {e}")

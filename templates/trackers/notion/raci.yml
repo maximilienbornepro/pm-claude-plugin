@@ -1,0 +1,27 @@
+# Template "RACI" - solution NOTION. Format long (une ligne = une activité × un rôle × une responsabilité),
+# plus lisible qu'une grille en Notion, et filtrable par rôle ou par activité.
+# GENERIQUE. Note parseur : une map flow PAR LIGNE, pas de virgule DANS une chaîne.
+
+object: raci
+solution: notion
+title: "RACI"
+
+properties: ["Activite:title", "Role:select", "Responsabilite:select"]
+
+options:
+  Responsabilite: [R, A, C, I]              # Responsible · Accountable · Consulted · Informed
+  Role: [Sponsor, Chef de projet, TPM, Dev, Qualite, SRE]
+
+views:
+  - { name: "Par activite", type: table, group_by: "Activite" }
+  - { name: "Par role", type: board, group_by: "Role" }
+  - { name: "Qui décide (A)", type: table, filter: "Responsabilite = A" }
+
+activites:
+  - { activite: "Cadrage", role: "Chef de projet", responsabilite: "A" }
+  - { activite: "Cadrage", role: "TPM", responsabilite: "R" }
+  - { activite: "Architecture", role: "Dev", responsabilite: "R" }
+  - { activite: "Architecture", role: "Chef de projet", responsabilite: "A" }
+  - { activite: "Recette", role: "Qualite", responsabilite: "R" }
+  - { activite: "Mise en production", role: "SRE", responsabilite: "R" }
+  - { activite: "Mise en production", role: "Sponsor", responsabilite: "A" }

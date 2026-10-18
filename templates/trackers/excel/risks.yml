@@ -1,0 +1,28 @@
+# Template "Risks" - solution EXCEL. Structure calquée sur le registre de risques SINBAD
+# (Risks_SINBAD.xlsx) : une feuille, lignes de titre en tete, en-tete Risk/Probability/Impact/Detail,
+# echelle High/Medium/Low, intitule du risque prefixe par sa categorie. Tenu en ANGLAIS.
+# GENERIQUE : valeurs d'exemple neutres. Note parseur : pas de virgule DANS une chaine (/ ou ;).
+
+object: risks
+solution: excel
+title: "Risks"
+sheet: "Risks"
+lang: en
+bareme_ref: "method.yaml > baremes.risque"
+
+# Lignes de titre au-dessus de l'en-tete (L1..L4 chez SINBAD).
+header_rows: ["<Projet> · Risks", "Purpose: project risks with their probability / impact / mitigation.", "Confidential · <Projet>"]
+
+# Ligne d'en-tete des colonnes.
+columns: [Risk, Probability, Impact, Detail]
+
+legende:
+  probability: [High, Medium, Low]
+  impact: [High, Medium, Low]
+  categories: [Contractual, Schedule, Security, AI, Quality]   # prefixe de l'intitule du risque
+
+exemples:
+  - { Risk: "Contractual: a key clause is not signed in time", Probability: "High", Impact: "High", Detail: "Blocks a dependency; escalate early and prepare a fallback." }
+  - { Risk: "Schedule: an external validation slips past the go-live date", Probability: "High", Impact: "Medium", Detail: "A clarification can take weeks; book the slot now." }
+  - { Risk: "Security: the authentication protocol is not confirmed", Probability: "Medium", Impact: "High", Detail: "Conditions the integration; default to a standard protocol." }
+  - { Risk: "Quality: the expected certification is not in place", Probability: "High", Impact: "Medium", Detail: "Mitigate with a documented quality plan and reviews." }

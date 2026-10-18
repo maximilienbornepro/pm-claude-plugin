@@ -122,3 +122,18 @@ les autres générateurs en `disable-model-invocation` (contrairement à l'inspi
 **point de départ classique** d'un projet, et chaque générateur reste appelable directement. Sur une mission
 vierge, le cockpit n'invente pas d'état : il renvoie vers `init` → `setup` → scaffold. Tests :
 `framework/harness/test_cockpit.py` (5 cas, dont `init.plan` sans écriture), ajoutés à `publish.sh`.
+
+## DM-020 - Registre de templates à deux axes : objet × solution  *(18/10/2026)*
+Les objets de pilotage (suivi des **sujets**, **planning**, **RACI**, registre des **risques**) sont décrits
+en donnée, par **solution de suivi**, dans `templates/trackers/<solution>/<objet>.yml` (ex. `notion/sujets.yml`,
+`excel/risks.yml`). **Organisé par solution** : ajouter ClickUp (ou autre) = ajouter un dossier, sans toucher au
+reste ; le profil choisit via `profile.yml > pm_tracker` (défaut `notion`). **Pourquoi :** le template `sujets`
+n'existait qu'embarqué dans `project-management-tree.yml`, sans **Thématique** ni énumération des **états**, et
+rien n'était prévu pour une autre solution. Contenu : Notion = propriétés + **options des selects** (états,
+thématiques…) + vues ; Excel = feuilles/colonnes + légende, **calqué sur les fichiers réels de la mission**
+(RACI = matrice Activity × rôles + une feuille d'extrait par rôle ; Risks = Risk/Probability/Impact/Detail,
+échelle High/Medium/Low) - la **structure** de SINBAD, pas ses données. Les options de cotation des risques
+pointent le barème `method.yaml > baremes.risque` (A4). **Générique** : les vraies valeurs d'une mission vivent
+dans son profil. Lecteur `framework/lib/templates.py` ; générateur `templates` (matrice + détail) ; le
+`notion-scaffold` lit le template (`_db_block` → `trackers/<pm_tracker>/<objet>.yml`, repli sur l'ancien bloc
+inline). Lint : le `verifier` valide chaque template ; tests `framework/harness/test_templates.py` (7 cas).

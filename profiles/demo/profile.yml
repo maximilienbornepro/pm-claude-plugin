@@ -3,6 +3,7 @@
 # SIMULE tout et n'ecrit nulle part. Sert aussi d'exemple minimal de profil.
 name: demo
 lang: fr
+pm_tracker: notion        # solution de suivi -> templates lus dans templates/trackers/<pm_tracker>/
 
 jira:
   instance:    "demo.atlassian.net"     # bidon
