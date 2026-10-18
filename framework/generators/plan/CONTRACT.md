@@ -20,6 +20,7 @@ Unités : les jours sont des **jours-homme estimés** (nombres). Les dates sont 
 | `mep` | date | Mise en production (repère). |
 | `jira` | str | Préfixe d'URL d'un ticket (ex. `https://…/browse/`). Concaténé à la clé. |
 | `links` | list | Liens des jalons : `[{label, url}]` (ex. planning, board). |
+| `nav` | list | Barre de navigation entre pages : `[{label, url, active?}]`. `active:true` marque la page courante (sans lien sortant). Omise = pas de barre. |
 | `release_link` | obj | Lien optionnel sur la carte d'un sprint : `{label, url}`. |
 
 Pas de `sre_absence` : si présent (`{start, end, label}`), une bande est dessinée sur les

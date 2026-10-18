@@ -83,6 +83,7 @@ def load_plan_cfg(mission):
                   "app_url": brand.get("app_url") or "", "app_label": brand.get("app_label") or ""},
         "jira": cfg.get("jira_browse") or "",
         "links": cfg.get("links") or [],
+        "nav": cfg.get("nav") or [],
         "release_link": cfg.get("release_link"),
         "obj": (_load_edi("objectifs") or {}).get("objectifs") or _load_edi("objectifs"),
         "nar": (_load_edi("narratif") or {}).get("sprints") or _load_edi("narratif"),
@@ -351,7 +352,8 @@ def build_datajson(mission, cfg, pcfg, rows, alloc, nsp):
         "meta": {
             "brand": pcfg["brand"], "today": today.isoformat(),
             "freeze": freeze.isoformat(), "mep": mep.isoformat(),
-            "jira": pcfg["jira"], "links": pcfg["links"], "release_link": pcfg["release_link"],
+            "jira": pcfg["jira"], "links": pcfg["links"], "nav": pcfg["nav"],
+            "release_link": pcfg["release_link"],
         },
         "report": {
             "kpi": {"v1_pct": round(r1v / c1 * 100) if c1 else 0, "v1_real": r1v,

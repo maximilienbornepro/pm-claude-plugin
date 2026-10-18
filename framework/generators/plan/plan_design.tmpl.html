@@ -185,9 +185,14 @@ details.pole[open] .caret{transform:rotate(90deg)}
 .splinks a{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;background:var(--accent-weak);padding:8px 12px;border-radius:9px}
 .splinks a:hover{filter:brightness(.97)}
 @media(max-width:560px){.applink{margin-left:0;width:100%;justify-content:center}}
+.xnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.xnav a{font-size:12px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;transition:.12s}
+.xnav a:hover{color:var(--ink);border-color:var(--ink-3)}
+.xnav a.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 </style>
 
 <div class="wrap">
+ <nav class="xnav" id="xnav" aria-label="Pages" hidden></nav>
  <div class="head">
   <img class="logo" id="brandLogo" alt="" hidden>
   <div class="htxt"><h1 id="brandTitle">Avancement et sprints</h1><div class="sub" id="brandSub"></div></div>
@@ -228,6 +233,10 @@ details.pole[open] .caret{transform:rotate(90deg)}
   if(b.logo){lg.src=b.logo;lg.alt=b.title||"";lg.hidden=false;}
   var al=document.getElementById("appLink");
   if(b.app_url){al.href=b.app_url;al.innerHTML=esc(b.app_label||"Ouvrir l'application")+' <span aria-hidden="true">↗</span>';al.hidden=false;}
+  var nv=(DATA.meta&&DATA.meta.nav)||[];
+  if(nv.length){document.getElementById("xnav").innerHTML=nv.map(function(l){
+    return '<a href="'+esc(l.url)+'"'+(l.active?' class="active" aria-current="page"':' target="_blank" rel="noopener"')+'>'+esc(l.label)+'</a>';
+   }).join("");document.getElementById("xnav").hidden=false;}
  }
  function init(){
   var sp=DATA.sprints;

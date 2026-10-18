@@ -15,6 +15,11 @@
       { "label": "Planning", "url": "https://orion.example.test/planning" },
       { "label": "Board", "url": "https://orion.example.test/board" }
     ],
+    "nav": [
+      { "label": "Rapport", "url": "https://orion.example.test/report" },
+      { "label": "Plan de sprints", "url": "https://orion.example.test/plan", "active": true },
+      { "label": "Architecture", "url": "https://orion.example.test/archi" }
+    ],
     "release_link": { "label": "Suivi release", "url": "https://orion.example.test/release" }
   },
   "report": {

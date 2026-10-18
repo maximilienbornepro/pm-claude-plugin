@@ -32,6 +32,12 @@ links:
   - { label: "Planning", url: "" }
   - { label: "Board", url: "" }
 
+# Barre de navigation entre pages (en haut). active:true = page courante.
+nav:
+  - { label: "Rapport", url: "" }
+  - { label: "Plan de sprints", url: "", active: true }
+  - { label: "Architecture", url: "" }
+
 # Lien optionnel sur la carte de chaque sprint.
 release_link: { label: "Suivi release", url: "" }
 
