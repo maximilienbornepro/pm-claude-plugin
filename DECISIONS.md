@@ -65,3 +65,44 @@ d'orphelin tout en validant leur meta.
 et d'agent dans `<projet>/.claude/usage.log` (JSON par ligne), sans jamais bloquer. **Pourquoi :** savoir plus
 tard ce qui n'est plus utilisé. Les runs de générateurs via `pm run` sont le plus souvent déclenchés par un
 skill/une routine, donc déjà couverts.
+
+## DM-016 - Les portes (gates) sont une DONNÉE ; le script compte, il ne valide pas (A6)  *(18/10/2026)*
+Générateur `gate` : les portes d'une mission vivent dans `profiles/<mission>/gate.yml` sous `gates:` (une liste
+- le standard GTF = 7 portes, Gate 0 à Gate 6 ; gabarit `gtf.sample.yml`). Chaque porte porte ses critères
+(0 / 0,5 / 1), son seuil, l'`acte_humain` de franchissement et des `waivers` datés. `gate.py` **compte et
+recommande**, il n'écrit rien. Doctrine, en dur dans `evaluate()` :
+- **aucun franchissement automatique** : seuil atteint ≠ franchie ; il faut un `acte_humain` (approbateur, date,
+  motif) tracé dans `gate.yml` ;
+- **un bloquant (critère à 0) se lève par un waiver à 8 champs dont une `echeance`** ; un waiver **expiré
+  redevient un bloquant** (fail-closed), un waiver **incomplet ne lève rien** ;
+- **un bloquant valablement waivé sort du score** (son risque est suivi par `surveillance`/`remediation`, pas
+  porté par la moyenne) et le verdict devient **WAIVÉ** - « waivé n'est pas recommandé », le verdict change de
+  nom, pas de nature ;
+- un critère **sans score est « non évalué »** (exclu du calcul, ≠ 0) ; une porte sans aucun score est « non entamée ».
+**Parseur :** `gate.yml` est imbriqué (gates → criteria/waivers), au-delà de ce que `profile._mini_parse` sait
+lire ; nouveau `framework/lib/yamlmin.py` (sous-ensemble YAML, 0 dépendance, blocs + maps/listes en ligne), **sans
+toucher** à `profile.py` (risque pour les profils). Tests : `framework/harness/test_gate.py` (10 cas), ajoutés à
+`publish.sh`.
+
+## DM-017 - La méthode est une DONNÉE : `method.yaml` par mission (A4)  *(18/10/2026)*
+« Ce qui se calcule ne se raconte pas. » Ce qui relève de la méthode et se calcule - barèmes de cotation,
+seuils-pivots, trames de livrables, chaîne de traçabilité - vit dans `profiles/<mission>/method.yaml`, pas dans
+la prose d'un skill ni en dur dans un script. Lecteur commun `framework/lib/method.py` (`seuil`/`bareme`/`trame`/
+`section`, fail-soft : section absente → défaut, rien ne casse). Générateur `method` : montre la méthode en
+clair et signale ce qui reste en prose. **Migration incrémentale**, livrable par livrable (pas de big-bang) :
+premier consommateur câblé, `gate` lit `seuils.gate_defaut` au lieu du 90 en dur. **Pourquoi :** des résultats
+reproductibles et **opposables** (COPIL, OTAN), pas « calculés par un modèle ». `method.yaml` porte le
+**transverse** ; les configs spécifiques d'un générateur (`risks.yml`, `gate.yml`) restent à elles. Tests :
+`framework/harness/test_method.py` (7 cas), ajoutés à `publish.sh`. Prépare A5 (bloc `tracabilite`).
+
+## DM-018 - Chaîne de traçabilité en donnée + audit de ruptures (A5)  *(18/10/2026)*
+La chaîne besoin/TR → ticket → POC → test est déclarée **une fois**, en donnée : `method.yaml` > `tracabilite`
+porte la **définition** (`phases`, `ordre` des maillons, `proprietaire` et `exigible_des` de chacun, `facultatif`
+optionnel) ; `profiles/<mission>/tracabilite.yml` porte les **items** (`phase_courante`, et par besoin les `liens`
+reliés). Générateur **lecture seule** `trace-audit` : à la phase courante, un maillon **exigible** (`exigible_des`
+≤ phase), **non facultatif** et **non relié** est une **rupture** ; il calcule les ruptures et dit **où aller**
+(propriétaire du premier maillon manquant). **Pourquoi :** unifier ce que disent la matrice IADT et le périmètre,
+et détecter les trous tôt, sans qu'un modèle « décide » - il mesure sur une chaîne déclarée. En mission réelle,
+`tracabilite.yml` est **produit par la synchro** (matrice + `perimetre_scope.json` + Jira), l'audit reste le même.
+Dépend de A4 (lit `method.section(..., "tracabilite")`). Tests : `framework/harness/test_trace.py` (8 cas),
+ajoutés à `publish.sh`.

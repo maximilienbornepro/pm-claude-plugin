@@ -42,6 +42,9 @@ GEN = {
     "drive-scaffold":      ("framework/generators/scaffold/scaffold_drive.py",       "arbo Drive : ce qui manque (--apply cree les dossiers)", True),
     # --- domaine docs / transverse ---
     "docs-coherence-audit":("framework/generators/docs-coherence-audit/check_coherence.py","coherence docs : une sortie est-elle a jour vs ses sources", True),
+    "gate":                ("framework/generators/gate/gate.py",                     "score les portes (gates) d'une mission et RECOMMANDE ; franchissement = acte humain", True),
+    "method":              ("framework/generators/method/method.py",                 "montre la methode de la mission en donnee (baremes, seuils, trames, tracabilite)", True),
+    "trace-audit":         ("framework/generators/trace-audit/trace_audit.py",       "ruptures de la chaine de tracabilite (besoin->ticket->POC->test) ; dit ou aller (lecture seule)", True),
     "tones":               ("framework/lib/set_tone.py",                             "aligne le ton des agents sur pipeline.yml (dry-run)", True),
     "setup":               ("framework/generators/setup/setup.py",                   "onboarding : champs manquants d'un profil + suggestions (lecture seule)", True),
     "preflight":           ("framework/generators/preflight/preflight.py",           "verifie qu'on est connecte aux BONS systemes (Notion/SharePoint/Jira) avant d'ecrire", True),

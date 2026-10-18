@@ -1,0 +1,63 @@
+# Portes GTF de la mission DEMO (instanciation du gabarit framework/generators/gate/gtf.sample.yml).
+# Montre : 2 portes franchies, une à seuil atteint SANS acte humain (pas franchie), une avec un
+# bloquant ouvert et un waiver EXPIRÉ (fail-closed), les suivantes non entamées.
+gates:
+  - id: gate0
+    name: "Technical Commitment review"
+    threshold: 90
+    criteria:
+      - { id: G0.1, label: "Architecture de solution validée", score: 1 }
+      - { id: G0.2, label: "Plan de livraison établi", score: 1 }
+      - { id: G0.3, label: "Risques identifiés et cotés", score: 1 }
+      - { id: G0.4, label: "Coût estimé et viabilité commerciale", score: 1 }
+    acte_humain: { approbateur: "Sponsor", date: "2026-01-10", motif: "revue d'engagement technique en comité" }
+  - id: gate1
+    name: "Project kickoff"
+    threshold: 90
+    criteria:
+      - { id: G1.1, label: "Objectifs validés", score: 1 }
+      - { id: G1.2, label: "Gouvernance en place (RACI, instances)", score: 1 }
+      - { id: G1.3, label: "Planning directeur établi", score: 1 }
+    acte_humain: { approbateur: "CP/RSIA", date: "2026-01-20", motif: "lancement validé en COPIL" }
+  - id: gate2
+    name: "Implementation kickoff"
+    threshold: 90
+    criteria:
+      - { id: G2.1, label: "Exigences validées (testables)", score: 1 }
+      - { id: G2.2, label: "Périmètre figé", score: 1 }
+      - { id: G2.3, label: "Architecture détaillée", score: 1 }
+      - { id: G2.4, label: "Responsabilités (RACI) à jour", score: 1 }
+      - { id: G2.5, label: "Approche de livraison définie", score: 0.5 }
+    # pas d'acte_humain : seuil atteint (90 %) mais porte NON franchie
+  - id: gate3
+    name: "Release freeze"
+    threshold: 90
+    criteria:
+      - { id: G3.1, label: "Périmètre gelé (IA / SW / HW)", score: 1 }
+      - { id: G3.2, label: "Prêt pour la phase de validation / recette", score: 0 }
+    waivers:
+      - bloquant: G3.2
+        approbateur: "CP/RSIA"
+        date: "2026-08-01"
+        motif: "recette lancée en parallèle, risque assumé"
+        echeance: "2026-09-01"
+        surveillance: "revue hebdo"
+        remediation: "Testeur"
+        cible: "plan de recette validé"
+  - id: gate4
+    name: "Deployment go/no-go"
+    threshold: 90
+    criteria:
+      - { id: G4.1, label: "Préparation du déploiement (prod, bascule)" }
+      - { id: G4.2, label: "Acceptation métier (recette)" }
+  - id: gate5
+    name: "Celebrate"
+    threshold: 90
+    criteria:
+      - { id: G5.1, label: "Adoption confirmée" }
+      - { id: G5.2, label: "Résultats / KPI mesurés" }
+  - id: gate6
+    name: "Decommissioning review"
+    threshold: 90
+    criteria:
+      - { id: G6.1, label: "Plan de fin de vie établi" }

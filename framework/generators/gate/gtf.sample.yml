@@ -1,0 +1,62 @@
+# Gabarit GTF (Global Technical Framework) - les 7 portes (Gate 0 à Gate 6).
+# À COPIER dans profiles/<mission>/gate.yml, puis remplir les `score` (0 / 0,5 / 1) de chaque critère,
+# et, quand une porte se franchit, son `acte_humain` (rôle, date, motif) et ses `waivers` éventuels.
+# Les critères ci-dessous sont un point de départ générique dérivé du résumé de chaque porte ; chaque
+# mission les ajuste.
+gates:
+  - id: gate0
+    name: "Technical Commitment review"
+    summary: "Valider l'architecture, le plan de livraison, les risques et le coût : faisabilité technique et viabilité commerciale avant engagement client."
+    threshold: 90
+    criteria:
+      - { id: G0.1, label: "Architecture de solution validée" }
+      - { id: G0.2, label: "Plan de livraison établi" }
+      - { id: G0.3, label: "Risques identifiés et cotés" }
+      - { id: G0.4, label: "Coût estimé et viabilité commerciale" }
+  - id: gate1
+    name: "Project kickoff"
+    summary: "Lancer le projet avec des objectifs, une gouvernance et un planning validés."
+    threshold: 90
+    criteria:
+      - { id: G1.1, label: "Objectifs validés" }
+      - { id: G1.2, label: "Gouvernance en place (RACI, instances)" }
+      - { id: G1.3, label: "Planning directeur établi" }
+  - id: gate2
+    name: "Implementation kickoff"
+    summary: "Valider les exigences, le périmètre, l'architecture, les responsabilités et l'approche de livraison."
+    threshold: 90
+    criteria:
+      - { id: G2.1, label: "Exigences validées (testables)" }
+      - { id: G2.2, label: "Périmètre figé" }
+      - { id: G2.3, label: "Architecture détaillée" }
+      - { id: G2.4, label: "Responsabilités (RACI) à jour" }
+      - { id: G2.5, label: "Approche de livraison définie" }
+  - id: gate3
+    name: "Release freeze"
+    summary: "Geler le périmètre (IA / SW / HW) et confirmer la préparation à la phase de validation finale."
+    threshold: 90
+    criteria:
+      - { id: G3.1, label: "Périmètre gelé (IA / SW / HW)" }
+      - { id: G3.2, label: "Prêt pour la phase de validation / recette" }
+  - id: gate4
+    name: "Deployment go/no-go"
+    summary: "Évaluer la préparation au déploiement et l'acceptation métier."
+    threshold: 90
+    criteria:
+      - { id: G4.1, label: "Préparation du déploiement (prod, bascule)" }
+      - { id: G4.2, label: "Acceptation métier (recette)" }
+  - id: gate5
+    name: "Celebrate"
+    summary: "Confirmer l'adoption, mesurer les résultats et les KPI, et clôturer formellement l'itération."
+    threshold: 90
+    criteria:
+      - { id: G5.1, label: "Adoption confirmée" }
+      - { id: G5.2, label: "Résultats / KPI mesurés" }
+      - { id: G5.3, label: "Clôture formelle de l'itération" }
+  - id: gate6
+    name: "Decommissioning review"
+    summary: "Planifier les activités de fin de vie et assurer un retrait sûr."
+    threshold: 90
+    criteria:
+      - { id: G6.1, label: "Plan de fin de vie établi" }
+      - { id: G6.2, label: "Retrait sûr assuré (données, dépendances)" }

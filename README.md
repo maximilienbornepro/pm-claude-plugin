@@ -69,6 +69,9 @@ Chaque générateur lit le **profil** (où est le Jira, le Drive, les dates…) 
 | `notion-sujets` | valide le format d'un sujet Notion (`--body`) | `notion_sujets.yml` |
 | `transcripts` | normalise transcriptions/CR (`--dump`/`--files`) | profil |
 | `coherence` | une sortie est-elle à jour vs ses sources | `coherence.yml` |
+| `gate` | score les portes (GTF : 7 gates) et recommande ; franchissement = acte humain | `gate.yml` |
+| `method` | montre la méthode en donnée (barèmes, seuils, trames, traçabilité) | `method.yaml` |
+| `trace-audit` | ruptures de la chaîne besoin → ticket → POC → test ; dit où aller | `method.yaml` + `tracabilite.yml` |
 | `scaffold-drive` | arbo Drive : ce qui manque (`--apply` crée) | `templates/` |
 | `scaffold-notion` | arbo Notion miroir : pages manquantes (`--emit-plan`) | `templates/` |
 | `tone` | aligne le ton des agents sur `pipeline.yml` | `pipeline.yml` |
