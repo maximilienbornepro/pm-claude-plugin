@@ -413,11 +413,7 @@ details.pole[open] .caret{transform:rotate(90deg)}
  }
  function renderReport(){
   renderJalons();
-  var r=DATA.report,k=r.kpi||{},m=DATA.meta,t=r.timeline||{},pct=k.v1_pct||0,C=201.06,off=C*(1-pct/100);
-  var chips=[];
-  if(t.v1_end)chips.push('fin V1 projetée <b>'+dfr(t.v1_end)+'</b>');
-  if(t.overshoot_weeks)chips.push('<span class="crit">dépassement <b>'+fmt(t.overshoot_weeks)+' sem</b></span>');
-  if(r.avail_weeks!=null)chips.push('<b>'+r.avail_weeks+'</b> sem avant le gel');
+  var r=DATA.report,k=r.kpi||{},m=DATA.meta,pct=k.v1_pct||0,C=201.06,off=C*(1-pct/100);
   var dd=r.delta||{};
   var dgroups=[["termine","Terminés","var(--ok)"],["avance","Avancés","var(--accent)"],["nouveau","Entrés au périmètre","var(--warn)"],["recul","Reculs","var(--crit)"],["disparu","Sortis","var(--ink-3)"]];
   var moved=dgroups.reduce(function(a,g){return a+(dd[g[0]]||[]).length;},0);
@@ -434,8 +430,7 @@ details.pole[open] .caret{transform:rotate(90deg)}
    '<circle cx="36" cy="36" r="32" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/></svg><b>'+pct+'%</b>'+
    (moved?'<span class="vbadge" title="changements depuis la dernière publication">+'+moved+'</span>':'')+
    '<div class="vtip">'+dtip+'</div></div>'+
-   '<div class="vtx"><div class="vlab">Avancement V1.0 <span class="vhint">survolez l\'anneau pour le détail</span></div><div class="vbig"><b>'+rj(k.v1_real)+'</b> / '+rj(k.v1_charge)+' j réalisés · reste <b>'+rj(k.v1_reste)+' j</b></div>'+
-   (chips.length?'<div class="vchips">'+chips.map(function(c){return '<span>'+c+'</span>';}).join("")+'</div>':'')+'</div>';
+   '<div class="vtx"><div class="vlab">Avancement V1.0 <span class="vhint">survolez l\'anneau pour le détail</span></div><div class="vbig"><b>'+rj(k.v1_real)+'</b> / '+rj(k.v1_charge)+' j réalisés · reste <b>'+rj(k.v1_reste)+' j</b></div></div>';
   var jl=(m.links||[]).map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+' <span aria-hidden="true">↗</span></a>';});
   var jln=document.getElementById("jlinks"); if(jln) jln.innerHTML=jl.join("");
   document.getElementById("poles").innerHTML=POLES.map(function(p){var g=r.poles[p];
@@ -494,18 +489,21 @@ details.pole[open] .caret{transform:rotate(90deg)}
    s.fout?'<div class="fout">'+esc(s.fout)+'</div>':"",
    '<div class="tiles"><div class="tile"><div class="v tnum">'+fmt(s.tot)+' <small>j</small></div><div class="k">à faire</div></div>'+
      '<div class="tile"><div class="v tnum">'+s.ntk+'</div><div class="k">tickets</div></div>'+
-     '<div class="tile"><div class="v tnum">'+fmt(s.bugs)+' <small>j</small></div><div class="k">réserve bugs</div></div></div>',
+     '<div class="tile"><div class="v tnum">'+fmt(s.bugs)+' <small>j</small></div><div class="k">réserve correction</div></div></div>',
    '<div class="splinks">'+((s.jiraUrl||DATA.meta.jira)?'<a href="'+esc(s.jiraUrl||DATA.meta.jira)+'" target="_blank" rel="noopener">Sprint dans Jira <span aria-hidden="true">↗</span></a>':'')+(DATA.meta.release_link?'<a href="'+esc(DATA.meta.release_link.url)+'" target="_blank" rel="noopener">'+esc(DATA.meta.release_link.label)+' <span aria-hidden="true">↗</span></a>':'')+'</div>'
   ].join("");
 
-  document.getElementById("pobj").innerHTML=POLES.map(function(p){var g=s.poles[p];var over=g.tot>g.cap+0.5;
+  document.getElementById("pobj").innerHTML=POLES.map(function(p){var g=s.poles[p];var over=g.load>g.cap+0.5;
+   var mx=Math.max(g.load,g.cap)*1.05||1;function w(v){return v/mx*100;}
    var objtxt=g.objectif?esc(g.objectif):'<span class="more">Pas d\'objectif dédié ce sprint</span>';
    return '<div class="poc'+(over?" over":"")+'" style="--pc:var(--'+p+')"><div class="ph"><span class="nm">'+g.label+'</span>'+
-     '<span class="ld">'+(over?'<b class="crit">surcharge</b>':'<b>'+fmt(g.tot)+' j</b> à faire')+'</span></div>'+
+     '<span class="ld">Restant <b>'+fmt(g.tot)+' j</b> / '+fmt(g.est)+' j estimés</span></div>'+
      '<div class="ep">'+objtxt+'</div>'+
-     '<div class="g-track"><div class="seg2" style="left:0;width:'+Math.min(100,g.tot/g.cap*100)+'%;background:'+(over?'var(--crit)':'var(--'+p+')')+'"></div></div>'+
-     '<div class="gl"><span>'+fmt(g.tot)+' j à faire</span><span>capacité '+g.cap+' j</span></div></div>';
-  }).join("");
+     '<div class="g-track"><div class="seg2" style="left:0;width:'+w(Math.min(g.load,g.cap))+'%;background:var(--'+p+')"></div>'+
+     (over?'<div class="seg2" style="left:'+w(g.cap)+'%;width:'+w(g.load-g.cap)+'%;background:var(--crit)"></div>':'')+
+     '<div class="capm" style="left:'+w(g.cap)+'%"></div></div>'+
+     '<div class="gl"><span>charge <b>'+fmt(g.load)+' j</b> · cap '+g.cap+' j</span><span'+(over?' style="color:var(--crit)"':'')+'>'+(over?'surcharge +'+fmt(g.load-g.cap)+' j':'dans la capacité')+'</span></div></div>';
+  }).join("")+'<div class="pobj-note"><b>Restant</b> = reste à faire des tickets du sprint (hors Dev Review, considérés finis). <b>Charge</b> = restant + réserve de correction (20 %). Le repère = la <b>capacité cible</b> du pôle ; la zone <b style="color:var(--crit)">rouge</b> au-delà = la <b>surcharge</b>.</div>';
 
   renderTickets(s);
  }

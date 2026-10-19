@@ -308,7 +308,7 @@ def build_datajson(mission, cfg, pcfg, rows, alloc, nsp):
     # sprints[]
     def pole_block(rs, pl, n):
         sub = [t for t in rs if t["p"] == pl]
-        tot = r1(sum(t["r"] for t in sub))
+        tot = r1(sum(t["r"] for t in sub if t["st"] != "Dev Review"))
         est = r1(sum((t.get("est") or 0) for t in sub))
         bugs = r1(est * pcfg["bug_pct"]) if pl in DEV else 0.0
         done = r1(sum((t.get("est") or 0) for t in sub if t["d"]))
@@ -332,7 +332,7 @@ def build_datajson(mission, cfg, pcfg, rows, alloc, nsp):
             a, b = sp_window(n, pcfg)
         phases = {t["ph"] for t in rs} or {"V1"}
         dt, hint = sp_meta(n, a, b, phases, freeze, mep)
-        tot = r1(sum(t["r"] for t in rs))
+        tot = r1(sum(t["r"] for t in rs if t["st"] != "Dev Review"))
         bugs = r1(sum((t.get("est") or 0) for t in rs if t["p"] in DEV) * pcfg["bug_pct"])
         estTotal = r1(sum((t.get("est") or 0) for t in rs))
         sprints.append({
