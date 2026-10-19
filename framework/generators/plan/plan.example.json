@@ -12,165 +12,901 @@
     "mep": "2026-04-03",
     "jira": "https://orion.example.test/browse/",
     "links": [
-      { "label": "Planning", "url": "https://orion.example.test/planning" },
-      { "label": "Board", "url": "https://orion.example.test/board" }
+      {
+        "label": "Planning",
+        "url": "https://orion.example.test/planning"
+      },
+      {
+        "label": "Board",
+        "url": "https://orion.example.test/board"
+      }
     ],
     "nav": [
-      { "label": "Rapport", "url": "https://orion.example.test/report" },
-      { "label": "Plan de sprints", "url": "https://orion.example.test/plan", "active": true },
-      { "label": "Architecture", "url": "https://orion.example.test/archi" }
+      {
+        "label": "Rapport",
+        "url": "https://orion.example.test/report"
+      },
+      {
+        "label": "Plan de sprints",
+        "url": "https://orion.example.test/plan",
+        "active": true
+      },
+      {
+        "label": "Architecture",
+        "url": "https://orion.example.test/archi"
+      }
     ],
-    "release_link": { "label": "Suivi release", "url": "https://orion.example.test/release" }
+    "release_link": {
+      "label": "Suivi release",
+      "url": "https://orion.example.test/release"
+    }
   },
   "report": {
-    "kpi": { "v1_pct": 46, "v1_real": 55.0, "v1_charge": 120.0, "v1_reste": 65.0 },
+    "kpi": {
+      "v1_pct": 46,
+      "v1_real": 55.0,
+      "v1_charge": 120.0,
+      "v1_reste": 65.0
+    },
     "poles": {
-      "back":  { "charge": 60.0, "reste": 34.0, "pct": 43, "real": 26.0, "weeks": 4, "cap_etp": 2.0 },
-      "front": { "charge": 40.0, "reste": 22.0, "pct": 45, "real": 18.0, "weeks": 3, "cap_etp": 1.5 },
-      "sre":   { "charge": 20.0, "reste": 9.0,  "pct": 55, "real": 11.0, "weeks": 2, "cap_etp": 1.0 }
+      "back": {
+        "charge": 60.0,
+        "reste": 34.0,
+        "pct": 43,
+        "real": 26.0,
+        "weeks": 4,
+        "cap_etp": 2.0
+      },
+      "front": {
+        "charge": 40.0,
+        "reste": 22.0,
+        "pct": 45,
+        "real": 18.0,
+        "weeks": 3,
+        "cap_etp": 1.5
+      },
+      "sre": {
+        "charge": 20.0,
+        "reste": 9.0,
+        "pct": 55,
+        "real": 11.0,
+        "weeks": 2,
+        "cap_etp": 1.0
+      }
     },
     "poles_v11": {
-      "back":  { "charge": 18.0, "reste": 18.0, "pct": 0, "real": 0.0 },
-      "front": { "charge": 10.0, "reste": 10.0, "pct": 0, "real": 0.0 },
-      "sre":   { "charge": 12.0, "reste": 12.0, "pct": 0, "real": 0.0 }
+      "back": {
+        "charge": 18.0,
+        "reste": 18.0,
+        "pct": 0,
+        "real": 0.0
+      },
+      "front": {
+        "charge": 10.0,
+        "reste": 10.0,
+        "pct": 0,
+        "real": 0.0
+      },
+      "sre": {
+        "charge": 12.0,
+        "reste": 12.0,
+        "pct": 0,
+        "real": 0.0
+      }
     },
-    "v11": { "reste": 40.0 },
-    "timeline": { "v1_end": "2026-03-27", "overshoot_weeks": 1.0 },
+    "v11": {
+      "reste": 40.0
+    },
+    "timeline": {
+      "v1_end": "2026-03-27",
+      "overshoot_weeks": 1.0
+    },
     "avail_weeks": 5,
     "epics": [
-      { "epic": "API", "pole": "back", "rV1": 25.0, "rV11": 8.0, "charge": 45.0, "phase": "V1 + V1.1" },
-      { "epic": "Détail", "pole": "front", "rV1": 13.0, "rV11": 0.0, "charge": 22.0, "phase": "V1" },
-      { "epic": "Exports", "pole": "front", "rV1": 0.0, "rV11": 10.0, "charge": 10.0, "phase": "V1.1" },
-      { "epic": "Plateforme", "pole": "sre", "rV1": 6.0, "rV11": 0.0, "charge": 15.0, "phase": "V1" }
+      {
+        "epic": "API",
+        "pole": "back",
+        "rV1": 25.0,
+        "rV11": 8.0,
+        "charge": 45.0,
+        "phase": "V1 + V1.1",
+        "tickets": [
+          {
+            "k": "ORI-10",
+            "s": "API détail d'un élément",
+            "st": "In Progress",
+            "r": 5.0,
+            "ph": "V1",
+            "ne": false
+          },
+          {
+            "k": "ORI-30",
+            "s": "API d'export (JSON, CSV)",
+            "st": "To Do",
+            "r": 8.0,
+            "ph": "V1.1",
+            "ne": false
+          }
+        ]
+      },
+      {
+        "epic": "Détail",
+        "pole": "front",
+        "rV1": 13.0,
+        "rV11": 0.0,
+        "charge": 22.0,
+        "phase": "V1",
+        "tickets": [
+          {
+            "k": "ORI-13",
+            "s": "Page de détail et édition",
+            "st": "Ready for sprint",
+            "r": 6.0,
+            "ph": "V1",
+            "ne": false
+          }
+        ]
+      },
+      {
+        "epic": "Exports",
+        "pole": "front",
+        "rV1": 0.0,
+        "rV11": 10.0,
+        "charge": 10.0,
+        "phase": "V1.1",
+        "tickets": [
+          {
+            "k": "ORI-31",
+            "s": "Écran d'export",
+            "st": "To Do",
+            "r": 6.0,
+            "ph": "V1.1",
+            "ne": false
+          }
+        ]
+      },
+      {
+        "epic": "Plateforme",
+        "pole": "sre",
+        "rV1": 6.0,
+        "rV11": 0.0,
+        "charge": 15.0,
+        "phase": "V1",
+        "tickets": [
+          {
+            "k": "ORI-14",
+            "s": "Déploiement production",
+            "st": "Ready for sprint",
+            "r": 2.0,
+            "ph": "V1",
+            "ne": false
+          }
+        ]
+      }
     ],
-    "delta": { "ref": null, "pct_avant": null, "pct_apres": null, "gain": 0, "jours_termines": 0,
-               "termine": [], "avance": [], "recul": [], "nouveau": [], "disparu": [] },
+    "delta": {
+      "ref": null,
+      "pct_avant": null,
+      "pct_apres": null,
+      "gain": 0,
+      "jours_termines": 0,
+      "termine": [],
+      "avance": [],
+      "recul": [],
+      "nouveau": [],
+      "disparu": []
+    },
     "burn_v1": {
-      "scope": 120.0, "start": "2026-01-12",
-      "freeze": "2026-03-20", "freeze_d": 67,
-      "mep": "2026-04-03", "mep_d": 81,
-      "today": "2026-02-09", "today_d": 28,
-      "serie": [
-        { "t": "2026-01-12", "d": 0,  "y": 120.0 },
-        { "t": "2026-01-19", "d": 7,  "y": 108.0 },
-        { "t": "2026-01-26", "d": 14, "y": 92.0 },
-        { "t": "2026-02-02", "d": 21, "y": 78.0 },
-        { "t": "2026-02-09", "d": 28, "y": 65.0 }
+      "scope": 120.0,
+      "start": "2026-01-12",
+      "freeze": "2026-03-20",
+      "freeze_d": 67,
+      "mep": "2026-04-03",
+      "mep_d": 81,
+      "today": "2026-02-09",
+      "today_d": 28,
+      "tk": [
+        {
+          "e": 20.0,
+          "cd": "2026-01-19",
+          "td": null,
+          "st": "Closed"
+        },
+        {
+          "e": 16.0,
+          "cd": "2026-01-26",
+          "td": null,
+          "st": "Closing"
+        },
+        {
+          "e": 14.0,
+          "cd": null,
+          "td": "2026-02-02",
+          "st": "Testing"
+        },
+        {
+          "e": 13.0,
+          "cd": null,
+          "td": "2026-02-09",
+          "st": "Testing"
+        },
+        {
+          "e": 12.0,
+          "cd": null,
+          "td": null,
+          "st": "In Progress"
+        },
+        {
+          "e": 10.0,
+          "cd": null,
+          "td": null,
+          "st": "Ready for sprint"
+        },
+        {
+          "e": 20.0,
+          "cd": null,
+          "td": null,
+          "st": "To Do"
+        },
+        {
+          "e": 15.0,
+          "cd": null,
+          "td": null,
+          "st": "To Do"
+        }
       ]
     }
   },
   "sprints": [
     {
-      "n": 1, "dates": "26 jan → 09 fév", "hint": "en cours",
-      "start": "2026-01-26", "end": "2026-02-09",
+      "n": 1,
+      "dates": "26 jan → 09 fév",
+      "hint": "en cours",
+      "start": "2026-01-26",
+      "end": "2026-02-09",
       "objectif": "Poser le socle. L'utilisateur se connecte et parcourt les données sur un tableau filtrable.",
       "fres": "L'utilisateur se connecte et voit la liste des éléments.",
       "fout": "",
-      "tot": 14.0, "bugs": 3.2, "ntk": 6, "estTotal": 28.0,
+      "tot": 14.0,
+      "bugs": 3.2,
+      "ntk": 6,
+      "estTotal": 28.0,
       "jiraUrl": "https://orion.example.test/board?sprint=1",
       "poles": {
-        "back":  { "label": "Back", "tot": 7.0, "est": 16.0, "bugs": 3.2, "done": 7.0, "load": 10.2, "cap": 17, "n": 3,
-                   "objectif": "Poser l'API et le stockage.",
-                   "epics": [{ "e": "API", "r": 4.0, "n": 2, "done": 1 }, { "e": "Stockage", "r": 3.0, "n": 1, "done": 0 }] },
-        "front": { "label": "Front", "tot": 5.0, "est": 9.0, "bugs": 1.8, "done": 2.0, "load": 6.8, "cap": 12, "n": 2,
-                   "objectif": "Livrer la connexion et la liste.",
-                   "epics": [{ "e": "Socle UI", "r": 5.0, "n": 2, "done": 1 }] },
-        "sre":   { "label": "SRE", "tot": 2.0, "est": 3.0, "bugs": 0.0, "done": 3.0, "load": 2.0, "cap": 8, "n": 1,
-                   "objectif": "Monter l'environnement de qualification.",
-                   "epics": [{ "e": "Plateforme", "r": 2.0, "n": 1, "done": 1 }] }
+        "back": {
+          "label": "Back",
+          "tot": 7.0,
+          "est": 16.0,
+          "bugs": 3.2,
+          "done": 7.0,
+          "load": 10.2,
+          "cap": 17,
+          "n": 3,
+          "objectif": "Poser l'API et le stockage.",
+          "epics": [
+            {
+              "e": "API",
+              "r": 4.0,
+              "n": 2,
+              "done": 1
+            },
+            {
+              "e": "Stockage",
+              "r": 3.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        },
+        "front": {
+          "label": "Front",
+          "tot": 5.0,
+          "est": 9.0,
+          "bugs": 1.8,
+          "done": 2.0,
+          "load": 6.8,
+          "cap": 12,
+          "n": 2,
+          "objectif": "Livrer la connexion et la liste.",
+          "epics": [
+            {
+              "e": "Socle UI",
+              "r": 5.0,
+              "n": 2,
+              "done": 1
+            }
+          ]
+        },
+        "sre": {
+          "label": "SRE",
+          "tot": 2.0,
+          "est": 3.0,
+          "bugs": 0.0,
+          "done": 3.0,
+          "load": 2.0,
+          "cap": 8,
+          "n": 1,
+          "objectif": "Monter l'environnement de qualification.",
+          "epics": [
+            {
+              "e": "Plateforme",
+              "r": 2.0,
+              "n": 1,
+              "done": 1
+            }
+          ]
+        }
       },
       "tickets": [
-        { "k": "ORI-1", "s": "Schéma de l'API et contrats", "p": "back", "e": "API", "r": 2.0, "est": 4.0, "st": "In Progress", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-2", "s": "Authentification OIDC", "p": "back", "e": "API", "r": 2.0, "est": 4.0, "st": "Testing", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-3", "s": "Schéma de persistance et index", "p": "back", "e": "Stockage", "r": 3.0, "est": 4.0, "st": "In Progress", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-4", "s": "Page de connexion", "p": "front", "e": "Socle UI", "r": 2.0, "est": 3.0, "st": "Testing", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-5", "s": "Liste des éléments (tableau, filtres)", "p": "front", "e": "Socle UI", "r": 3.0, "est": 4.0, "st": "In Progress", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-6", "s": "Pipeline CI/CD de qualification", "p": "sre", "e": "Plateforme", "r": 2.0, "est": 3.0, "st": "Testing", "d": false, "ne": false, "ph": "V1" }
+        {
+          "k": "ORI-1",
+          "s": "Schéma de l'API et contrats",
+          "p": "back",
+          "e": "API",
+          "r": 2.0,
+          "est": 4.0,
+          "st": "In Progress",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-2",
+          "s": "Authentification OIDC",
+          "p": "back",
+          "e": "API",
+          "r": 2.0,
+          "est": 4.0,
+          "st": "Testing",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-3",
+          "s": "Schéma de persistance et index",
+          "p": "back",
+          "e": "Stockage",
+          "r": 3.0,
+          "est": 4.0,
+          "st": "In Progress",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-4",
+          "s": "Page de connexion",
+          "p": "front",
+          "e": "Socle UI",
+          "r": 2.0,
+          "est": 3.0,
+          "st": "Testing",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-5",
+          "s": "Liste des éléments (tableau, filtres)",
+          "p": "front",
+          "e": "Socle UI",
+          "r": 3.0,
+          "est": 4.0,
+          "st": "In Progress",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-6",
+          "s": "Pipeline CI/CD de qualification",
+          "p": "sre",
+          "e": "Plateforme",
+          "r": 2.0,
+          "est": 3.0,
+          "st": "Testing",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        }
       ],
-      "burn": { "scope": 28.0, "len": 14, "serie": [
-        { "x": 0, "y": 28.0 }, { "x": 2, "y": 25.0 }, { "x": 4, "y": 25.0 }, { "x": 6, "y": 20.0 },
-        { "x": 8, "y": 20.0 }, { "x": 10, "y": 16.0 }, { "x": 12, "y": 14.0 }, { "x": 14, "y": 14.0 } ] }
+      "burn": {
+        "scope": 28.0,
+        "len": 14,
+        "start": "2026-01-26",
+        "tk": [
+          {
+            "e": 4.0,
+            "cd": "2026-01-30",
+            "td": null,
+            "st": "Closed"
+          },
+          {
+            "e": 6.0,
+            "cd": null,
+            "td": "2026-02-04",
+            "st": "Testing"
+          },
+          {
+            "e": 4.0,
+            "cd": null,
+            "td": null,
+            "st": "In Progress"
+          },
+          {
+            "e": 5.0,
+            "cd": null,
+            "td": null,
+            "st": "Ready for sprint"
+          },
+          {
+            "e": 9.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          }
+        ]
+      }
     },
     {
-      "n": 2, "dates": "09 fév → 23 fév", "hint": "découpage proposé",
-      "start": "2026-02-09", "end": "2026-02-23",
+      "n": 2,
+      "dates": "09 fév → 23 fév",
+      "hint": "découpage proposé",
+      "start": "2026-02-09",
+      "end": "2026-02-23",
       "objectif": "Ouvrir un détail. L'utilisateur ouvre un élément et gère ses réglages.",
       "fres": "L'utilisateur ouvre un élément et modifie ses réglages.",
       "fout": "",
-      "tot": 18.0, "bugs": 3.6, "ntk": 5, "estTotal": 18.0,
+      "tot": 18.0,
+      "bugs": 3.6,
+      "ntk": 5,
+      "estTotal": 18.0,
       "jiraUrl": "https://orion.example.test/board?sprint=2",
       "poles": {
-        "back":  { "label": "Back", "tot": 10.0, "est": 12.0, "bugs": 2.4, "done": 0, "load": 12.4, "cap": 17, "n": 3,
-                   "objectif": "Compléter l'API de détail et les réglages.",
-                   "epics": [{ "e": "API", "r": 10.0, "n": 3, "done": 0 }] },
-        "front": { "label": "Front", "tot": 6.0, "est": 4.0, "bugs": 0.8, "done": 0, "load": 6.8, "cap": 12, "n": 1,
-                   "objectif": "Livrer la page de détail et l'édition.",
-                   "epics": [{ "e": "Détail", "r": 6.0, "n": 1, "done": 0 }] },
-        "sre":   { "label": "SRE", "tot": 2.0, "est": 2.0, "bugs": 0.0, "done": 0, "load": 2.0, "cap": 8, "n": 1,
-                   "objectif": "Mettre en service la production.",
-                   "epics": [{ "e": "Plateforme", "r": 2.0, "n": 1, "done": 0 }] }
+        "back": {
+          "label": "Back",
+          "tot": 10.0,
+          "est": 12.0,
+          "bugs": 2.4,
+          "done": 0,
+          "load": 12.4,
+          "cap": 17,
+          "n": 3,
+          "objectif": "Compléter l'API de détail et les réglages.",
+          "epics": [
+            {
+              "e": "API",
+              "r": 10.0,
+              "n": 3,
+              "done": 0
+            }
+          ]
+        },
+        "front": {
+          "label": "Front",
+          "tot": 6.0,
+          "est": 4.0,
+          "bugs": 0.8,
+          "done": 0,
+          "load": 6.8,
+          "cap": 12,
+          "n": 1,
+          "objectif": "Livrer la page de détail et l'édition.",
+          "epics": [
+            {
+              "e": "Détail",
+              "r": 6.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        },
+        "sre": {
+          "label": "SRE",
+          "tot": 2.0,
+          "est": 2.0,
+          "bugs": 0.0,
+          "done": 0,
+          "load": 2.0,
+          "cap": 8,
+          "n": 1,
+          "objectif": "Mettre en service la production.",
+          "epics": [
+            {
+              "e": "Plateforme",
+              "r": 2.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        }
       },
       "tickets": [
-        { "k": "ORI-10", "s": "API détail d'un élément", "p": "back", "e": "API", "r": 4.0, "est": 5.0, "st": "Ready for sprint", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-11", "s": "API réglages (CRUD)", "p": "back", "e": "API", "r": 4.0, "est": 5.0, "st": "Ready for sprint", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-12", "s": "Recherche et pagination", "p": "back", "e": "API", "r": 2.0, "est": 2.0, "st": "Ready for sprint", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-13", "s": "Page de détail et édition", "p": "front", "e": "Détail", "r": 6.0, "est": 4.0, "st": "Ready for sprint", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-14", "s": "Déploiement production", "p": "sre", "e": "Plateforme", "r": 2.0, "est": 2.0, "st": "Ready for sprint", "d": false, "ne": false, "ph": "V1" }
+        {
+          "k": "ORI-10",
+          "s": "API détail d'un élément",
+          "p": "back",
+          "e": "API",
+          "r": 4.0,
+          "est": 5.0,
+          "st": "Ready for sprint",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-11",
+          "s": "API réglages (CRUD)",
+          "p": "back",
+          "e": "API",
+          "r": 4.0,
+          "est": 5.0,
+          "st": "Ready for sprint",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-12",
+          "s": "Recherche et pagination",
+          "p": "back",
+          "e": "API",
+          "r": 2.0,
+          "est": 2.0,
+          "st": "Ready for sprint",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-13",
+          "s": "Page de détail et édition",
+          "p": "front",
+          "e": "Détail",
+          "r": 6.0,
+          "est": 4.0,
+          "st": "Ready for sprint",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-14",
+          "s": "Déploiement production",
+          "p": "sre",
+          "e": "Plateforme",
+          "r": 2.0,
+          "est": 2.0,
+          "st": "Ready for sprint",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        }
       ],
-      "burn": { "scope": 18.0, "len": 14, "serie": [] }
+      "burn": {
+        "scope": 18.0,
+        "len": 14,
+        "start": "2026-02-09",
+        "tk": [
+          {
+            "e": 5.0,
+            "cd": null,
+            "td": null,
+            "st": "Ready for sprint"
+          },
+          {
+            "e": 5.0,
+            "cd": null,
+            "td": null,
+            "st": "Ready for sprint"
+          },
+          {
+            "e": 2.0,
+            "cd": null,
+            "td": null,
+            "st": "Ready for sprint"
+          },
+          {
+            "e": 6.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          }
+        ]
+      }
     },
     {
-      "n": 3, "dates": "09 mars → 20 mars · gel", "hint": "reste V1",
-      "start": "2026-03-09", "end": "2026-03-20",
+      "n": 3,
+      "dates": "09 mars → 20 mars · gel",
+      "hint": "reste V1",
+      "start": "2026-03-09",
+      "end": "2026-03-20",
       "objectif": "Geler la V1. Parcours complet et mise en production des réglages.",
       "fres": "La version gelée : parcours complet, réglages activables.",
       "fout": "Non disponible pour le gel : les exports et les écrans avancés (V1.1).",
-      "tot": 20.0, "bugs": 4.0, "ntk": 4, "estTotal": 20.0,
+      "tot": 20.0,
+      "bugs": 4.0,
+      "ntk": 4,
+      "estTotal": 20.0,
       "jiraUrl": "https://orion.example.test/board?sprint=3",
       "poles": {
-        "back":  { "label": "Back", "tot": 11.0, "est": 13.0, "bugs": 2.6, "done": 0, "load": 13.6, "cap": 17, "n": 2,
-                   "objectif": "Durcir et mettre en production l'API.",
-                   "epics": [{ "e": "API", "r": 11.0, "n": 2, "done": 0 }] },
-        "front": { "label": "Front", "tot": 7.0, "est": 5.0, "bugs": 1.0, "done": 0, "load": 8.0, "cap": 12, "n": 1,
-                   "objectif": "Compléter le détail et l'activation des réglages.",
-                   "epics": [{ "e": "Détail", "r": 7.0, "n": 1, "done": 0 }] },
-        "sre":   { "label": "SRE", "tot": 2.0, "est": 2.0, "bugs": 0.0, "done": 0, "load": 2.0, "cap": 8, "n": 1,
-                   "objectif": "Mettre en production en continu avec une supervision de base.",
-                   "epics": [{ "e": "Plateforme", "r": 2.0, "n": 1, "done": 0 }] }
+        "back": {
+          "label": "Back",
+          "tot": 11.0,
+          "est": 13.0,
+          "bugs": 2.6,
+          "done": 0,
+          "load": 13.6,
+          "cap": 17,
+          "n": 2,
+          "objectif": "Durcir et mettre en production l'API.",
+          "epics": [
+            {
+              "e": "API",
+              "r": 11.0,
+              "n": 2,
+              "done": 0
+            }
+          ]
+        },
+        "front": {
+          "label": "Front",
+          "tot": 7.0,
+          "est": 5.0,
+          "bugs": 1.0,
+          "done": 0,
+          "load": 8.0,
+          "cap": 12,
+          "n": 1,
+          "objectif": "Compléter le détail et l'activation des réglages.",
+          "epics": [
+            {
+              "e": "Détail",
+              "r": 7.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        },
+        "sre": {
+          "label": "SRE",
+          "tot": 2.0,
+          "est": 2.0,
+          "bugs": 0.0,
+          "done": 0,
+          "load": 2.0,
+          "cap": 8,
+          "n": 1,
+          "objectif": "Mettre en production en continu avec une supervision de base.",
+          "epics": [
+            {
+              "e": "Plateforme",
+              "r": 2.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        }
       },
       "tickets": [
-        { "k": "ORI-20", "s": "Durcissement et TLS", "p": "back", "e": "API", "r": 6.0, "est": 7.0, "st": "To Do", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-21", "s": "Provisionnement base de production", "p": "back", "e": "API", "r": 5.0, "est": 6.0, "st": "To Do", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-22", "s": "Activation des réglages", "p": "front", "e": "Détail", "r": 7.0, "est": 5.0, "st": "To Do", "d": false, "ne": false, "ph": "V1" },
-        { "k": "ORI-23", "s": "Supervision de base", "p": "sre", "e": "Plateforme", "r": 2.0, "est": 2.0, "st": "To Do", "d": false, "ne": false, "ph": "V1" }
+        {
+          "k": "ORI-20",
+          "s": "Durcissement et TLS",
+          "p": "back",
+          "e": "API",
+          "r": 6.0,
+          "est": 7.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-21",
+          "s": "Provisionnement base de production",
+          "p": "back",
+          "e": "API",
+          "r": 5.0,
+          "est": 6.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-22",
+          "s": "Activation des réglages",
+          "p": "front",
+          "e": "Détail",
+          "r": 7.0,
+          "est": 5.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        },
+        {
+          "k": "ORI-23",
+          "s": "Supervision de base",
+          "p": "sre",
+          "e": "Plateforme",
+          "r": 2.0,
+          "est": 2.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1"
+        }
       ],
-      "burn": { "scope": 20.0, "len": 11, "serie": [] }
+      "burn": {
+        "scope": 20.0,
+        "len": 11,
+        "start": "2026-03-09",
+        "tk": [
+          {
+            "e": 7.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          },
+          {
+            "e": 6.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          },
+          {
+            "e": 5.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          },
+          {
+            "e": 2.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          }
+        ]
+      }
     },
     {
-      "n": 4, "dates": "20 mars → 03 avr · MEP", "hint": "reste V1 + V1.1",
-      "start": "2026-03-20", "end": "2026-04-03",
+      "n": 4,
+      "dates": "20 mars → 03 avr · MEP",
+      "hint": "reste V1 + V1.1",
+      "start": "2026-03-20",
+      "end": "2026-04-03",
       "objectif": "Compléter la V1 et démarrer la V1.1. Exports et écrans avancés.",
       "fres": "L'utilisateur exporte ses rapports et consulte les écrans avancés.",
       "fout": "",
-      "tot": 16.0, "bugs": 2.6, "ntk": 3, "estTotal": 16.0,
+      "tot": 16.0,
+      "bugs": 2.6,
+      "ntk": 3,
+      "estTotal": 16.0,
       "jiraUrl": "https://orion.example.test/board?sprint=4",
       "poles": {
-        "back":  { "label": "Back", "tot": 8.0, "est": 9.0, "bugs": 1.8, "done": 0, "load": 9.8, "cap": 17, "n": 1,
-                   "objectif": "Exposer l'API d'export.",
-                   "epics": [{ "e": "Exports", "r": 8.0, "n": 1, "done": 0 }] },
-        "front": { "label": "Front", "tot": 6.0, "est": 4.0, "bugs": 0.8, "done": 0, "load": 6.8, "cap": 12, "n": 1,
-                   "objectif": "Livrer les exports et les écrans avancés.",
-                   "epics": [{ "e": "Exports", "r": 6.0, "n": 1, "done": 0 }] },
-        "sre":   { "label": "SRE", "tot": 2.0, "est": 3.0, "bugs": 0.0, "done": 0, "load": 2.0, "cap": 8, "n": 1,
-                   "objectif": "Mettre en place l'observabilité.",
-                   "epics": [{ "e": "Observabilité", "r": 2.0, "n": 1, "done": 0 }] }
+        "back": {
+          "label": "Back",
+          "tot": 8.0,
+          "est": 9.0,
+          "bugs": 1.8,
+          "done": 0,
+          "load": 9.8,
+          "cap": 17,
+          "n": 1,
+          "objectif": "Exposer l'API d'export.",
+          "epics": [
+            {
+              "e": "Exports",
+              "r": 8.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        },
+        "front": {
+          "label": "Front",
+          "tot": 6.0,
+          "est": 4.0,
+          "bugs": 0.8,
+          "done": 0,
+          "load": 6.8,
+          "cap": 12,
+          "n": 1,
+          "objectif": "Livrer les exports et les écrans avancés.",
+          "epics": [
+            {
+              "e": "Exports",
+              "r": 6.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        },
+        "sre": {
+          "label": "SRE",
+          "tot": 2.0,
+          "est": 3.0,
+          "bugs": 0.0,
+          "done": 0,
+          "load": 2.0,
+          "cap": 8,
+          "n": 1,
+          "objectif": "Mettre en place l'observabilité.",
+          "epics": [
+            {
+              "e": "Observabilité",
+              "r": 2.0,
+              "n": 1,
+              "done": 0
+            }
+          ]
+        }
       },
       "tickets": [
-        { "k": "ORI-30", "s": "API d'export (JSON, CSV)", "p": "back", "e": "Exports", "r": 8.0, "est": 9.0, "st": "To Do", "d": false, "ne": false, "ph": "V1.1" },
-        { "k": "ORI-31", "s": "Écran d'export", "p": "front", "e": "Exports", "r": 6.0, "est": 4.0, "st": "To Do", "d": false, "ne": false, "ph": "V1.1" },
-        { "k": "ORI-32", "s": "Tableau de bord d'observabilité", "p": "sre", "e": "Observabilité", "r": 2.0, "est": 3.0, "st": "To Do", "d": false, "ne": false, "ph": "V1.1" }
+        {
+          "k": "ORI-30",
+          "s": "API d'export (JSON, CSV)",
+          "p": "back",
+          "e": "Exports",
+          "r": 8.0,
+          "est": 9.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1.1"
+        },
+        {
+          "k": "ORI-31",
+          "s": "Écran d'export",
+          "p": "front",
+          "e": "Exports",
+          "r": 6.0,
+          "est": 4.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1.1"
+        },
+        {
+          "k": "ORI-32",
+          "s": "Tableau de bord d'observabilité",
+          "p": "sre",
+          "e": "Observabilité",
+          "r": 2.0,
+          "est": 3.0,
+          "st": "To Do",
+          "d": false,
+          "ne": false,
+          "ph": "V1.1"
+        }
       ],
-      "burn": { "scope": 16.0, "len": 14, "serie": [] }
+      "burn": {
+        "scope": 16.0,
+        "len": 14,
+        "start": "2026-03-20",
+        "tk": [
+          {
+            "e": 9.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          },
+          {
+            "e": 5.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          },
+          {
+            "e": 2.0,
+            "cd": null,
+            "td": null,
+            "st": "To Do"
+          }
+        ]
+      }
     }
   ]
 }

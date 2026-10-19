@@ -55,6 +55,32 @@ a{color:inherit}
 .kpi-mini .mtx .l{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
 .kpi-mini .mtx .v{font-size:12.5px;font-weight:600}
 .kpi-mini .mtx .v b{font-weight:700}
+.v1hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.vring{position:relative;width:72px;height:72px;flex:none}
+.vring svg{transform:rotate(-90deg)}
+.vring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;letter-spacing:-.02em}
+.vtx{flex:1;min-width:200px}
+.vlab{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:4px}
+.vbig{font-size:15.5px}.vbig b{font-weight:700}
+.vchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.vchips span{font-family:var(--mono);font-size:11px;background:var(--surface-2);border-radius:8px;padding:5px 10px;color:var(--ink-2)}
+.vchips b{color:var(--ink);font-weight:600}.vchips .crit b{color:var(--crit)}
+.v1sub{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.v1sub h3{font-size:12px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em}
+.vhint{font-family:var(--mono);font-size:9.5px;text-transform:none;letter-spacing:0;color:var(--ink-3);font-weight:400;margin-left:6px}
+.vring.tip{position:relative;cursor:help;outline:none}
+.vbadge{position:absolute;top:-3px;right:-7px;background:var(--accent);color:#fff;font:700 10px/1 var(--mono);padding:3px 5px;border-radius:999px;border:2px solid var(--surface)}
+.vtip{position:absolute;top:calc(100% + 8px);left:0;min-width:250px;max-width:330px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.32);padding:12px 14px;z-index:40;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .14s,transform .14s,visibility .14s;text-align:left}
+.vring.tip:hover .vtip,.vring.tip:focus .vtip,.vring.tip:focus-within .vtip{opacity:1;visibility:visible;transform:none}
+.vtip-h{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.vtip-s{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-bottom:8px}
+.vtip-g{margin-bottom:7px}.vtip-g:last-child{margin-bottom:0}
+.vtip-gl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:2px}
+.vtip-tk{display:flex;gap:7px;font-size:12px;padding:1px 0;min-width:0}
+.vtip-tk .k{font-family:var(--mono);font-size:10.5px;color:var(--accent);flex:none}
+.vtip-tk .s{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.vtip-more{font-size:10.5px;color:var(--ink-3);padding-left:2px}
+@media(max-width:560px){.vtip{left:auto;right:0}}
 .seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px;margin-bottom:18px}
 .seg button{border:0;background:transparent;color:var(--ink-2);font:600 13px/1 var(--sans);padding:9px 18px;border-radius:9px;cursor:pointer;transition:.12s}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
@@ -77,12 +103,11 @@ a{color:inherit}
 .bnote b{color:var(--ink-2);font-weight:600}
 .muted{font-size:12.5px;color:var(--ink-3)}
 .pdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
-.erow{margin:9px 0}
-.erow .et{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;margin-bottom:4px}
-.erow .et .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.erow .et .rv{font-family:var(--mono);font-size:11px;color:var(--ink-2);flex:none}
-.erow .ebar{display:flex;height:8px;border-radius:5px;overflow:hidden;background:var(--surface-2);min-width:3%}
-.erow .ebar i{display:block;height:100%}
+.et{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;margin-bottom:5px}
+.et .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.et .rv{font-family:var(--mono);font-size:11px;color:var(--ink-2);flex:none}
+.ebar{display:flex;height:8px;border-radius:5px;overflow:hidden;background:var(--surface-2);min-width:3%}
+.ebar i{display:block;height:100%}
 .dgrp{margin:0 0 12px}.dgrp:last-child{margin-bottom:0}
 .dgh{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
 .dk{display:flex;gap:9px;align-items:baseline;padding:2px 0;font-size:12.5px}
@@ -90,6 +115,47 @@ a{color:inherit}
 .dk .id:hover{text-decoration:underline}
 .dk .s{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
 .dk .mv{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);flex:none}
+.spzone{border:1.5px solid var(--line);border-radius:18px;padding:14px 14px 0;margin-bottom:16px;background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.spzone-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:4px 6px 12px}
+.spzone-h .lab{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.spzone-sub{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.epicwrap{padding:0}
+.epicwrap>.epsum{cursor:pointer;list-style:none;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:16px 40px 14px 20px;position:relative}
+.epicwrap>.epsum::-webkit-details-marker{display:none}
+.epicwrap>.epsum .et-h{font-size:14px;font-weight:600}
+.epicwrap>.epsum::after{content:"\25BE";position:absolute;right:18px;top:17px;color:var(--ink-3);font-size:12px;transition:transform .15s}
+.epicwrap:not([open])>.epsum::after{transform:rotate(-90deg)}
+.epicwrap>#epics{padding:0 20px 16px}
+.epd{border-top:1px solid var(--line)}
+.epd>summary{cursor:pointer;list-style:none;padding:10px 0 9px;position:relative}
+.epd>summary::-webkit-details-marker{display:none}
+.epd>summary::after{content:"\25BE";position:absolute;right:2px;top:12px;color:var(--ink-3);font-size:11px;transition:transform .15s}
+.epd:not([open])>summary::after{transform:rotate(-90deg)}
+.epd .etk{padding:0 0 10px}
+.epd .tk{display:flex;gap:9px;align-items:baseline;padding:3px 0 3px 18px;font-size:12.5px}
+.epd .tk .id{font-family:var(--mono);font-size:11px;color:var(--accent);text-decoration:none;flex:none}
+.epd .tk .s{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.epd .tk .st{font-size:10.5px;color:var(--ink-3);flex:none}
+.epd .tk .rr{font-family:var(--mono);font-size:11px;color:var(--ink-2);flex:none}
+.epgrp{border-top:1px solid var(--line)}
+.epicwrap>#epics>.epgrp:first-child{border-top:none}
+.epgrp>summary{cursor:pointer;list-style:none;padding:12px 0 11px;font-size:13px;color:var(--ink-2);position:relative}
+.epgrp>summary::-webkit-details-marker{display:none}
+.epgrp>summary::after{content:"\25BE";position:absolute;right:2px;top:13px;color:var(--ink-3);font-size:11px;transition:transform .15s}
+.epgrp:not([open])>summary::after{transform:rotate(-90deg)}
+.epgrp>summary b{color:var(--ink);font-weight:700}
+.epgrp-n{color:var(--ink-3);font-size:11.5px}
+.epgrp-b{padding-left:12px}
+.pobj-note{grid-column:1/-1;font-size:11px;line-height:1.55;color:var(--ink-3);border-top:1px dashed var(--line);padding-top:10px;margin-top:2px}
+.pobj-note b{color:var(--ink-2);font-weight:600}
+.poc .ld small{color:var(--ink-3)}
+.poc .ld.crit b{color:var(--crit)}
+.bsub{font-size:11.5px;color:var(--ink-2);margin:2px 0 10px}
+.bsub b{color:var(--ink);font-weight:600}
+.burnseg{display:inline-flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:2px;flex:none}
+.burnseg button{border:0;background:transparent;color:var(--ink-2);font:600 11px/1 var(--mono);padding:5px 10px;border-radius:999px;cursor:pointer;transition:.12s}
+.burnseg button.on{background:var(--accent);color:#fff}
+.burnseg button:hover:not(.on){color:var(--ink)}
 .obj-lab{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:5px}
 
 .jal svg{width:100%;height:auto;display:block;overflow:visible}
@@ -212,7 +278,6 @@ details.pole[open] .caret{transform:rotate(90deg)}
  <div class="head">
   <img class="logo" id="brandLogo" alt="" hidden>
   <div class="htxt"><h1 id="brandTitle">Avancement projet Jira</h1><div class="sub" id="brandSub"></div></div>
-  <div class="kpi-mini" id="kpiMini"></div>
   <a class="applink" id="appLink" target="_blank" rel="noopener" hidden></a>
  </div>
  <div id="app"><div class="loading"><div class="skel"></div><div style="margin-top:10px;font-size:12px">Chargement…</div></div></div>
@@ -235,7 +300,23 @@ details.pole[open] .caret{transform:rotate(90deg)}
  function dlong(iso){var d=D2(iso);return d.getDate()+" "+MOIS[d.getMonth()];}
  function stClass(st,d){var s=(st||"").toLowerCase();if(d||/clos|done|closed/.test(s))return"s-done";if(/cancel/.test(s))return"s-stop";if(/progress|review|testing|dev/.test(s))return"s-prog";return"s-todo";}
 
- var DATA=null,cur=1,sec="report",JIRA="",chartsReady=false;
+ var DATA=null,cur=1,sec="report",JIRA="",chartsReady=false,burnMode="deux";
+ function burnLabel(m){return m==="ferme"?"fermés":(m==="testing"?"en Testing":"fermés + Testing");}
+ function burned(t,day,m){var c=t.cd&&t.cd<=day,te=t.st==="Testing"&&t.td&&t.td<=day;return m==="ferme"?!!c:(m==="testing"?!!te:(!!c||!!te));}
+ function burnPoints(tk,startMs,lastD,m,weekly){
+  function iso(d){return new Date(startMs+d*864e5).toISOString().slice(0,10);}
+  function rem(day){var s=0;for(var i=0;i<tk.length;i++){if(!burned(tk[i],day,m))s+=tk[i].e;}return Math.round(s*10)/10;}
+  var pts=[],step=weekly?7:1;
+  for(var d=0;d<lastD;d+=step)pts.push({x:d,y:rem(iso(d))});
+  pts.push({x:lastD,y:rem(iso(lastD))});
+  return pts;
+ }
+ function burnSeg(){return '<span class="burnseg" role="group" aria-label="Statuts comptés">'+
+   [["ferme","Fermés"],["testing","Testing"],["deux","Les deux"]].map(function(o){
+     return '<button type="button" data-bm="'+o[0]+'"'+(burnMode===o[0]?' class="on"':'')+'>'+o[1]+'</button>';}).join("")+'</span>';}
+ function setBurnMode(m){burnMode=m;
+   Array.prototype.forEach.call(document.querySelectorAll(".burnseg button"),function(b){b.classList.toggle("on",b.dataset.bm===m);});
+   buildMacro(); if(chartsReady)buildBurn();}
  var chMacro=null,chBurn=null,chDough=null;
 
  try{DATA=JSON.parse(document.getElementById("DATAJSON").textContent);JIRA=DATA.meta.jira;init();}
@@ -259,18 +340,20 @@ details.pole[open] .caret{transform:rotate(90deg)}
   brand();
   document.getElementById("app").innerHTML=[
    '<div class="card"><div class="c-h"><h3>Jalons du programme</h3><span class="jlinks" id="jlinks"></span></div><div class="jal" id="jal"></div><div class="jkey" id="jkey"></div></div>',
-   '<div class="card"><div class="c-h"><h3>Avancement par pôle <span class="phtag">V1.0</span></h3></div><div id="poles"></div><div id="polesV11"></div></div>',
-   '<div class="card"><div class="c-h"><h3>Burn-down du plan <span class="phtag">V1.0</span></h3><span class="sub">reste à faire V1 (charge réelle), tickets fermés ou en Testing, vs descente idéale au gel</span></div><div class="cv"><canvas id="cvMacro"></canvas></div><div class="bnote">Un ticket descend la courbe le jour où il passe <b>en Testing ou fermé</b> (Testing, Closing, Closed) - dev considéré fini. Le travail <b>encore en cours</b> (In Progress, Dev Review) n\'est décompté qu\'à ce moment : le reste affiché ici reste <b>supérieur au reste pondéré par statut</b> du bandeau V1.0 (qui crédite aussi l\'avancement en cours). Pour un Testing non fermé, la date retenue est sa dernière modification.</div></div>',
-   '<div class="card" id="deltaCard" hidden><div class="c-h"><h3>Depuis la dernière publication</h3><span class="sub" id="deltaSub"></span></div><div id="delta"></div></div>',
-   '<div class="card"><div class="c-h"><h3>Reste à faire par epic</h3><span class="sub">V1.0 et V1.1, par pôle</span></div><div id="epics"></div></div>',
-   '<div class="tl"><div class="tl-h"><span class="lab">Choisir un sprint</span><span class="hint" id="tlHint"></span></div><div class="nodes" id="nodes"></div></div>',
-   '<div class="card" id="objCard"></div>',
-   '<div class="pobj" id="pobj"></div>',
-   '<div class="charts">',
-     '<div class="card"><div class="c-h"><h3>Burn-down du sprint</h3><span class="sub" id="bSub"></span></div><div class="cv"><canvas id="cvBurn"></canvas></div><div class="bnote">Compte les tickets <b>fermés ou en Testing</b> (dev fini). Le travail encore en cours (In Progress, Dev Review) n\'est décompté qu\'une fois en Testing ou fermé : l\'écart avec la tuile <b>« à faire »</b> (reste pondéré par statut) vient de là.</div></div>',
-     '<div class="card"><div class="c-h"><h3>Reste par pôle</h3><span class="sub" id="dSub"></span></div><div class="cv"><canvas id="cvDough"></canvas></div></div>',
-   '</div>',
-   '<div class="card"><div class="tk-head"><h3>Tickets du sprint</h3><span class="cnt" id="tkCnt"></span></div><div id="tickets"></div></div>'
+   '<div class="card"><div class="v1hero" id="v1hero"></div><div class="c-h v1sub"><h3>Par pôle <span class="phtag">V1.0</span></h3></div><div id="poles"></div><div id="polesV11"></div></div>',
+   '<div class="card"><div class="c-h"><h3>Burn-down du plan <span class="phtag">V1.0</span></h3>'+burnSeg()+'</div><div class="bsub">reste à faire V1 vs descente idéale au gel · <b>choisis les statuts comptés comme « faits »</b> ci-dessus</div><div class="cv"><canvas id="cvMacro"></canvas></div><div class="bnote">Un ticket descend la courbe le jour où il atteint le statut choisi : <b>Fermés</b> = Closing / Closed (date de résolution), <b>Testing</b> = en recette (dernière modification), <b>Les deux</b> = dev considéré fini. Le travail encore en cours (In Progress, Dev Review) n\'est jamais décompté. Le reste ici reste <b>supérieur au reste pondéré par statut</b> du bandeau V1.0 (qui crédite aussi l\'avancement en cours).</div></div>',
+   '<section class="spzone">',
+     '<div class="spzone-h"><span class="lab">Plan de sprints</span><span class="spzone-sub" id="spzoneSub"></span></div>',
+     '<div class="tl"><div class="tl-h"><span class="lab">Choisir un sprint</span><span class="hint" id="tlHint"></span></div><div class="nodes" id="nodes"></div></div>',
+     '<div class="card" id="objCard"></div>',
+     '<div class="pobj" id="pobj"></div>',
+     '<div class="charts">',
+       '<div class="card"><div class="c-h"><h3>Burn-down du sprint</h3>'+burnSeg()+'</div><div class="bsub" id="bSub"></div><div class="cv"><canvas id="cvBurn"></canvas></div><div class="bnote">Statuts comptés comme « faits » : <b>Fermés</b>, <b>Testing</b> ou <b>les deux</b> (sélecteur ci-dessus). Le travail encore en cours (In Progress, Dev Review) n\'est pas décompté : l\'écart avec la tuile <b>« à faire »</b> vient de là.</div></div>',
+       '<div class="card"><div class="c-h"><h3>Reste par pôle</h3><span class="sub" id="dSub"></span></div><div class="cv"><canvas id="cvDough"></canvas></div></div>',
+     '</div>',
+     '<div class="card"><div class="tk-head"><h3>Tickets du sprint</h3><span class="cnt" id="tkCnt"></span></div><div id="tickets"></div></div>',
+   '</section>',
+   '<details class="card epicwrap"><summary class="epsum"><span class="et-h">Reste à faire par epic <span class="phtag">V1.0 + V1.1</span></span><span class="sub">tout le périmètre, hors sprint · déplie pour voir les epics et leurs tickets</span></summary><div id="epics"></div></details>'
   ].join("");
 
   renderReport(); buildMacro();
@@ -282,8 +365,13 @@ details.pole[open] .caret{transform:rotate(90deg)}
   document.getElementById("nodes").addEventListener("click",function(e){var b=e.target.closest(".node");if(b)select(+b.dataset.n);});
   renderPlan();
   buildBurn(); chartsReady=true; renderDough(DATA.sprints[cur-1]);
-  document.getElementById("foot").innerHTML="Mêmes chiffres que le rapport de projection. Charge = reste pondéré par statut + réserve bugs (20 % de l'estimé, pôles dev). Burn-down = jours estimés réels, descente quand un ticket passe en Testing ou fermé (dev fini). Capacités cibles par sprint de 2 semaines : Back 17 j, Front 15 j, SRE 10 j. Le découpage suit les sprints du board Jira ; S1 est le sprint en cours.";
+  var _g=DATA.meta.generated||"";var _gt=_g?'<b>Mis à jour le '+dfr(_g)+' à '+_g.slice(11,16)+'</b> (données Jira live) · ':'';
+  document.getElementById("foot").innerHTML=_gt+"Charge = reste pondéré par statut + réserve bugs (20 % de l'estimé, pôles dev). Burn-down = jours estimés réels, descente quand un ticket atteint le statut choisi. Capacités cibles par sprint de 2 semaines : Back 17 j, Front 15 j, SRE 10 j. Le découpage suit les sprints du board Jira ; S1 est le sprint en cours.";
   window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",function(){buildMacro();buildBurn();renderDough(DATA.sprints[cur-1]);});
+  document.addEventListener("click",function(e){var b=e.target.closest(".burnseg button");if(b)setBurnMode(b.dataset.bm);});
+  // Rendu une fois la police chargée : Chart.js mesure la largeur des étiquettes Y
+  // avec la police réelle (sinon les nombres à 3 chiffres sont coupés à gauche).
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildMacro();if(chartsReady)buildBurn();});
  }
 
  function renderJalons(){
@@ -325,11 +413,29 @@ details.pole[open] .caret{transform:rotate(90deg)}
  }
  function renderReport(){
   renderJalons();
-  var r=DATA.report,k=r.kpi||{},m=DATA.meta,pct=k.v1_pct||0,C=119.38,off=C*(1-pct/100);
-  document.getElementById("kpiMini").innerHTML=
-   '<div class="mring"><svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="19" fill="none" stroke="var(--surface-2)" stroke-width="5"/>'+
-   '<circle cx="27" cy="27" r="19" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/></svg><b>'+pct+'%</b></div>'+
-   '<div class="mtx"><span class="l">Avancement V1.0</span><span class="v"><b>'+rj(k.v1_real)+'</b> / '+rj(k.v1_charge)+' j · reste <b>'+rj(k.v1_reste)+' j</b></span></div>';
+  var r=DATA.report,k=r.kpi||{},m=DATA.meta,t=r.timeline||{},pct=k.v1_pct||0,C=201.06,off=C*(1-pct/100);
+  var chips=[];
+  if(t.v1_end)chips.push('fin V1 projetée <b>'+dfr(t.v1_end)+'</b>');
+  if(t.overshoot_weeks)chips.push('<span class="crit">dépassement <b>'+fmt(t.overshoot_weeks)+' sem</b></span>');
+  if(r.avail_weeks!=null)chips.push('<b>'+r.avail_weeks+'</b> sem avant le gel');
+  var dd=r.delta||{};
+  var dgroups=[["termine","Terminés","var(--ok)"],["avance","Avancés","var(--accent)"],["nouveau","Entrés au périmètre","var(--warn)"],["recul","Reculs","var(--crit)"],["disparu","Sortis","var(--ink-3)"]];
+  var moved=dgroups.reduce(function(a,g){return a+(dd[g[0]]||[]).length;},0);
+  var dsub=[]; if(dd.ref)dsub.push("depuis le "+dfr(dd.ref)); if(dd.pct_avant!=null)dsub.push(dd.pct_avant+" % → "+dd.pct_apres+" %"); if(dd.jours_termines)dsub.push(fmt(dd.jours_termines)+" j terminés");
+  var dtip=moved?
+    ('<div class="vtip-h">Depuis la dernière publication</div><div class="vtip-s">'+esc(dsub.join(" · "))+'</div>'+
+     dgroups.filter(function(g){return (dd[g[0]]||[]).length;}).map(function(g){
+      return '<div class="vtip-g"><div class="vtip-gl" style="color:'+g[2]+'">'+g[1]+' ('+dd[g[0]].length+')</div>'+
+        dd[g[0]].slice(0,5).map(function(t){return '<div class="vtip-tk"><span class="k">'+esc(t.k)+'</span><span class="s">'+esc(t.s)+'</span></div>';}).join("")+
+        (dd[g[0]].length>5?'<div class="vtip-more">+'+(dd[g[0]].length-5)+' autres</div>':'')+'</div>';}).join(""))
+    :('<div class="vtip-h">À jour</div><div class="vtip-s">Aucun changement'+(dd.ref?" depuis le "+dfr(dd.ref):"")+'</div>');
+  document.getElementById("v1hero").innerHTML=
+   '<div class="vring tip" tabindex="0" role="button" aria-label="Changements depuis la dernière publication"><svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="32" fill="none" stroke="var(--surface-2)" stroke-width="7"/>'+
+   '<circle cx="36" cy="36" r="32" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/></svg><b>'+pct+'%</b>'+
+   (moved?'<span class="vbadge" title="changements depuis la dernière publication">+'+moved+'</span>':'')+
+   '<div class="vtip">'+dtip+'</div></div>'+
+   '<div class="vtx"><div class="vlab">Avancement V1.0 <span class="vhint">survolez l\'anneau pour le détail</span></div><div class="vbig"><b>'+rj(k.v1_real)+'</b> / '+rj(k.v1_charge)+' j réalisés · reste <b>'+rj(k.v1_reste)+' j</b></div>'+
+   (chips.length?'<div class="vchips">'+chips.map(function(c){return '<span>'+c+'</span>';}).join("")+'</div>':'')+'</div>';
   var jl=(m.links||[]).map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+' <span aria-hidden="true">↗</span></a>';});
   var jln=document.getElementById("jlinks"); if(jln) jln.innerHTML=jl.join("");
   document.getElementById("poles").innerHTML=POLES.map(function(p){var g=r.poles[p];
@@ -339,44 +445,37 @@ details.pole[open] .caret{transform:rotate(90deg)}
    '<details class="v11det"><summary><span class="phtag v11tag">V1.1</span> après le gel · reste <b>'+fmt(r.v11.reste)+' j</b> <span class="more">voir par pôle</span></summary>'+
    '<div class="v11body">'+POLES.map(function(p){var g=v11[p]||{};
      return prow(p,null,g.charge||0,null,null,g.pct||0,g.reste||0,true);}).join("")+'</div></details>';
-  renderEpics(); renderDelta();
+  renderEpics();
  }
 
+ function epTk(t){
+  var rr=t.ne?'non est.':'reste '+fmt(t.r)+' j';
+  return '<div class="tk"><a class="id" href="'+JIRA+t.k+'" target="_blank" rel="noopener">'+t.k+'</a>'+
+    '<span class="s" title="'+esc(t.s)+'">'+esc(t.s)+'</span>'+
+    '<span class="st '+stClass(t.st,false)+'">'+esc(t.st)+'</span><span class="rr">'+rr+'</span></div>';
+ }
+ function epSection(all,phase,label){
+  var key=phase==="V1"?"rV1":"rV11";
+  var eps=all.filter(function(e){return e[key]>0.05;}).sort(function(a,b){return b[key]-a[key];});
+  if(!eps.length)return "";
+  var mx=Math.max.apply(null,eps.map(function(e){return e[key];}))||1;
+  var tot=eps.reduce(function(a,e){return a+e[key];},0);
+  var body=eps.map(function(e){
+   var w=Math.max(3,e[key]/mx*100),col=phase==="V1"?"var(--"+e.pole+")":"var(--ink-3)";
+   var tks=(e.tickets||[]).filter(function(t){return (t.ph==="V1.1")===(phase==="V1.1");});
+   var inner=tks.length?tks.map(epTk).join(""):'<div class="muted" style="padding:2px 0 8px 18px">Aucun ticket ouvert.</div>';
+   return '<details class="epd"><summary><div class="et"><span class="nm"><span class="pdot" style="background:var(--'+e.pole+')"></span>'+esc(e.epic)+' <span class="st" style="color:var(--ink-3)">'+tks.length+' tk</span></span>'+
+     '<span class="rv">reste '+fmt(e[key])+' j</span></div><div class="ebar" style="width:'+w+'%"><i style="width:100%;background:'+col+'"></i></div></summary>'+
+     '<div class="etk">'+inner+'</div></details>';
+  }).join("");
+  return '<details class="epgrp" open><summary class="epgrp-h"><span class="phtag'+(phase==="V1.1"?" v11tag":"")+'">'+label+'</span> reste <b>'+fmt(tot)+' j</b> <span class="epgrp-n">· '+eps.length+' epics</span></summary><div class="epgrp-b">'+body+'</div></details>';
+ }
  function renderEpics(){
-  var eps=(DATA.report.epics||[]).filter(function(e){return (e.rV1+e.rV11)>0.05;});
-  if(!eps.length){document.getElementById("epics").innerHTML='<div class="muted">Aucun reste à faire.</div>';return;}
-  var mx=Math.max.apply(null,eps.map(function(e){return e.rV1+e.rV11;}))||1;
-  document.getElementById("epics").innerHTML=eps.map(function(e){
-   var tot=e.rV1+e.rV11,w=Math.max(3,tot/mx*100);
-   var seg=e.rV1>0?'<i style="width:'+(e.rV1/tot*100)+'%;background:var(--'+e.pole+')"></i>':'';
-   seg+=e.rV11>0?'<i style="width:'+(e.rV11/tot*100)+'%;background:var(--ink-3)"></i>':'';
-   var det=[]; if(e.rV1>0)det.push('V1.0 '+fmt(e.rV1)+' j'); if(e.rV11>0)det.push('V1.1 '+fmt(e.rV11)+' j');
-   return '<div class="erow"><div class="et"><span class="nm"><span class="pdot" style="background:var(--'+e.pole+')"></span>'+esc(e.epic)+'</span>'+
-     '<span class="rv">'+det.join(' · ')+'</span></div>'+
-     '<div class="ebar" style="width:'+w+'%">'+seg+'</div></div>';
-  }).join("");
+  var all=(DATA.report.epics||[]);
+  var html=epSection(all,"V1","V1.0")+epSection(all,"V1.1","V1.1");
+  document.getElementById("epics").innerHTML=html||'<div class="muted">Aucun reste à faire.</div>';
  }
 
- function renderDelta(){
-  var d=DATA.report.delta||{};
-  var groups=[["termine","Terminés","var(--ok)"],["avance","Avancés","var(--accent)"],
-              ["nouveau","Entrés au périmètre","var(--warn)"],["recul","Reculs","var(--crit)"],
-              ["disparu","Sortis du périmètre","var(--ink-3)"]];
-  var any=groups.some(function(g){return (d[g[0]]||[]).length;});
-  if(!any){document.getElementById("deltaCard").hidden=true;return;}
-  document.getElementById("deltaCard").hidden=false;
-  var sub=[]; if(d.ref)sub.push("depuis le "+dfr(d.ref));
-  if(d.jours_termines)sub.push(fmt(d.jours_termines)+" j terminés");
-  if(d.pct_avant!=null)sub.push(d.pct_avant+" % → "+d.pct_apres+" %");
-  document.getElementById("deltaSub").textContent=sub.join(" · ");
-  function tk(t,g){var mv=g==="avance"?' +'+fmt(t.gain)+' j':(g==="recul"?' '+fmt(t.gain)+' j':(t.st_avant&&t.st_avant!==t.st?' '+esc(t.st_avant)+' → '+esc(t.st):''));
-   return '<div class="dk"><a class="id" href="'+JIRA+t.k+'" target="_blank" rel="noopener">'+t.k+'</a>'+
-     '<span class="s" title="'+esc(t.s)+'">'+esc(t.s)+'</span><span class="mv">'+esc(t.st||"")+mv+'</span></div>';}
-  document.getElementById("delta").innerHTML=groups.filter(function(g){return (d[g[0]]||[]).length;}).map(function(g){
-   return '<div class="dgrp"><div class="dgh" style="color:'+g[2]+'">'+g[1]+' ('+d[g[0]].length+')</div>'+
-     d[g[0]].map(function(t){return tk(t,g[0]);}).join("")+'</div>';
-  }).join("");
- }
 
  function select(n){if(n<1||n>DATA.sprints.length)return;cur=n;renderPlan();
    if(chartsReady){buildBurn();renderDough(DATA.sprints[cur-1]);}}
@@ -385,6 +484,7 @@ details.pole[open] .caret{transform:rotate(90deg)}
   var s=DATA.sprints[cur-1];
   Array.prototype.forEach.call(document.querySelectorAll(".node"),function(b){b.classList.toggle("on",+b.dataset.n===cur);});
   document.getElementById("tlHint").textContent="Sprint "+cur+" / "+DATA.sprints.length+" · "+s.dates.replace(/ · (gel|MEP)/,"");
+  var szs=document.getElementById("spzoneSub"); if(szs)szs.textContent="Sprint "+cur+" sélectionné · tout ci-dessous concerne ce sprint";
   var phBadge=/gel/.test(s.dates)?"Gel du code":(/MEP/.test(s.dates)?"Mise en service":(s.n===1?"En cours":s.hint));
   document.getElementById("objCard").innerHTML=[
    '<div class="sp-top"><h2>Sprint '+s.n+'</h2><span class="ph">'+esc(phBadge)+'</span></div>',
@@ -398,17 +498,13 @@ details.pole[open] .caret{transform:rotate(90deg)}
    '<div class="splinks">'+((s.jiraUrl||DATA.meta.jira)?'<a href="'+esc(s.jiraUrl||DATA.meta.jira)+'" target="_blank" rel="noopener">Sprint dans Jira <span aria-hidden="true">↗</span></a>':'')+(DATA.meta.release_link?'<a href="'+esc(DATA.meta.release_link.url)+'" target="_blank" rel="noopener">'+esc(DATA.meta.release_link.label)+' <span aria-hidden="true">↗</span></a>':'')+'</div>'
   ].join("");
 
-  document.getElementById("pobj").innerHTML=POLES.map(function(p){var g=s.poles[p];var over=g.load>g.cap+0.5;
-   var eps=(g.epics||[]).filter(function(e){return e.r>0||e.done>0;});
-   var top=eps.slice(0,2),rest=eps.length-top.length;
-   var mx=Math.max(g.load,g.cap)*1.08||1;function w(v){return v/mx*100;}
-   var done=Math.min(g.done,g.load),restW=Math.max(0,g.load-done-g.bugs);
+  document.getElementById("pobj").innerHTML=POLES.map(function(p){var g=s.poles[p];var over=g.tot>g.cap+0.5;
    var objtxt=g.objectif?esc(g.objectif):'<span class="more">Pas d\'objectif dédié ce sprint</span>';
-   return '<div class="poc'+(over?" over":"")+'" style="--pc:var(--'+p+')"><div class="ph"><span class="nm">'+g.label+'</span><span class="ld">'+fmt(g.load)+' / '+g.cap+' j</span></div>'+
+   return '<div class="poc'+(over?" over":"")+'" style="--pc:var(--'+p+')"><div class="ph"><span class="nm">'+g.label+'</span>'+
+     '<span class="ld">'+(over?'<b class="crit">surcharge</b>':'<b>'+fmt(g.tot)+' j</b> à faire')+'</span></div>'+
      '<div class="ep">'+objtxt+'</div>'+
-     '<div class="g-track"><div class="seg2 done" style="width:'+w(done)+'%"></div><div class="seg2" style="left:'+w(done)+'%;width:'+w(restW)+'%;background:var(--'+p+')"></div>'+
-     (g.bugs?'<div class="seg2 bugs" style="left:'+w(done+restW)+'%;width:'+w(g.bugs)+'%"></div>':'')+'<div class="capm" style="left:'+w(g.cap)+'%"></div></div>'+
-     '<div class="gl"><span>'+(g.done?'réalisé '+fmt(done)+' j':'—')+'</span><span>'+(over?'dépassement':'cap '+g.cap+' j')+'</span></div></div>';
+     '<div class="g-track"><div class="seg2" style="left:0;width:'+Math.min(100,g.tot/g.cap*100)+'%;background:'+(over?'var(--crit)':'var(--'+p+')')+'"></div></div>'+
+     '<div class="gl"><span>'+fmt(g.tot)+' j à faire</span><span>capacité '+g.cap+' j</span></div></div>';
   }).join("");
 
   renderTickets(s);
@@ -439,22 +535,25 @@ details.pole[open] .caret{transform:rotate(90deg)}
   var vals=POLES.map(function(p){return Math.round(s.poles[p].tot*10)/10;}),cols=[cssv("--back"),cssv("--front"),cssv("--sre")];
   if(chDough){chDough.data.datasets[0].data=vals;chDough.data.datasets[0].backgroundColor=cols;chDough.data.datasets[0].borderColor=cssv("--surface");chDough.update();return;}
   chDough=new Chart(document.getElementById("cvDough"),{type:"doughnut",data:{labels:["Back","Front","SRE"],datasets:[{data:vals,backgroundColor:cols,borderWidth:2,borderColor:cssv("--surface")}]},
-   options:{responsive:true,maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"bottom",labels:{color:cssv("--ink-2"),font:{family:"Manrope",size:12},boxWidth:10,boxHeight:10,padding:14}},tooltip:{callbacks:{label:function(c){return c.label+" : "+fmt(c.raw)+" j";}}}}}});
+   options:{responsive:true,maintainAspectRatio:false,layout:{padding:{left:8,top:4,right:4}},cutout:"62%",plugins:{legend:{position:"bottom",labels:{color:cssv("--ink-2"),font:{family:"Manrope",size:12},boxWidth:10,boxHeight:10,padding:14}},tooltip:{callbacks:{label:function(c){return c.label+" : "+fmt(c.raw)+" j";}}}}}});
  }
 
  function buildBurn(){
-  var s=DATA.sprints[cur-1],b=s.burn||{scope:0,len:1,serie:[]};
-  var scope=Math.round((b.scope||0)*10)/10,len=b.len||1,serie=b.serie||[];
-  var hasReal=serie.length>0,lastX=hasReal?serie[serie.length-1].x:0;
-  var pastSp=hasReal&&lastX>=len,active=hasReal&&lastX<len,futSp=!hasReal;
-  var remN=hasReal?serie[serie.length-1].y:scope;
+  var s=DATA.sprints[cur-1],b=s.burn||{scope:0,len:1,tk:[]};
+  var scope=Math.round((b.scope||0)*10)/10,len=b.len||1;
+  var startMs=D2(b.start).getTime(),todayMs=D2(DATA.meta.today).getTime();
+  var elapsed=Math.round((todayMs-startMs)/864e5);
+  var futSp=elapsed<0,pastSp=elapsed>=len,active=!futSp&&!pastSp;
+  var lastX=futSp?0:Math.min(elapsed,len);
+  var serie=futSp?[]:burnPoints(b.tk||[],startMs,lastX,burnMode,false);
+  var remN=serie.length?serie[serie.length-1].y:scope;
   var ink2=cssv("--ink-2"),line=cssv("--line"),acc=cssv("--accent"),ink3=cssv("--ink-3"),ok=cssv("--ok");
   document.getElementById("bSub").textContent=dlong(s.start)+" → "+dlong(s.end)+
    (active?(" · J"+lastX+"/"+len+" (aujourd'hui)"):(futSp?" · à venir, pas encore de réel":" · terminé"))+
    " · "+fmt(scope)+" j estimés"+(futSp?"":" au départ");
   var ds=[{label:"Idéal",data:[{x:0,y:scope},{x:len,y:0}],borderColor:ink3,borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false,tension:0,parsing:false}];
-  if(hasReal){
-   ds.push({label:"Réel (fermés + Testing)",data:serie.map(function(p){return {x:p.x,y:p.y};}),borderColor:pastSp?ok:acc,borderWidth:2.5,pointRadius:function(c){return c.dataIndex===c.dataset.data.length-1?5:2;},pointBackgroundColor:pastSp?ok:acc,pointBorderColor:cssv("--surface"),pointBorderWidth:2,fill:false,parsing:false});
+  if(!futSp){
+   ds.push({label:"Réel ("+burnLabel(burnMode)+")",data:serie.map(function(p){return {x:p.x,y:p.y};}),borderColor:pastSp?ok:acc,borderWidth:2.5,pointRadius:function(c){return c.dataIndex===c.dataset.data.length-1?5:2;},pointBackgroundColor:pastSp?ok:acc,pointBorderColor:cssv("--surface"),pointBorderWidth:2,fill:false,parsing:false});
    if(active){
     var slope=(scope-remN)/Math.max(lastX,0.5),projEnd=Math.max(0,Math.round((remN-slope*(len-lastX))*10)/10);
     ds.push({label:"Projection",data:[{x:lastX,y:remN},{x:len,y:projEnd}],borderColor:acc,borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false,parsing:false});
@@ -462,10 +561,10 @@ details.pole[open] .caret{transform:rotate(90deg)}
   }
   if(chBurn)chBurn.destroy();
   chBurn=new Chart(document.getElementById("cvBurn"),{type:"line",data:{datasets:ds},
-   options:{responsive:true,maintainAspectRatio:false,
+   options:{responsive:true,maintainAspectRatio:false,layout:{padding:{left:8,top:4,right:4}},
     plugins:{legend:{display:true,position:"bottom",labels:{color:ink2,font:{family:"Manrope",size:11},boxWidth:16,padding:12,filter:function(l){return l.text.indexOf("_")!==0;}}},
      tooltip:{filter:function(c){return c.dataset.label.indexOf("_")!==0;},callbacks:{title:function(c){return "Jour "+Math.round(c[0].parsed.x);},label:function(c){return c.dataset.label+" : "+fmt(c.parsed.y)+" j";}}}},
-    scales:{y:{beginAtZero:true,grid:{color:line},ticks:{color:ink2,font:{family:"IBM Plex Mono",size:10},callback:function(v){return v+" j";}}},
+    scales:{y:{beginAtZero:true,grid:{color:line},ticks:{color:ink2,font:{family:"IBM Plex Mono",size:10},maxTicksLimit:6,callback:function(v){return v+" j";}}},
      x:{type:"linear",min:0,max:len,grid:{display:false},ticks:{color:ink2,font:{family:"IBM Plex Mono",size:10},stepSize:Math.max(2,Math.round(len/7)),callback:function(v){return "J"+v;}},title:{display:true,text:"jours du sprint",color:ink3,font:{family:"IBM Plex Mono",size:10}}}}}});
  }
 
@@ -478,19 +577,19 @@ details.pole[open] .caret{transform:rotate(90deg)}
   if(chMacro)chMacro.destroy();
   var ctx=document.getElementById("cvMacro"),grad=ctx.getContext("2d").createLinearGradient(0,0,0,235);
   grad.addColorStop(0,cssv("--accent-weak"));grad.addColorStop(1,"transparent");
-  var real=b.serie.map(function(p){return {x:p.d,y:p.y};});
+  var real=burnPoints(b.tk||[],start,b.today_d,burnMode,true);
   var ds=[
-   {label:"Reste réel V1 (fermés + Testing)",data:real,borderColor:acc1,backgroundColor:grad,fill:true,tension:0,borderWidth:2.5,pointBackgroundColor:acc1,pointBorderColor:cssv("--surface"),pointBorderWidth:2,pointRadius:function(c){return c.dataIndex===c.dataset.data.length-1?5:2.5;},parsing:false},
+   {label:"Reste réel V1 ("+burnLabel(burnMode)+")",data:real,borderColor:acc1,backgroundColor:grad,fill:true,tension:0,borderWidth:2.5,pointBackgroundColor:acc1,pointBorderColor:cssv("--surface"),pointBorderWidth:2,pointRadius:function(c){return c.dataIndex===c.dataset.data.length-1?5:2.5;},parsing:false},
    {label:"Idéal (0 au gel)",data:[{x:0,y:b.scope},{x:b.freeze_d,y:0}],borderColor:ink3,borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false,parsing:false},
    {label:"_gel",data:[{x:b.freeze_d,y:0},{x:b.freeze_d,y:b.scope}],borderColor:crit,borderWidth:1,pointRadius:0,fill:false,parsing:false},
    {label:"_mep",data:[{x:b.mep_d,y:0},{x:b.mep_d,y:b.scope}],borderColor:ok,borderWidth:1,pointRadius:0,fill:false,parsing:false},
    {label:"_today",data:[{x:b.today_d,y:0},{x:b.today_d,y:b.scope}],borderColor:acc1,borderDash:[2,3],borderWidth:1,pointRadius:0,fill:false,parsing:false}
   ];
   chMacro=new Chart(ctx,{type:"line",data:{datasets:ds},
-   options:{responsive:true,maintainAspectRatio:false,
+   options:{responsive:true,maintainAspectRatio:false,layout:{padding:{left:8,top:4,right:4}},
     plugins:{legend:{display:true,position:"bottom",labels:{color:ink2,font:{family:"Manrope",size:11},boxWidth:16,padding:12,filter:function(l){return l.text.indexOf("_")!==0;}}},
      tooltip:{filter:function(c){return c.dataset.label.indexOf("_")!==0;},callbacks:{title:function(c){return lbl(Math.round(c[0].parsed.x));},label:function(c){return c.dataset.label+" : "+fmt(c.parsed.y)+" j";}}}},
-    scales:{y:{beginAtZero:true,grid:{color:line},ticks:{color:ink2,font:{family:"IBM Plex Mono",size:10},callback:function(v){return v+" j";}}},
+    scales:{y:{beginAtZero:true,grid:{color:line},ticks:{color:ink2,font:{family:"IBM Plex Mono",size:10},maxTicksLimit:6,callback:function(v){return v+" j";}}},
      x:{type:"linear",min:0,max:maxX,grid:{display:false},ticks:{color:ink2,font:{family:"IBM Plex Mono",size:10},stepSize:7,callback:lbl}}}}});
  }
 })();

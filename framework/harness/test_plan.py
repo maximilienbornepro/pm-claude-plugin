@@ -48,34 +48,27 @@ def test_validate_detecte_les_manques():
     assert errs, "un JSON vide devrait lever des erreurs"
 
 
-def test_validate_detecte_burndown_remontant():
-    data = json.loads(json.dumps(EXAMPLE))
-    data["report"]["burn_v1"]["serie"][2]["y"] = 999.0  # remontee
-    _, warns = V.check(data)
-    assert any("remonte" in w for w in warns), "la remontee du burn-down doit etre signalee"
+def test_cdtd_par_statut():
+    assert FJ._cdtd({"st": "Closed", "res": "2026-01-04", "d": 1}) == ("2026-01-04", None)
+    assert FJ._cdtd({"st": "Closing", "res": "2026-01-05", "d": 1}) == ("2026-01-05", None)
+    assert FJ._cdtd({"st": "Testing", "res": "2026-01-06"}) == (None, "2026-01-06")
+    assert FJ._cdtd({"st": "In Progress", "res": None}) == (None, None)
 
 
-def test_burndown_monotone_et_fenetre():
+def test_burndown_tk_et_exclusion_anterieure():
     start = datetime.date(2026, 1, 1)
     end = datetime.date(2026, 1, 15)
-    today = datetime.date(2026, 1, 10)
     rows = [
-        {"est": 5.0, "res": "2026-01-04"},   # brule dans la fenetre
-        {"est": 3.0, "res": None},           # pas encore brule
-        {"est": 2.0, "res": "2025-12-30"},   # brule AVANT le sprint -> hors scope
+        {"est": 5.0, "st": "Closed", "res": "2026-01-04", "d": 1},      # fermé dans la fenêtre
+        {"est": 3.0, "st": "In Progress", "res": None, "d": 0},         # ouvert
+        {"est": 2.0, "st": "Closed", "res": "2025-12-30", "d": 1},      # fermé AVANT -> exclu
     ]
-    b = FJ.burndown(rows, start, end, today)
-    assert b["scope"] == 8.0, f"scope attendu 8.0 (hors travail anterieur), eu {b['scope']}"
-    ys = [p["y"] for p in b["serie"]]
-    assert ys == sorted(ys, reverse=True), f"burn-down non monotone : {ys}"
-    assert b["serie"][-1]["x"] == (today - start).days, "serie s'arrete aujourd'hui"
-
-
-def test_burndown_sprint_futur_vide():
-    start = datetime.date(2026, 2, 1)
-    b = FJ.burndown([{"est": 3.0, "res": None}], start, start + datetime.timedelta(days=14),
-                    datetime.date(2026, 1, 1))
-    assert b["serie"] == [], "un sprint a venir n'a pas de serie reelle"
+    b = FJ.burndown(rows, start, end)
+    assert b["scope"] == 8.0, f"scope attendu 8.0 (hors travail antérieur), eu {b['scope']}"
+    assert len(b["tk"]) == 2, "le ticket fermé avant le sprint doit être exclu"
+    assert b["start"] == "2026-01-01" and b["len"] == 14
+    cds = [t.get("cd") for t in b["tk"]]
+    assert "2026-01-04" in cds, "la date de fermeture doit être portée par le ticket"
 
 
 def test_allocation_backlog_par_capacite():

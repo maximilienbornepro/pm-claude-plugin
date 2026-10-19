@@ -50,16 +50,11 @@ def check(d):
     b = r.get("burn_v1") or {}
     need(isinstance(b.get("scope"), (int, float)), "report.burn_v1.scope manquant")
     need(_date(b.get("start")), "report.burn_v1.start absent")
-    serie = b.get("serie") or []
-    need(isinstance(serie, list) and serie, "report.burn_v1.serie vide")
-    last = None
-    for p in serie:
-        need(isinstance(p.get("d"), (int, float)) and isinstance(p.get("y"), (int, float)),
-             "report.burn_v1.serie : chaque point a d et y")
-        if last is not None and isinstance(p.get("y"), (int, float)) and p["y"] > last + 1e-6:
-            warns.append(f"burn_v1 remonte à d={p.get('d')} ({last} → {p['y']}) : un burn-down ne remonte pas")
-        if isinstance(p.get("y"), (int, float)):
-            last = p["y"]
+    tk = b.get("tk")
+    need(isinstance(tk, list) and tk, "report.burn_v1.tk vide (tickets du burn-down, série calculée côté page)")
+    for p in (tk or []):
+        need(isinstance(p.get("e"), (int, float)), "report.burn_v1.tk : chaque ticket a `e` (estimation)")
+        need("cd" in p and "td" in p and "st" in p, "report.burn_v1.tk : chaque ticket a cd, td, st")
 
     # ---- sprints
     sprints = d.get("sprints") or []
@@ -88,8 +83,8 @@ def check(d):
                 for k in ("k", "s", "p", "e", "r", "st", "ph"):
                     need(k in t, f"{tag} ticket {t.get('k','?')} : champ {k} manquant")
         bn = s.get("burn") or {}
-        need("scope" in bn and "len" in bn and isinstance(bn.get("serie"), list),
-             f"{tag} : burn {{scope,len,serie}} requis (serie vide = à venir)")
+        need("scope" in bn and "len" in bn and isinstance(bn.get("tk"), list),
+             f"{tag} : burn {{scope, len, start, tk}} requis (tk = tickets, série calculée côté page)")
     if nums and nums != sorted(nums):
         warns.append(f"sprints non ordonnés : {nums}")
     if nums and nums[0] != 1:

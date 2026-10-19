@@ -211,27 +211,30 @@ def sp_meta(n, start, end, phases, freeze, mep):
 
 
 # ------------------------------------------------------------------ burn-down
-def burndown(rows, start, end, today):
-    length = (end - start).days
-    bset = []
+def _cdtd(t):
+    """Dates de burn par statut : (fermeture, entrée en Testing). La courbe est
+    recalculée côté page selon le mode (fermé / Testing / les deux)."""
+    res = t.get("res")
+    if t.get("d") or t["st"] in ("Closing", "Closed"):
+        return res, None
+    if t["st"] == "Testing":
+        return None, res
+    return None, None
+
+
+def burndown(rows, start, end):
+    """Donnée du burn-down d'un sprint : tickets (est + dates par statut), scope, bornes."""
+    tk = []
     for t in rows:
         e = t.get("est") or 0
         if e <= 0:
             continue
-        r = _date(t["res"]) if t.get("res") else None
-        if r is not None and r < start:
+        cd, td = _cdtd(t)
+        if cd and _date(cd) and _date(cd) < start:
             continue
-        bset.append((e, r))
-    scope = r1(sum(e for e, _ in bset))
-    if start > today:
-        return {"scope": scope, "len": length, "serie": []}
-    last = min(today, end)
-    elapsed = max(0, (last - start).days)
-    serie = []
-    for d in range(0, elapsed + 1):
-        day = start + datetime.timedelta(days=d)
-        serie.append({"x": d, "y": r1(sum(e for e, r in bset if r is None or r > day))})
-    return {"scope": scope, "len": length, "serie": serie}
+        tk.append({"e": e, "cd": cd, "td": td, "st": t["st"]})
+    return {"scope": r1(sum(x["e"] for x in tk)), "len": (end - start).days,
+            "start": start.isoformat(), "tk": tk}
 
 
 # ------------------------------------------------------------------ assemblage
@@ -284,25 +287,23 @@ def build_datajson(mission, cfg, pcfg, rows, alloc, nsp):
     v1_end = max(end_pole(pl) for pl in POLES)
     avail_weeks = round(P._biz_days(today, freeze) / dpw)
 
-    # burn-down du plan (V1)
+    # burn-down du plan (V1) : tickets + dates par statut, série calculée côté page
     def burn_v1():
         v1 = [t for t in rows if t["ph"] == "V1" and (t.get("est") or 0) > 0]
-        scope = r1(sum(t["est"] for t in v1))
-        res = [_date(t["res"]) for t in v1 if t.get("res")]
-        res = [d for d in res if d]
-        start = min(res) if res else today - datetime.timedelta(days=7)
+        tk, dates = [], []
+        for t in v1:
+            cd, td = _cdtd(t)
+            tk.append({"e": t["est"], "cd": cd, "td": td, "st": t["st"]})
+            if cd and _date(cd):
+                dates.append(_date(cd))
+            if td and _date(td):
+                dates.append(_date(td))
+        start = min(dates) if dates else today - datetime.timedelta(days=7)
         start -= datetime.timedelta(days=start.weekday())
-        serie, d = [], start
-        while d < today:
-            serie.append({"t": d.isoformat(), "d": (d - start).days,
-                          "y": r1(sum(t["est"] for t in v1 if not (t.get("res") and _date(t["res"]) and _date(t["res"]) <= d)))})
-            d += datetime.timedelta(days=7)
-        serie.append({"t": today.isoformat(), "d": (today - start).days,
-                      "y": r1(sum(t["est"] for t in v1 if not (t.get("res") and _date(t["res"]) and _date(t["res"]) <= today)))})
-        return {"scope": scope, "start": start.isoformat(),
+        return {"scope": r1(sum(x["e"] for x in tk)), "start": start.isoformat(),
                 "freeze": freeze.isoformat(), "freeze_d": (freeze - start).days,
                 "mep": mep.isoformat(), "mep_d": (mep - start).days,
-                "today": today.isoformat(), "today_d": (today - start).days, "serie": serie}
+                "today": today.isoformat(), "today_d": (today - start).days, "tk": tk}
 
     # sprints[]
     def pole_block(rs, pl, n):
@@ -345,12 +346,13 @@ def build_datajson(mission, cfg, pcfg, rows, alloc, nsp):
             "tickets": [{"k": t["k"], "s": t["s"], "p": t["p"], "e": t["e"], "r": t["r"],
                          "est": t.get("est"), "st": t["st"], "d": bool(t["d"]),
                          "ne": bool(t["ne"]), "ph": t["ph"]} for t in rs],
-            "burn": burndown(rs, a, b, today),
+            "burn": burndown(rs, a, b),
         })
 
     return {
         "meta": {
             "brand": pcfg["brand"], "today": today.isoformat(),
+            "generated": datetime.datetime.now().isoformat(timespec="seconds"),
             "freeze": freeze.isoformat(), "mep": mep.isoformat(),
             "jira": pcfg["jira"], "links": pcfg["links"], "nav": pcfg["nav"],
             "release_link": pcfg["release_link"],
@@ -384,19 +386,25 @@ def _detag(s):
 
 
 def _epics(rows):
-    """Reste à faire par epic (V1 / V1.1), pour la carte « Reste par epic »."""
+    """Reste à faire par epic (V1 / V1.1) + tickets non terminés (epic dépliable)."""
     ep = {}
+    tk_by_epic = {}
     for t in rows:
         e = ep.setdefault(t["e"], {"pole": t["p"], "rV1": 0, "rV11": 0, "cV1": 0, "cV11": 0})
         if t["ph"] == "V1.1":
             e["rV11"] += t["r"]; e["cV11"] += (t.get("est") or 0)
         else:
             e["rV1"] += t["r"]; e["cV1"] += (t.get("est") or 0)
+        if not t.get("d") and (t["r"] or t.get("ne")):
+            tk_by_epic.setdefault(t["e"], []).append(t)
     out = []
     for name, e in ep.items():
         phase = "V1" if e["cV11"] == 0 else ("V1.1" if e["cV1"] == 0 else "V1 + V1.1")
+        ts = sorted(tk_by_epic.get(name, []), key=lambda x: -x["r"])
         out.append({"epic": name, "pole": e["pole"], "rV1": r1(e["rV1"]),
-                    "rV11": r1(e["rV11"]), "charge": r1(e["cV1"] + e["cV11"]), "phase": phase})
+                    "rV11": r1(e["rV11"]), "charge": r1(e["cV1"] + e["cV11"]), "phase": phase,
+                    "tickets": [{"k": t["k"], "s": t["s"], "st": t["st"], "r": t["r"],
+                                 "ph": t["ph"], "ne": bool(t.get("ne"))} for t in ts]})
     out.sort(key=lambda x: -(x["rV1"] + x["rV11"]))
     return out
 

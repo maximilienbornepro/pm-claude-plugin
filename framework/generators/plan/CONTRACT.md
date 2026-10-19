@@ -16,6 +16,7 @@ Unités : les jours sont des **jours-homme estimés** (nombres). Les dates sont 
 | `brand.app_url` | str | Lien du bouton d'en-tête (ex. l'application). Masqué si absent. |
 | `brand.app_label` | str | Libellé du bouton (défaut « Ouvrir l'application »). |
 | `today` | date | Aujourd'hui (position du repère et fin des courbes réelles). |
+| `generated` | datetime | Horodatage de génération (affiché « Mis à jour le … » en pied de page). |
 | `freeze` | date | Gel du code (repère + cible de la droite idéale). |
 | `mep` | date | Mise en production (repère). |
 | `jira` | str | Préfixe d'URL d'un ticket (ex. `https://…/browse/`). Concaténé à la clé. |
@@ -35,7 +36,8 @@ jalons ; l'omettre la retire.
 - `timeline` : `{v1_end, overshoot_weeks}` pour le bandeau (optionnels).
 - `avail_weeks` : nombre (semaines avant le gel).
 - `burn_v1` : burn-down du plan (voir ci-dessous).
-- `epics` : reste par epic, `[{epic, pole, rV1, rV11, charge, phase}]` (carte « Reste par epic »).
+- `epics` : reste par epic, `[{epic, pole, rV1, rV11, charge, phase, tickets:[{k,s,st,r,ph,ne}]}]`
+  (carte « Reste par epic », en bas, repliée ; sous-sections V1.0 / V1.1, chaque epic dépliable sur ses tickets).
 - `delta` : différentiel depuis la dernière publication (optionnel ; carte masquée si tout est vide).
   `{ref, pct_avant, pct_apres, gain, jours_termines, termine[], avance[], recul[], nouveau[], disparu[]}` ;
   chaque item : `{k, s, e, p, st, st_avant}` (+ `gain` pour avance/recul). Nécessite un état persistant
@@ -45,11 +47,12 @@ jalons ; l'omettre la retire.
 
 ```
 { scope, start, freeze, freeze_d, mep, mep_d, today, today_d,
-  serie: [ {t: date, d: int, y: nombre}, … ] }
+  tk: [ {e: estimation, cd: date de fermeture|null, td: date d'entrée en Testing|null, st: statut}, … ] }
 ```
-`scope` = charge totale du périmètre au départ. `*_d` = décalage en jours depuis `start`.
-`serie` = le reste réel dans le temps : un point par semaine jusqu'à aujourd'hui.
-Un ticket **descend la courbe** le jour où il passe en Testing ou fermé (voir `from_jira.py`).
+`scope` = charge totale du périmètre (somme des `e`). `*_d` = décalage en jours depuis `start`.
+La **série est calculée dans la page** à partir de `tk`, selon le mode choisi par le lecteur
+(**Fermés** = `cd`, **Testing** = `td` des tickets en Testing, **Les deux**). Un ticket descend la
+courbe le jour de la date retenue. `cd` vient de `resolutiondate`, `td` de `updated` (entrée en Testing).
 
 ## `sprints[]` (un objet par sprint)
 
@@ -69,7 +72,7 @@ Un ticket **descend la courbe** le jour où il passe en Testing ou fermé (voir 
 | `jiraUrl` | str | Lien « Sprint dans Jira » (sinon `meta.jira`). |
 | `poles` | obj | `{back, front, sre}` (voir ci-dessous). |
 | `tickets` | list | Tickets du sprint (voir ci-dessous). |
-| `burn` | obj | Burn-down du sprint : `{scope, len, serie: [{x, y}]}`. `serie` vide = sprint à venir. |
+| `burn` | obj | Burn-down du sprint : `{scope, len, start, tk}` (même `tk` que `burn_v1`). Série calculée côté page selon le mode ; un sprint à venir donne une courbe idéale seule. |
 
 ### `sprints[].poles[pole]`
 
