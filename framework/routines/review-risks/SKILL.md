@@ -4,7 +4,9 @@ description: Routine config-driven - relit le registre de risques, le confronte 
 schedule: config   # voir routines.yml > routines.revue-risques.schedule (manuel par defaut ; planifiable)
 ---
 
-Routine de revue des **risques**. Elle relit le registre, le confronte a l'etat reel du projet, **montre le registre actualise dans la conversation**, puis, apres confirmation en seance, **met a jour le fichier en place** avec les garde-fous ci-dessous. Elle ne touche jamais le tracker de suivi et n'envoie aucune notification. Reponds dans la langue du profil (`profile.yml > lang`).
+Routine de revue des **risques**. Elle relit **chaque registre declare dans `risks.yml > registres` (BUILD et RUN)**, le confronte a l'etat reel du projet, **montre le registre actualise dans la conversation**, puis, apres confirmation en seance, **met a jour chaque fichier en place** avec les garde-fous ci-dessous. Elle ne touche jamais le tracker de suivi et n'envoie aucune notification. Reponds dans la langue du profil (`profile.yml > lang`).
+
+**Deux registres (BUILD et RUN).** `risks.yml > registres` liste les classeurs a reviser. Les colonnes du BUILD sont connues ; celles du RUN sont `a_confirmer` : pour le RUN, **lire la ligne d'en-tete du classeur avant d'ecrire** et mapper depuis les libelles lus (`label/probability/impact/detail`, plus `mitigation/owner` s'ils existent). Ne jamais inventer une position de colonne. Traiter les deux registres dans la meme passe (montrer, valider, ecrire), chacun avec les memes garde-fous Office.
 
 Tout le propre-a-la-mission (classeur, mapping des colonnes, echelle, sources annexees) vit dans **`profiles/<mission>/risks.yml`** (le generateur `risks` ne lit que lui) et dans **`routines.yml > routines.revue-risques`**. Ce SKILL porte la methode et les garde-fous.
 
@@ -14,7 +16,7 @@ Tout le propre-a-la-mission (classeur, mapping des colonnes, echelle, sources an
 
 `chains: [risks, projection]` - deux generateurs du framework en lecture seule :
 
-- **`risks`** lit le registre selon `risks.yml` (chemin, colonnes `label/probability/impact/detail`, echelle). Il ne fait que lire et proposer : son `write.enabled` reste `false`.
+- **`risks`** lit chaque registre de `risks.yml > registres` (BUILD et RUN) - chemin, colonnes `label/probability/impact/detail`, echelle. Il ne fait que lire et proposer : son `write.enabled` reste `false`.
 - **`projection`** fournit la livrabilite V1 (reste par pole, chemin critique) qui sert le risque de livraison.
 
 ## Etape 1 : lire le registre (lecture seule)

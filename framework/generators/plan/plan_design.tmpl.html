@@ -200,6 +200,11 @@ a{color:inherit}
 .sp-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
 .sp-top h2{font-size:22px;letter-spacing:-.02em}
 .sp-top .ph{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--accent-weak);color:var(--accent)}
+.sp-top .ph-done{background:var(--surface-2);color:var(--ink-3)}
+.sp-top .ph-now{background:var(--ok-weak);color:var(--ok)}
+.sp-top .ph-next{background:var(--accent-weak);color:var(--accent)}
+.node.node-done{opacity:.55}
+.node.node-done.on,.node.on{opacity:1}
 .sp-dates{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-bottom:14px}
 .obj{font-size:14.5px;line-height:1.6}
 .fres{margin-top:14px;padding:13px 14px;background:var(--accent-weak);border-radius:12px;font-size:14.5px;line-height:1.55}
@@ -210,10 +215,15 @@ a{color:inherit}
 .tile .v{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .tile .v small{font-size:12px;font-weight:500;color:var(--ink-2)}
 .tile .k{font-size:11px;color:var(--ink-2);margin-top:1px}
+.tile-crit{background:color-mix(in srgb,var(--crit) 12%,var(--surface-2))}
+.tile-crit .v,.tile-crit .v small{color:var(--crit)}
 
 .pobj{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 @media(max-width:620px){.pobj{grid-template-columns:1fr}}
-.poc{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 15px;border-top:3px solid var(--pc)}
+.poc{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 15px;border-top:3px solid var(--pc);position:relative;cursor:help;outline:none}
+.poc .ptip{position:absolute;top:calc(100% - 4px);left:12px;right:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.32);padding:10px 12px;z-index:30;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .14s,transform .14s,visibility .14s;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--ink-2);text-align:left}
+.poc:hover .ptip,.poc:focus .ptip,.poc:focus-within .ptip{opacity:1;visibility:visible;transform:none}
+.poc .ptip b{color:var(--ink);font-weight:600}
 .poc .ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
 .poc .nm{font-weight:700;font-size:13.5px;color:var(--pc)}
 .poc .ld{font-family:var(--mono);font-size:10.5px;color:var(--ink-2)}
@@ -306,9 +316,11 @@ details.pole[open] .caret{transform:rotate(90deg)}
  function burnPoints(tk,startMs,lastD,m,weekly){
   function iso(d){return new Date(startMs+d*864e5).toISOString().slice(0,10);}
   function rem(day){var s=0;for(var i=0;i<tk.length;i++){if(!burned(tk[i],day,m))s+=tk[i].e;}return Math.round(s*10)/10;}
-  var pts=[],step=weekly?7:1;
-  for(var d=0;d<lastD;d+=step)pts.push({x:d,y:rem(iso(d))});
-  pts.push({x:lastD,y:rem(iso(lastD))});
+  var full=0;for(var i=0;i<tk.length;i++)full+=tk[i].e;full=Math.round(full*10)/10;
+  var step=weekly?7:1;
+  var pts=[{x:0,y:full}];   // J0 = scope plein : le sprint démarre, rien n'est encore décompté (identique dans les 3 modes)
+  for(var d=step;d<lastD;d+=step)pts.push({x:d,y:rem(iso(d))});
+  if(lastD>0)pts.push({x:lastD,y:rem(iso(lastD))});
   return pts;
  }
  function burnSeg(){return '<span class="burnseg" role="group" aria-label="Statuts comptés">'+
@@ -317,9 +329,9 @@ details.pole[open] .caret{transform:rotate(90deg)}
  function setBurnMode(m){burnMode=m;
    Array.prototype.forEach.call(document.querySelectorAll(".burnseg button"),function(b){b.classList.toggle("on",b.dataset.bm===m);});
    buildMacro(); if(chartsReady)buildBurn();}
- var chMacro=null,chBurn=null,chDough=null;
+ var chMacro=null,chBurn=null;
 
- try{DATA=JSON.parse(document.getElementById("DATAJSON").textContent);JIRA=DATA.meta.jira;init();}
+ try{DATA=JSON.parse(document.getElementById("DATAJSON").textContent);JIRA=DATA.meta.jira;cur=Math.min(Math.max(1,DATA.meta.current_sprint||1),DATA.sprints.length);init();}
  catch(e){document.getElementById("app").innerHTML='<div class="loading">Données illisibles.<br><small>'+esc(e.message)+'</small></div>';}
 
  function brand(){
@@ -341,16 +353,13 @@ details.pole[open] .caret{transform:rotate(90deg)}
   document.getElementById("app").innerHTML=[
    '<div class="card"><div class="c-h"><h3>Jalons du programme</h3><span class="jlinks" id="jlinks"></span></div><div class="jal" id="jal"></div><div class="jkey" id="jkey"></div></div>',
    '<div class="card"><div class="v1hero" id="v1hero"></div><div class="c-h v1sub"><h3>Par pôle <span class="phtag">V1.0</span></h3></div><div id="poles"></div><div id="polesV11"></div></div>',
-   '<div class="card"><div class="c-h"><h3>Burn-down du plan <span class="phtag">V1.0</span></h3>'+burnSeg()+'</div><div class="bsub">reste à faire V1 vs descente idéale au gel · <b>choisis les statuts comptés comme « faits »</b> ci-dessus</div><div class="cv"><canvas id="cvMacro"></canvas></div><div class="bnote">Un ticket descend la courbe le jour où il atteint le statut choisi : <b>Fermés</b> = Closing / Closed (date de résolution), <b>Testing</b> = en recette (dernière modification), <b>Les deux</b> = dev considéré fini. Le travail encore en cours (In Progress, Dev Review) n\'est jamais décompté. Le reste ici reste <b>supérieur au reste pondéré par statut</b> du bandeau V1.0 (qui crédite aussi l\'avancement en cours).</div></div>',
+   '<div class="card"><div class="c-h"><h3>Burn-down du plan <span class="phtag">V1.0</span></h3>'+burnSeg()+'</div><div class="bsub">reste à faire V1 vs descente idéale au gel · <b>choisis les statuts comptés comme « faits »</b> ci-dessus</div><div class="cv"><canvas id="cvMacro"></canvas></div><div class="bnote">Un ticket descend la courbe le jour où il atteint le statut choisi : <b>Fermés</b> = Closing / Closed (date de résolution), <b>Testing</b> = en recette (date d\'entrée en recette), <b>Les deux</b> = dev considéré fini. Le travail encore en cours (In Progress, Dev Review) n\'est jamais décompté. Le reste ici reste <b>supérieur au reste pondéré par statut</b> du bandeau V1.0 (qui crédite aussi l\'avancement en cours).</div></div>',
    '<section class="spzone">',
      '<div class="spzone-h"><span class="lab">Plan de sprints</span><span class="spzone-sub" id="spzoneSub"></span></div>',
      '<div class="tl"><div class="tl-h"><span class="lab">Choisir un sprint</span><span class="hint" id="tlHint"></span></div><div class="nodes" id="nodes"></div></div>',
      '<div class="card" id="objCard"></div>',
      '<div class="pobj" id="pobj"></div>',
-     '<div class="charts">',
-       '<div class="card"><div class="c-h"><h3>Burn-down du sprint</h3>'+burnSeg()+'</div><div class="bsub" id="bSub"></div><div class="cv"><canvas id="cvBurn"></canvas></div><div class="bnote">Statuts comptés comme « faits » : <b>Fermés</b>, <b>Testing</b> ou <b>les deux</b> (sélecteur ci-dessus). Le travail encore en cours (In Progress, Dev Review) n\'est pas décompté : l\'écart avec la tuile <b>« à faire »</b> vient de là.</div></div>',
-       '<div class="card"><div class="c-h"><h3>Reste par pôle</h3><span class="sub" id="dSub"></span></div><div class="cv"><canvas id="cvDough"></canvas></div></div>',
-     '</div>',
+     '<div class="card"><div class="c-h"><h3>Burn-down du sprint</h3>'+burnSeg()+'</div><div class="bsub" id="bSub"></div><div class="cv"><canvas id="cvBurn"></canvas></div><div class="bnote">Statuts comptés comme « faits » : <b>Fermés</b>, <b>Testing</b> ou <b>les deux</b> (sélecteur ci-dessus). Le travail encore en cours (In Progress, Dev Review) n\'est pas décompté : l\'écart avec la tuile <b>reste à faire</b> vient de là.</div></div>',
      '<div class="card"><div class="tk-head"><h3>Tickets du sprint</h3><span class="cnt" id="tkCnt"></span></div><div id="tickets"></div></div>',
    '</section>',
    '<details class="card epicwrap"><summary class="epsum"><span class="et-h">Reste à faire par epic <span class="phtag">V1.0 + V1.1</span></span><span class="sub">tout le périmètre, hors sprint · déplie pour voir les epics et leurs tickets</span></summary><div id="epics"></div></details>'
@@ -359,15 +368,16 @@ details.pole[open] .caret{transform:rotate(90deg)}
   renderReport(); buildMacro();
   document.getElementById("nodes").innerHTML=sp.map(function(s){
    var mk=/gel/.test(s.dates)?'<span class="mk gel">GEL</span>':(/MEP/.test(s.dates)?'<span class="mk mep">MEP</span>':"");
-   var caps=POLES.map(function(p){var g=s.poles[p];var over=g.load>g.cap+0.5;var col=over?"var(--crit)":(g.load>=g.cap*0.9?"var(--warn)":"var(--"+p+")");var h=Math.max(10,Math.min(100,g.cap?g.load/g.cap*100:0));return '<i style="background:'+col+';height:'+h+'%"></i>';}).join("");
-   return '<button class="node" data-n="'+s.n+'">'+mk+'<div class="n">S'+s.n+'</div><div class="d">'+esc(s.dates.replace(/ · (gel|MEP)/,""))+'</div><div class="cap">'+caps+'</div></button>';
+   var caps=POLES.map(function(p){var g=s.poles[p];var h=Math.max(8,Math.min(100,g.cap?g.est/g.cap*100:0));return '<i style="background:var(--'+p+');height:'+h+'%"></i>';}).join("");   // volume de dev estimé / capacité (saturé = sprint chargé)
+   var ndone=s.hint.indexOf("terminé")===0?" node-done":"";
+   return '<button class="node'+ndone+'" data-n="'+s.n+'">'+mk+'<div class="n">S'+s.n+(ndone?' <span style="font-weight:400;color:var(--ok)">✓</span>':'')+'</div><div class="d">'+esc(s.dates.replace(/ · (gel|MEP)/,""))+'</div><div class="cap">'+caps+'</div></button>';
   }).join("");
   document.getElementById("nodes").addEventListener("click",function(e){var b=e.target.closest(".node");if(b)select(+b.dataset.n);});
   renderPlan();
-  buildBurn(); chartsReady=true; renderDough(DATA.sprints[cur-1]);
+  buildBurn(); chartsReady=true;
   var _g=DATA.meta.generated||"";var _gt=_g?'<b>Mis à jour le '+dfr(_g)+' à '+_g.slice(11,16)+'</b> (données Jira live) · ':'';
-  document.getElementById("foot").innerHTML=_gt+"Charge = reste pondéré par statut + réserve bugs (20 % de l'estimé, pôles dev). Burn-down = jours estimés réels, descente quand un ticket atteint le statut choisi. Capacités cibles par sprint de 2 semaines : Back 17 j, Front 15 j, SRE 10 j. Le découpage suit les sprints du board Jira ; S1 est le sprint en cours.";
-  window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",function(){buildMacro();buildBurn();renderDough(DATA.sprints[cur-1]);});
+  document.getElementById("foot").innerHTML=_gt+"Charge par pôle = volume de dev estimé du sprint, comparé à la capacité (repère) ; la partie pleine est le réalisé. Barres du sélecteur de sprint = même charge estimée rapportée à la capacité (saturées = sprint chargé). Burn-down = jours estimés réels, descente quand un ticket atteint le statut choisi. Capacités cibles par sprint de 2 semaines : Back 17 j, Front 15 j, SRE 10 j. Le découpage suit les sprints du board Jira ; le sprint en cours est S"+cur+" (d'après Jira).";
+  window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",function(){buildMacro();buildBurn();});
   document.addEventListener("click",function(e){var b=e.target.closest(".burnseg button");if(b)setBurnMode(b.dataset.bm);});
   // Rendu une fois la police chargée : Chart.js mesure la largeur des étiquettes Y
   // avec la police réelle (sinon les nombres à 3 chiffres sont coupés à gauche).
@@ -473,37 +483,39 @@ details.pole[open] .caret{transform:rotate(90deg)}
 
 
  function select(n){if(n<1||n>DATA.sprints.length)return;cur=n;renderPlan();
-   if(chartsReady){buildBurn();renderDough(DATA.sprints[cur-1]);}}
+   if(chartsReady){buildBurn();}}
 
  function renderPlan(){
   var s=DATA.sprints[cur-1];
   Array.prototype.forEach.call(document.querySelectorAll(".node"),function(b){b.classList.toggle("on",+b.dataset.n===cur);});
   document.getElementById("tlHint").textContent="Sprint "+cur+" / "+DATA.sprints.length+" · "+s.dates.replace(/ · (gel|MEP)/,"");
   var szs=document.getElementById("spzoneSub"); if(szs)szs.textContent="Sprint "+cur+" sélectionné · tout ci-dessous concerne ce sprint";
-  var phBadge=/gel/.test(s.dates)?"Gel du code":(/MEP/.test(s.dates)?"Mise en service":(s.n===1?"En cours":s.hint));
+  var state=s.hint.indexOf("terminé")===0?"Terminé":(s.hint.indexOf("en cours")===0?"En cours":"À venir");
+  var milestone=/gel/.test(s.dates)?"Gel du code":(/MEP/.test(s.dates)?"Mise en service":"");
+  var spOver=POLES.reduce(function(a,p){var g=s.poles[p]||{};return a+Math.max(0,(g.est||0)-(g.cap||0));},0);
   document.getElementById("objCard").innerHTML=[
-   '<div class="sp-top"><h2>Sprint '+s.n+'</h2><span class="ph">'+esc(phBadge)+'</span></div>',
+   '<div class="sp-top"><h2>Sprint '+s.n+'</h2><span class="ph ph-'+(state==="Terminé"?"done":(state==="En cours"?"now":"next"))+'">'+esc(state)+'</span>'+(milestone?'<span class="ph">'+esc(milestone)+'</span>':'')+'</div>',
    '<div class="sp-dates">'+esc(s.dates.replace(/ · (gel|MEP)/,""))+'</div>',
-   '<div class="obj-lab">Objectif global du sprint</div><div class="obj">'+esc(s.objectif||"—")+'</div>',
-   s.fres?'<div class="fres">'+esc(s.fres)+'</div>':"",
+   '<div class="obj-lab">Objectif global du sprint</div><div class="obj">'+esc(s.fres||s.objectif||"—")+'</div>',
    s.fout?'<div class="fout">'+esc(s.fout)+'</div>':"",
-   '<div class="tiles"><div class="tile"><div class="v tnum">'+fmt(s.tot)+' <small>j</small></div><div class="k">à faire</div></div>'+
+   '<div class="tiles"><div class="tile"><div class="v tnum">'+fmt(s.tot)+' <small>j</small></div><div class="k">reste à faire</div></div>'+
      '<div class="tile"><div class="v tnum">'+s.ntk+'</div><div class="k">tickets</div></div>'+
-     '<div class="tile"><div class="v tnum">'+fmt(s.bugs)+' <small>j</small></div><div class="k">réserve correction</div></div></div>',
+     '<div class="tile'+(spOver>0.05?' tile-crit':'')+'"><div class="v tnum">'+(spOver>0.05?'+'+fmt(spOver):'0')+' <small>j</small></div><div class="k">au-delà de la capacité</div></div></div>',
    '<div class="splinks">'+((s.jiraUrl||DATA.meta.jira)?'<a href="'+esc(s.jiraUrl||DATA.meta.jira)+'" target="_blank" rel="noopener">Sprint dans Jira <span aria-hidden="true">↗</span></a>':'')+(DATA.meta.release_link?'<a href="'+esc(DATA.meta.release_link.url)+'" target="_blank" rel="noopener">'+esc(DATA.meta.release_link.label)+' <span aria-hidden="true">↗</span></a>':'')+'</div>'
   ].join("");
 
-  document.getElementById("pobj").innerHTML=POLES.map(function(p){var g=s.poles[p];var over=g.load>g.cap+0.5;
-   var mx=Math.max(g.load,g.cap)*1.05||1;function w(v){return v/mx*100;}
+  document.getElementById("pobj").innerHTML=POLES.map(function(p){var g=s.poles[p];
+   var done=Math.max(0,g.est-g.tot),rem=Math.max(0,g.tot),over=g.est>g.cap+0.5;
+   var mx=Math.max(g.est,g.cap)*1.02||1;function w(v){return v/mx*100;}
    var objtxt=g.objectif?esc(g.objectif):'<span class="more">Pas d\'objectif dédié ce sprint</span>';
-   return '<div class="poc'+(over?" over":"")+'" style="--pc:var(--'+p+')"><div class="ph"><span class="nm">'+g.label+'</span>'+
-     '<span class="ld">Restant <b>'+fmt(g.tot)+' j</b> / '+fmt(g.est)+' j estimés</span></div>'+
+   return '<div class="poc'+(over?" over":"")+'" style="--pc:var(--'+p+')" tabindex="0"><div class="ph"><span class="nm">'+g.label+'</span>'+
+     '<span class="ld">Charge <b>'+fmt(g.est)+' j</b> / cap '+fmt(g.cap)+' j</span></div>'+
      '<div class="ep">'+objtxt+'</div>'+
-     '<div class="g-track"><div class="seg2" style="left:0;width:'+w(Math.min(g.load,g.cap))+'%;background:var(--'+p+')"></div>'+
-     (over?'<div class="seg2" style="left:'+w(g.cap)+'%;width:'+w(g.load-g.cap)+'%;background:var(--crit)"></div>':'')+
+     '<div class="g-track"><div class="seg2" style="left:0;width:'+w(done)+'%;background:var(--'+p+')"></div>'+
+     '<div class="seg2" style="left:'+w(done)+'%;width:'+w(rem)+'%;background:color-mix(in srgb,var(--'+p+') 32%,transparent)"></div>'+
      '<div class="capm" style="left:'+w(g.cap)+'%"></div></div>'+
-     '<div class="gl"><span>charge <b>'+fmt(g.load)+' j</b> · cap '+g.cap+' j</span><span'+(over?' style="color:var(--crit)"':'')+'>'+(over?'surcharge +'+fmt(g.load-g.cap)+' j':'dans la capacité')+'</span></div></div>';
-  }).join("")+'<div class="pobj-note"><b>Restant</b> = reste à faire des tickets du sprint (hors Dev Review, considérés finis). <b>Charge</b> = restant + réserve de correction (20 %). Le repère = la <b>capacité cible</b> du pôle ; la zone <b style="color:var(--crit)">rouge</b> au-delà = la <b>surcharge</b>.</div>';
+     '<div class="ptip">réalisé <b>'+fmt(done)+' j</b> / '+fmt(g.est)+' j estimés · reste <b>'+fmt(rem)+' j</b><br>capacité '+fmt(g.cap)+' j'+(over?' · <b style="color:var(--crit)">+'+fmt(g.est-g.cap)+' j au-delà</b>':'')+'</div></div>';
+  }).join("")+'<div class="pobj-note"><b>Charge</b> = volume de dev estimé du pôle sur le sprint, comparé à la <b>capacité</b> (repère blanc) ; partie pleine = réalisé, partie claire = restant. <b>Survole une carte</b> pour le détail (réalisé, reste, dépassement).</div>';
 
   renderTickets(s);
  }
@@ -512,7 +524,7 @@ details.pole[open] .caret{transform:rotate(90deg)}
   document.getElementById("tkCnt").textContent=s.ntk+" tickets · "+fmt(s.tot)+" j à faire";
   var byP={back:[],front:[],sre:[]};s.tickets.forEach(function(t){(byP[t.p]||(byP[t.p]=[])).push(t);});
   var html=POLES.filter(function(p){return byP[p]&&byP[p].length;}).map(function(p){
-   var rows=byP[p],g=s.poles[p],over=g.load>g.cap+0.5,barcol=over?"var(--crit)":"var(--"+p+")",barw=Math.min(100,g.cap?g.load/g.cap*100:0);
+   var rows=byP[p],g=s.poles[p],over=g.tot>g.cap+0.5,barcol=over?"var(--crit)":"var(--"+p+")",barw=Math.min(100,g.cap?g.tot/g.cap*100:0);
    var byE={},order=[];rows.forEach(function(t){if(!byE[t.e]){byE[t.e]=[];order.push(t.e);}byE[t.e].push(t);});
    var inner=order.map(function(ep){var st=byE[ep].reduce(function(a,t){return a+t.r;},0);
      return '<div class="epic"><div class="eh">'+esc(ep)+' · '+(st>0?'reste '+fmt(st)+' j':'terminé')+'</div>'+
@@ -522,18 +534,10 @@ details.pole[open] .caret{transform:rotate(90deg)}
    }).join("");
    var open=(p==="back"&&cur<=4)||rows.length<=3?" open":"";
    return '<details class="pole"'+open+'><summary><span class="p-dot" style="background:var(--'+p+')"></span><span class="p-name">'+g.label+'</span>'+
-     '<span class="p-meta"><span class="p-bar"><i style="width:'+barw+'%;background:'+barcol+'"></i></span>'+fmt(g.load)+'/'+g.cap+' j · '+rows.length+' tk '+
+     '<span class="p-meta"><span class="p-bar"><i style="width:'+barw+'%;background:'+barcol+'"></i></span>'+fmt(g.tot)+'/'+g.cap+' j · '+rows.length+' tickets '+
      '<svg class="caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></span></summary>'+inner+'<div style="height:12px;background:var(--surface)"></div></details>';
   }).join("");
   document.getElementById("tickets").innerHTML=html||'<div style="color:var(--ink-2);font-size:13px;padding:8px 2px">Aucun ticket.</div>';
- }
-
- function renderDough(s){
-  document.getElementById("dSub").textContent=fmt(s.tot)+" j à faire";
-  var vals=POLES.map(function(p){return Math.round(s.poles[p].tot*10)/10;}),cols=[cssv("--back"),cssv("--front"),cssv("--sre")];
-  if(chDough){chDough.data.datasets[0].data=vals;chDough.data.datasets[0].backgroundColor=cols;chDough.data.datasets[0].borderColor=cssv("--surface");chDough.update();return;}
-  chDough=new Chart(document.getElementById("cvDough"),{type:"doughnut",data:{labels:["Back","Front","SRE"],datasets:[{data:vals,backgroundColor:cols,borderWidth:2,borderColor:cssv("--surface")}]},
-   options:{responsive:true,maintainAspectRatio:false,layout:{padding:{left:8,top:4,right:4}},cutout:"62%",plugins:{legend:{position:"bottom",labels:{color:cssv("--ink-2"),font:{family:"Manrope",size:12},boxWidth:10,boxHeight:10,padding:14}},tooltip:{callbacks:{label:function(c){return c.label+" : "+fmt(c.raw)+" j";}}}}}});
  }
 
  function buildBurn(){

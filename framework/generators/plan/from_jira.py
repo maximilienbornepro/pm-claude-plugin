@@ -78,6 +78,11 @@ def load_plan_cfg(mission):
         "v11_from": int(cad.get("v11_from_sprint") or 5),
         "bug_pct": float(cad.get("bug_reserve_pct") or 0.20),
         "burn_wip": set(cfg.get("burn_wip") or ["Testing"]),
+        # Statut "en recette" qui declenche la regle du reliquat : un ticket passe dans ce statut
+        # pendant un sprint reste rattache a CE sprint (meme si Jira l'a bascule au suivant). Nom
+        # configurable par mission (QA, En test, In Review...). `reliquat: false` desactive la regle.
+        "test_status": cfg.get("test_status") or "Testing",
+        "reliquat": cfg.get("reliquat", True),
         "brand": {"title": brand.get("title") or f"Avancement et sprints {mission}",
                   "sub": brand.get("sub") or "", "logo": logo,
                   "app_url": brand.get("app_url") or "", "app_label": brand.get("app_label") or ""},
@@ -144,7 +149,57 @@ def fetch_rows(mission, cfg, pcfg):
             "ph": "V1.1" if is_next else "V1",
             "sp": sp, "res": res, "d": 1 if done else 0, "ne": 0 if est else 1,
         })
-    return J, rows
+    reliquat = _appliquer_reliquat(J, rows, pcfg)
+    return J, rows, reliquat
+
+
+def sprint_of_date(d, pcfg):
+    """Numero de sprint du plan contenant la date d (fenetres de `length` jours des `second_start`)."""
+    if d < pcfg["second_start"]:
+        return 1
+    return 2 + (d - pcfg["second_start"]).days // pcfg["length"]
+
+
+def _appliquer_reliquat(J, rows, pcfg):
+    """Regle du reliquat de fin de sprint (dashboard uniquement, AUCUNE ecriture Jira).
+
+    Un ticket actuellement dans le statut de recette (`test_status`) est rattache au sprint ou il est
+    ENTRE dans ce statut (1re transition, lue dans le changelog Jira), pas a son champ sprint courant.
+    Jira bascule le non-termine au sprint suivant en fin de sprint ; cette regle garde le travail
+    la ou il a ete fait. Rend la liste des tickets maintenus (pour l'alerte explicite)."""
+    if not pcfg.get("reliquat", True):
+        return []
+    ts = pcfg["test_status"]
+    reliquat = []
+    for t in rows:
+        if t["st"] != ts:
+            continue
+        dates = [d for d, _fr, to in J.status_changes(t["k"]) if to == ts]
+        if not dates:
+            continue
+        t["td"] = min(dates)   # date reelle d'entree en recette, pour le burndown (cf _cdtd)
+        orig = sprint_of_date(datetime.date.fromisoformat(min(dates)), pcfg)
+        if orig != t["sp"]:
+            reliquat.append({"k": t["k"], "s": t["s"], "orig": orig, "jira": t["sp"],
+                             "p": t["p"], "testing": min(dates)})
+        t["sp"] = orig
+    return reliquat
+
+
+def alert_reliquat(reliquat, pcfg):
+    """Message d'alerte explicite a montrer a l'utilisateur quand il y a du reliquat, ou ''."""
+    if not reliquat:
+        return ""
+    ts = pcfg["test_status"]
+    par = {}
+    for r in reliquat:
+        par.setdefault((r["orig"], r["jira"]), []).append(r["k"])
+    out = [f"⚠  ATTENTION - reliquat de fin de sprint ({len(reliquat)} tickets en {ts})",
+           f"   Jira les a bascules au sprint suivant ; ils sont MAINTENUS a leur sprint d'entree en {ts} :"]
+    for (orig, jira), ks in sorted(par.items()):
+        out.append(f"   S{orig} <- (Jira: S{jira}) : {len(ks)} tickets  {', '.join(sorted(ks))}")
+    out.append("   Verifie si certains doivent au contraire rester dans le scope du sprint courant.")
+    return "\n".join(out)
 
 
 # ------------------------------------------------------------------ allocation
@@ -218,7 +273,9 @@ def _cdtd(t):
     if t.get("d") or t["st"] in ("Closing", "Closed"):
         return res, None
     if t["st"] == "Testing":
-        return None, res
+        # Date reelle d'entree en Testing (changelog, posee par _appliquer_reliquat), pas `updated` :
+        # sinon une migration de sprint (qui touche `updated`) fausse la descente de la courbe.
+        return None, t.get("td") or res
     return None, None
 
 
@@ -230,8 +287,9 @@ def burndown(rows, start, end):
         if e <= 0:
             continue
         cd, td = _cdtd(t)
-        if cd and _date(cd) and _date(cd) < start:
-            continue
+        # Pas d'exclusion du travail anterieur : un ticket ferme/en recette avant le debut du
+        # sprint reste rattache au sprint (il apparait « fait » des J0), donc le scope du burndown
+        # egale l'estime du sprint affiche par ailleurs (pas d'ecart de scope).
         tk.append({"e": e, "cd": cd, "td": td, "st": t["st"]})
     return {"scope": r1(sum(x["e"] for x in tk)), "len": (end - start).days,
             "start": start.isoformat(), "tk": tk}
@@ -422,9 +480,10 @@ def main(argv):
         out = rest[0]
     cfg = P.load_config(mission)
     pcfg = load_plan_cfg(mission)
-    J, rows = fetch_rows(mission, cfg, pcfg)
+    J, rows, reliquat = fetch_rows(mission, cfg, pcfg)
     alloc, nsp = allocate(rows, cfg, pcfg)
     data = build_datajson(mission, cfg, pcfg, rows, alloc, nsp)
+    data["reliquat"] = reliquat
     if json_only:
         json.dump(data, open(json_only, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print(f"écrit {json_only} | {nsp} sprints")
@@ -433,6 +492,9 @@ def main(argv):
         print(f"écrit {out} | {n} octets | {nsp} sprints")
     print("CONTROLE V1 reste =", data["report"]["v1_total"]["reste"],
           "| V1.1 reste =", data["report"]["v11"]["reste"])
+    alerte = alert_reliquat(reliquat, pcfg)
+    if alerte:
+        print(alerte)
 
 
 if __name__ == "__main__":

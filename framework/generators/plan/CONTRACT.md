@@ -86,4 +86,11 @@ courbe le jour de la date retenue. `cd` vient de `resolutiondate`, `td` de `upda
 `{ k, s, p, e, r, est, st, d, ne, ph }` : clé, résumé, pôle, epic, reste, estimation,
 statut, terminé (bool), non estimé (bool), phase (`V1` / `V1.1`).
 
+### `reliquat[]` (optionnel)
+
+Tickets en recette maintenus a leur sprint d'origine par la regle du reliquat de fin de sprint
+(voir `SKILL.md`) : `{ k, s, orig, jira, p, testing }` - clé, résumé, sprint d'origine (entrée en
+recette), sprint où Jira l'avait basculé, pôle, date d'entrée en recette. Sert l'alerte explicite ;
+vide quand il n'y a pas de reliquat.
+
 Voir `plan.example.json` pour un exemple complet et `validate.py` pour les contrôles.

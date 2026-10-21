@@ -64,6 +64,16 @@ class Jira:
             if not tok:
                 return res
 
+    def status_changes(self, key):
+        """Transitions de statut d'un ticket : liste de (date AAAA-MM-JJ, from, to), chronologique."""
+        r = self._api("GET", f"/rest/api/3/issue/{key}?expand=changelog&fields=status")
+        out = []
+        for h in r.get("changelog", {}).get("histories", []):
+            for it in h.get("items", []):
+                if it.get("field") == "status":
+                    out.append((h["created"][:10], it.get("fromString"), it.get("toString")))
+        return sorted(out)
+
 
 if __name__ == "__main__":
     m = sys.argv[1] if len(sys.argv) > 1 else "sinbad"

@@ -31,6 +31,29 @@ La localisation du fichier est portable (jamais de chemin propre à un poste) : 
 (absolu), sinon `$PMF_DRIVE_ROOT` + `file.path`, sinon recherche du motif `file.glob` sous
 `~/Library/CloudStorage`.
 
+## Créer un nouveau classeur de risques : CLONER la référence, jamais de zéro
+
+Règle dure (apprise sur SINBAD le 18-19/10 : une v3 écrite « nue » est ressortie sans `styles.xml`,
+sans largeurs, sans couleurs, avec les exemples génériques du template en guise de contenu - « tout
+pourri »). **On ne génère JAMAIS un xlsx de risques à partir de zéro, ni à partir des `exemples` du
+template** (ils ne sont que des placeholders de structure).
+
+Pour **créer** un nouveau classeur (nouveau périmètre, nouvelle version, matrice du RUN…) :
+
+1. **Partir d'une copie du registre de référence** de la mission - `profiles/<mission>/risks.yml >
+   design_ref` (pour SINBAD : `Risks_RUN_SINBAD.xlsx`). Il porte le design réel (polices, fonds, code
+   couleur Probabilité / Impact, largeurs, en-tête, colonnes : Risk / Probability / Impact / Detail /
+   Mitigation / Owner). Le code couleur des niveaux y est souvent **manuel ou en mise en forme
+   conditionnelle** : un writer qui « ré-apprend » les styles est fragile, donc on **ne reconstruit pas**,
+   on clone.
+2. **Éditer les cellules chirurgicalement** sur la copie (helper `onedrive_xlsx` / `office`), exactement
+   comme une mise à jour : on remplace les valeurs, on garde les styles. Ajouter une ligne = dupliquer le
+   style d'une ligne de données existante.
+3. Le template `templates/trackers/excel/risks.yml` ne sert qu'à la **structure et à la légende**
+   (colonnes, échelle, `level_colors` de secours) ; il **ne génère pas** le fichier.
+
+`design_ref` absent : demander le registre de référence, ne pas improviser un xlsx nu.
+
 ## Le flux piloté par formulaire (formulaire → proposition → écriture gardée)
 
 1. **Lire le registre** (lecture seule) — `read_register`, via le mapping de la config.

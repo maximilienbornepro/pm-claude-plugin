@@ -31,6 +31,7 @@ GEN = {
     "activity":            ("framework/generators/activity/activity.py",             "suivi d'activite : collect / check / weekly / sync (dry-run)", True),
     "deck-gate":           ("framework/generators/deck-gate/deck_gate.py",           "contenu du deck GATE (slides markdown/JSON ; assemblage pptx garde)", True),
     "transcripts":         ("framework/generators/transcripts/read_transcripts.py",  "normalise transcriptions/CR vers {date,title,url,text} (--dump|--files)", True),
+    "slack":               ("framework/generators/slack/read_slack.py",              "normalise un export Slack (canaux+DM, threads) vers {date,author,channel,thread,text,url} ; lecture via Claude in Chrome, jamais d'ecriture", True),
     "partner-report":      ("framework/generators/partner-report/cr_partenaire.py",  "mail de suivi d'un call partenaire (--input ; rendu texte, jamais d'envoi)", True),
     # --- domaine Jira ---
     "jira-images":         ("framework/generators/jira-images/jira_image.py",        "images des tickets Jira via API (check ; --apply garde)", True),

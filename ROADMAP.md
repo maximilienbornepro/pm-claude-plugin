@@ -104,7 +104,7 @@ construit à côté ; **rien n'écrit dehors sans dry-run + validation + carte d
       ton, seuils de structure) + `check_sujet.py` (validateur de format : sections Contexte/Action, pas de
       liste à plat ≥3, pas de prose au kilomètre, pas de mention ; testé) + SKILL (écriture connecteur gardée).
       Condensation de l'existant : routine `revue-sujets`, mode `condensation`.
-- [~] notion-planning : report planning (+ slide deck), écriture gardée « demander avant » (SKILL + `notion_planning.yml` faits ; pas de validateur dédié, écriture par le connecteur)
+- [~] notion-planning : report planning, écriture gardée « demander avant » (SKILL + `notion_planning.yml` faits ; pas de validateur dédié, écriture par le connecteur)
 - [x] **cr-partenaire** `generators/partner-report/cr_partenaire.py` + `profiles/sinbad/partner-report.yml` : mail KSAT (EN) / Airbus (FR), format par partenaire, rendu texte **sans envoi** (testé)
 - [x] **raci** `generators/raci/raci.py` + `profiles/sinbad/raci.yml` : RACI data-driven (rôles = colonnes,
       activités en flow inline), rend la matrice + un extrait par rôle (markdown/JSON) + un plan de cellules
@@ -131,9 +131,9 @@ construit à côté ; **rien n'écrit dehors sans dry-run + validation + carte d
 
 ## Lot 6 - Routines planifiées  `[x]`
 
-- [x] Définitions `routines/` paramétrées par profil : **une routine = une tâche**. 8 routines mono-tâche
+- [x] Définitions `routines/` paramétrées par profil : **une routine = une tâche**. 7 routines mono-tâche
       (`publication-projection`, `objectifs-sprints`, `avancement-tracker`, `audit-perimetre`, `revue-sujets`,
-      `revue-risques`, `slide-planning`, `suivi`) dans `routines.yml` + un SKILL générique chacune
+      `revue-risques`, `suivi`) dans `routines.yml` + un SKILL générique chacune
 - [x] Doc de ré-activation portable (`framework/routines/README.md` : pointeur mince app -> SKILL, procédure)
 
 ## Lot 7 - Cohérence & audits  `[~]`

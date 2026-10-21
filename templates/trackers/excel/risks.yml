@@ -16,6 +16,19 @@ header_rows: ["<Projet> · Risks", "Purpose: project risks with their probabilit
 # Ligne d'en-tete des colonnes.
 columns: [Risk, Probability, Impact, Detail]
 
+# Design (pour un writer stylé : en-tete gras sur fond, volet fige, bordures, retour a la ligne).
+# NE PAS ecrire un xlsx NU (sans styles.xml) : c'etait le defaut de la v3 jetable. Reprendre le writer
+# style (cf. traceability.py / build_risks_v3b) pilote par ces cles.
+widths: { Risk: 64, Probability: 14, Impact: 12, Detail: 70 }
+
+# Colonnes a liste deroulante Excel.
+selects:
+  Probability: [High, Medium, Low]
+  Impact: [High, Medium, Low]
+
+# Code couleur applique aux cellules Probability / Impact selon la valeur.
+level_colors: { High: "FFF4B9A8", Medium: "FFFCE1C2", Low: "FFC9E6CC" }
+
 legende:
   probability: [High, Medium, Low]
   impact: [High, Medium, Low]

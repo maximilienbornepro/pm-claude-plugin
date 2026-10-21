@@ -54,6 +54,22 @@ PMF_JIRA_ENV=<.../.env> python3 framework/generators/plan/from_jira.py <mission>
 - **Editorial** (maintenu a la main) : objectif par sprint, phrase `fres`/`fout`, objectif par
   pole - trois fichiers JSON references dans `plan.yml`.
 
+## Reliquat de fin de sprint (regle Testing) - alerte obligatoire
+
+Quand un sprint se termine, Jira **bascule tout le non-termine au sprint suivant**, y compris les
+tickets deja **en recette**. Sans garde-fou, le dashboard les compte comme perimetre du nouveau
+sprint (qui gonfle) et pollue son objectif.
+
+- **Regle (dashboard seul, aucune ecriture Jira)** : un ticket actuellement dans le statut de recette
+  reste rattache au sprint ou il est **entre dans ce statut** (1re transition, lue dans le changelog
+  via `J.status_changes`), pas a son champ sprint courant. `_appliquer_reliquat` dans `from_jira.py`.
+- **Config** `plan.yml` : `test_status` (nom du statut de recette, defaut `Testing` - a adapter :
+  `QA`, `En test`, `In Review`...) et `reliquat: true|false` (defaut `true`) pour activer la regle.
+- **Alerte explicite obligatoire** : `alert_reliquat` imprime `⚠ ATTENTION - reliquat de fin de
+  sprint` et liste les tickets maintenus. **Toujours le repeter a l'utilisateur** et lui demander de
+  verifier si certains doivent au contraire rester dans le scope du sprint courant. Jamais en silence.
+- `data["reliquat"]` porte la liste (cle, sprint d'origine, sprint Jira) pour l'audit.
+
 ## Garde-fous
 
 - **Lecture seule** cote systemes : uniquement des requetes Jira de lecture ; n'ecrit que le

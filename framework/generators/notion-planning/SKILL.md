@@ -1,6 +1,6 @@
 ---
 name: notion-planning
-description: Construit et tient a jour le planning de reference de la mission - une PAGE NOTION avec un GANTT (vue timeline), pas un Excel. Un seul sens (source -> Notion), ecriture GARDEE "demander-avant". Le dossier Drive "04 - Planning" n'est pas forcement utilise. Le report sur la slide du deck est porte par slide-planning. Aucune notification.
+description: Construit et tient a jour le planning de reference de la mission - une PAGE NOTION avec un GANTT (vue timeline), pas un Excel. Un seul sens (source -> Notion), ecriture GARDEE "demander-avant". Le dossier Drive "04 - Planning" n'est pas forcement utilise. Aucune notification.
 meta:
   produces: planning-notion
   consumes: [roadmap]
@@ -35,12 +35,6 @@ reperes (ou une colonne dediee). C'est cette vue timeline qui fait office de Gan
 4. Ecrire **uniquement** les champs valides, de maniere chirurgicale (`notion-update-page`, `update_content`
    ou `update_properties` cible ; jamais `replace_content`). Mentions en texte simple.
 5. Relire (`notion-fetch`).
-
-## Lien avec la slide
-
-Le **meme** planning se reporte sur la slide du deck via la routine `slide-planning` (OneDrive, ecriture en
-place, garde-fou anti-ecrasement). Les deux lisent la **meme source** : ne jamais corriger la source depuis
-la slide ou depuis Notion, c'est l'inverse.
 
 ## Garde-fous
 

@@ -1,0 +1,28 @@
+# Template "Traceability / IADT" - solution NOTION.
+# Une base Notion où chaque exigence (ou élément de backlog) est une page ; les équipes répondent via
+# des propriétés select (Méthode IADT / Responsable / Couverture / Phase) + texte libre. Équivalent de
+# la matrice Excel, mais collaboratif et filtrable. Note parseur : une map flow PAR LIGNE.
+
+object: traceability
+solution: notion
+title: "Matrice de couverture (IADT)"
+
+# Propriétés : "Nom:type". La 1re (title) porte la référence de l'exigence.
+properties: ["Réf:title", "Req ID:text", "Exigence:text", "Phase:select", "Méthode:select", "Responsable:select", "Couverture:select", "Réponse / évidence:text", "Lien backlog:text", "Test prévu:text", "Commentaire:text"]
+
+options:
+  Phase: ["V1", "V1.1", "V2"]
+  Méthode: ["I - Inspection", "A - Analyse", "D - Démonstration", "T - Test"]
+  Couverture: ["Couvert", "Partiel", "Non couvert", "À confirmer"]
+  Responsable: ["Équipe interne", "Partenaire A", "Partenaire B", "Partenaire C", "À attribuer"]
+
+views:
+  - { name: "Toutes les exigences", type: table, sort: "Req ID" }
+  - { name: "Par couverture", type: board, group_by: "Couverture" }
+  - { name: "Par responsable", type: board, group_by: "Responsable" }
+  - { name: "Non couvertes", type: table, filter: "Couverture = Non couvert" }
+  - { name: "Par méthode", type: board, group_by: "Méthode" }
+
+exemples:
+  - { réf: "EX 001", req_id: "EX 001", exigence: "Le service produit des sorties analytiques et des alertes dans la latence cible.", phase: "V1" }
+  - { réf: "EX 002", req_id: "EX 002", exigence: "L'utilisateur configure des alertes par seuil sur une zone d'intérêt.", phase: "V1" }

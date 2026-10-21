@@ -40,9 +40,7 @@ Catalogues liés : tons -> `framework/REDACTION.md` · agents -> `framework/AGEN
 | `avancement-tracker` | pousser l'avancement V1 (un champ) dans Notion | notion |
 | `audit-perimetre` | auditer périmètre V1/V2 + couverture TR (lecture seule) | jira, office |
 | `revue-sujets` | revue des sujets (formulaire) | notion |
-| `revue-risques` | actualiser le registre des risques | office |
-| `slide-planning` | reporter le planning sur une slide du deck | office |
-| `suivi` | suivi d'activité quotidien -> DB privée | notion |
+| `revue-risques` | actualiser le registre des risques | office || `suivi` | suivi d'activité quotidien -> DB privée | notion |
 | `brouillons-relances` | brouillons de relances (rendu texte, sans envoi) | **partenaire**, mail |
 
 ## Agents (`framework/agents/`) - détail dans `AGENTS.md`

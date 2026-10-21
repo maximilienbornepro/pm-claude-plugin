@@ -1,0 +1,41 @@
+# Template "Traceability / IADT" - solution EXCEL.
+# Matrice de couverture d'un besoin : on part d'un backlog ou d'un jeu d'exigences (TR), et chaque
+# ligne se confronte à une méthode de vérification IADT (Inspection / Analyse / Démonstration / Test),
+# un responsable (équipe ou partenaire) et un état de couverture. Les colonnes à choix sont des LISTES
+# DÉROULANTES Excel ; le reste est du texte libre que les équipes remplissent.
+# Calqué sur SINBAD_Requirements_Traceability (IADT_Matrice_SINBAD.xlsx).
+# GÉNÉRIQUE : options neutres, à adapter par mission. Note parseur : pas de virgule DANS une chaîne.
+
+object: traceability
+solution: excel
+title: "Traceability (IADT)"
+sheet: "Matrice IADT"
+lang: fr
+
+# Lignes de titre au-dessus de l'en-tête.
+header_rows:
+  - "<Projet> · Matrice de couverture (IADT)"
+  - "Objet : confronter chaque exigence / élément de backlog à une méthode de vérification (I/A/D/T) et un responsable."
+  - "À remplir par les équipes : Méthode / Responsable / Couverture (listes déroulantes) + réponse / évidence / test (texte libre)."
+
+# Colonnes, dans l'ordre.
+columns: ["Réf", "Req ID", "Exigence", "Phase", "Méthode", "Responsable", "Couverture", "Réponse / évidence", "Lien backlog", "Test prévu", "Commentaire"]
+
+# Colonnes pré-remplies depuis la source (items en entrée : TR ou backlog).
+prefill: ["Réf", "Req ID", "Exigence", "Phase"]
+
+# Colonnes à liste déroulante (validation de données Excel). Les équipes choisissent.
+selects:
+  Phase: ["V1", "V1.1", "V2"]
+  Méthode: ["I - Inspection", "A - Analyse", "D - Démonstration", "T - Test"]
+  Couverture: ["Couvert", "Partiel", "Non couvert", "À confirmer"]
+  Responsable: ["Équipe interne", "Partenaire A", "Partenaire B", "Partenaire C", "À attribuer"]
+
+# Largeur indicative des colonnes (caractères).
+widths: { "Réf": 16, "Req ID": 10, "Exigence": 70, "Phase": 8, "Méthode": 18, "Responsable": 16, "Couverture": 14, "Réponse / évidence": 50, "Lien backlog": 18, "Test prévu": 40, "Commentaire": 30 }
+
+# Exemple d'items (si aucune source fournie). En vrai : TR du SOW ou tickets du backlog.
+exemples:
+  - { "Réf": "EX 001 · A", "Req ID": "EX 001", "Exigence": "Le service produit des sorties analytiques et des alertes dans la latence cible.", "Phase": "V1" }
+  - { "Réf": "EX 002", "Req ID": "EX 002", "Exigence": "L'utilisateur configure des alertes par seuil sur une zone d'intérêt.", "Phase": "V1" }
+  - { "Réf": "EX 003", "Req ID": "EX 003", "Exigence": "Les rapports sont exportables au format d'échange standard.", "Phase": "V1.1" }

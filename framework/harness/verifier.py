@@ -21,7 +21,7 @@ import generator_meta as gm     # noqa: E402
 
 COSTS = {"heavy-local", "light"}
 STATUTS = {"draft", "stable"}
-CONNECTEURS = {"jira", "notion", "m365", "figma", "drive", "outlook", "teams", "confluence"}
+CONNECTEURS = {"jira", "notion", "m365", "figma", "drive", "outlook", "teams", "confluence", "chrome"}  # chrome = Claude in Chrome (lecture Slack)
 
 errors, warns = [], []
 def err(m): errors.append(m)

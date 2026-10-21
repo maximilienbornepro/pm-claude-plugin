@@ -27,15 +27,13 @@ Dans l'app (section **Scheduled**), chaque tâche porte **à la fois** :
 
 | Dossier (`framework/routines/`) | Horaire (config) | Enchaine (`chains`) | Ecrit (gardé) |
 |---|---|---|---|
-| `publication-projection` | cron (ex. 8h/11h/18h) | `projection`, `sprint-audit` | **gh-pages + artefact Claude** (rapport + plan, les deux a jour) |
+| `publication-projection` | cron (ex. 8h/11h/18h) | `projection`, `sprint-audit` | **gh-pages + artefacts Claude** (memes HTML), **objectifs des sprints** (champ texte, si `commands.objectifs`) ; alerte explicite si le texte des sprints est perime (`commands.drift_check`, lecture seule) |
 | `objectifs-sprints` | manuel | - | objectifs de sprint Jira (texte ; aucun ticket deplace) |
 | `avancement-tracker` | cron (ex. 8h/11h/18h) | `projection` | 1 champ du tracker Notion (avancement V1) |
 | `audit-perimetre` | manuel | `sprint-audit` | **lecture seule** : perimetre V1/V2 + couverture TR (propositions, aucune ecriture) |
 | `suivi` | cron (ex. 19h) | `suivi` (collect + weekly + sync) | store local + DB Notion **privee** (4 categories ; aucune notif) ; jamais la page Weekly report de Greg |
 | `revue-sujets` | manuel | `revue-risques` (sauf mode `condensation`) | base de suivi (sujets valides, condensation des sujets a rallonge comprise via le mode `condensation`), puis registre des risques via `revue-risques` |
-| `revue-risques` | manuel (planifiable) | `risks`, `projection` | registre des risques (Office, en place) |
-| `slide-planning` | manuel | - | deck pptx, une seule slide (Office, en place) |
-| `brouillons-relances` | manuel | - | brouillons Outlook ouverts en redaction (`mailto:`, nouveau fil) ou reponse dans le fil d'origine (presse-papiers / Outlook web) + copie `.eml` locale ; messages Slack internes rendus a copier, **rien n'est envoye ni poste** |
+| `revue-risques` | manuel (planifiable) | `risks`, `projection` | registre des risques (Office, en place) || `brouillons-relances` | manuel | - | brouillons Outlook ouverts en redaction (`mailto:`, nouveau fil) ou reponse dans le fil d'origine (presse-papiers / Outlook web) + copie `.eml` locale ; messages Slack internes rendus a copier, **rien n'est envoye ni poste** |
 
 `chains` ne reference que des generateurs du framework (`python3 framework/pm.py list`) ou une autre
 routine. L'horaire reel est dans le frontmatter `schedule` du SKILL (valeur `config`, qui renvoie a
