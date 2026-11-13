@@ -22,7 +22,7 @@ def _invariants(html):
 
 
 def _overview(html):
-    return re.search(r'<section class="view" id="v-overview">(.*?)</section>', html, re.S).group(1)
+    return re.search(r'id="v-overview">(.*?)<div class="view" id="v-', html, re.S).group(1)
 
 
 def test_demo_rendu_passe_les_7_invariants_dans_tous_les_modes():
@@ -34,7 +34,7 @@ def test_demo_rendu_passe_les_7_invariants_dans_tous_les_modes():
 
 def test_tout_element_cliquable_porte_une_loupe():
     html = B.build_html(DEMO, {"donnees": "abstrait"})
-    blocs = re.findall(r'<g class="(?:nodelink|zonelink)"[^>]*>(.*?)</g>', html, re.S)
+    blocs = re.findall(r'<g class="blk"[^>]*>(.*?)</g>', html, re.S)
     assert blocs and all('class="zoom"' in b for b in blocs)
 
 
@@ -47,7 +47,7 @@ def test_couche_abstraite_devient_un_bloc_cliquable():
 def test_couche_masquee_absente_de_la_vue_d_ensemble_mais_pas_des_autres_vues():
     html = B.build_html(DEMO, {"partenaires": "masque"})
     assert ">Partner A<" not in _overview(html)
-    assert ">Partner A<" in re.search(r'id="v-donnees"(.*?)</section>', html, re.S).group(1)
+    assert ">Partner A<" in re.search(r'id="v-donnees"(.*?)(?:<div class="view" id="v-|</body>)', html, re.S).group(1)
 
 
 def test_couche_du_chemin_principal_ne_se_masque_pas():
@@ -74,11 +74,16 @@ def test_questions_public_d_abord_puis_chaque_couche():
     assert ops["proposition"] == "masque"
 
 
-def test_couleurs_de_role_et_encart_d_equipe():
+def test_style_du_schema_de_reference():
+    """Meme design system que le schema de reference : tokens, coquille (menu, theme, fil d'Ariane),
+    cartes cliquables en entier, flux anime, couleurs de role en tokens golden, import draw.io par vue."""
     html = B.build_html(DEMO)
-    assert "--auth:" in html and "var(--auth)" in html        # token défini dans :root et utilisé
-    assert 'class="zone team"' in html
-    assert 'class="flow main"' in html                        # flux principal animé
+    assert "--bg:#f4f3f7" in html and "--sai:#7e14ff" in html and '.blk rect.bg' in html
+    assert 'id="xmenu"' in html and 'id="xtheme"' in html and 'id="trail"' in html
+    assert 'class="flow"' in html                                # flux principal anime
+    assert re.search(r'style="stroke:var\(--(?:grn|sai|kc|amb|air|s3|rds)\)"', html)
+    assert html.count("data-impfile>") == html.count("<div class=\"view\"")      # un import draw.io par vue
+    assert 'class="back" data-back' in html
 
 
 def test_aller_retour_drawio_conserve_les_entites():
@@ -140,6 +145,35 @@ def test_enrich_import_brut_vers_style_par_defaut():
     blk = {e["id"]: e for e in f["entities"]}["couche-front"]
     assert blk["zone"] == "z-ns" and blk["color"] is None and "couche-front" in f["views"][0]["layout"]
     assert not _invariants(B.build_html(m, {"front": "abstrait", "partners": "abstrait"}))
+
+
+
+SEQ = """<mxfile><diagram name="Auth"><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>
+<mxCell id="u" value="User" style="shape=umlLifeline;" vertex="1" parent="1"><mxGeometry x="0" y="0" width="80" height="300" as="geometry"/></mxCell>
+<mxCell id="k" value="Keycloak" style="shape=umlLifeline;" vertex="1" parent="1"><mxGeometry x="200" y="0" width="80" height="300" as="geometry"/></mxCell>
+<mxCell id="m" value="login" edge="1" parent="1" source="u" target="k"><mxGeometry relative="1" as="geometry"/></mxCell>
+</root></mxGraphModel></diagram></mxfile>"""
+
+
+def test_vue_sequence_et_import_fige():
+    """Une vue `kind: sequence` et un draw.io fige dans une sous-vue (views[].drawio) sont embarques
+    pour le moteur navigateur (meme dessin que la sequence de reference)."""
+    import import_view as IV
+    import tempfile
+    m = json.loads(json.dumps(DEMO))
+    m["views"].append({"id": "seq", "label": "Auth", "kind": "sequence",
+                       "participants": [{"id": "u", "label": "User"}, {"id": "k", "label": "Keycloak", "color": "auth"}],
+                       "messages": [{"from": "u", "to": "k", "label": "login"}]})
+    d = Path(tempfile.mkdtemp())
+    (d / "m.json").write_text(json.dumps(m), encoding="utf-8")
+    (d / "s.drawio").write_text(SEQ, encoding="utf-8")
+    sub = m["views"][1]["id"]
+    assert IV.main([str(d / "m.json"), "--view", sub, str(d / "s.drawio"), "-o", str(d / "o.json")]) == 0
+    html = B.build_html(json.loads((d / "o.json").read_text(encoding="utf-8")))
+    assert 'data-seq="seq"' in html and '"participants"' in html
+    assert re.search(r'window\.IMPORTS=\{"' + re.escape(sub) + '"', html)
+    assert "umlLifeline" in html and "seqSVG" in html
+    assert not _invariants(html)
 
 
 if __name__ == "__main__":

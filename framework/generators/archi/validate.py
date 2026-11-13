@@ -126,7 +126,7 @@ def check_navigation(h):
 def check_logos(h):
     """Chaque data-logo référencé existe dans window.LOGOS (sinon logo invisible)."""
     v = []
-    used = set(re.findall(r'data-logo="([^"]+)"', h))
+    used = set(re.findall(r'data-logo="([^"]+)"', re.sub(r'<script\b.*?</script>', '', h, flags=re.S)))
     m = re.search(r'window\.LOGOS\s*=\s*\{', h)
     keys = set()
     if m:

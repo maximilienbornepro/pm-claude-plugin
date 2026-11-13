@@ -582,6 +582,17 @@ def build_html(model, modes=None):
     import abstraction as ABS  # sibling (archi/)
     model = ABS.apply(model, modes)
     meta = model.get("meta", {})
+    if meta.get("style") != "legacy":
+        # rendu par defaut : style EXACT du schema de reference (golden.py + golden_style.css)
+        import golden as GOLD  # sibling (archi/)
+        b64 = None
+        try:
+            import export_drawio as XDR  # sibling (archi/)
+            xml, _, _ = XDR.build_xml(model)
+            b64 = base64.b64encode(xml.encode("utf-8")).decode("ascii")
+        except Exception:
+            pass
+        return GOLD.build_page(model, b64)
     title = meta.get("project") or "Architecture"
     palette = dict(DEFAULT_PALETTE)
     palette.update(ROLE_COLORS)

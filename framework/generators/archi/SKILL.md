@@ -63,13 +63,32 @@ gardés dans `abstraction.json` à côté du modèle et relus à chaque rendu.
 
 Une couche du chemin principal (`main: true`) ne peut pas être masquée.
 
-## Style (repris du schéma SINBAD par défaut)
+## Style : celui du schéma de référence, à l'identique (`golden.py`, depuis le 13/11/2026)
 
-- **Loupe** sur tout élément cliquable (`link`), drill-down vers la vue cible.
+Le rendu par défaut reprend **exactement** le schéma d'architecture publié sur gh-pages : même feuille de
+style (`golden_style.css`, copiée telle quelle, on ne la retouche pas, on étend en fin de `_EXTRA_CSS`), même
+coquille (menu, thème clair / sombre, fil d'Ariane, scène), même vocabulaire SVG (`g.blk` + `rect.bg`,
+`.box`, `.flow` animé, `.arr`, `.auth`, `.lbl`, `.t`, `.tm`, `.s`). L'ancien rendu reste accessible par
+`meta.style: "legacy"`.
+
+- **Harmonie de la vue d'ensemble** : colonne centrale = le compte cloud (stockage en tête, puis cadre
+  Kubernetes avec son onglet, namespace, blocs empilés pleine largeur dans l'ordre des flux, deux petits
+  blocs côte à côte) ; à gauche les sources ; à droite exploitation, API et applications externes, alignées
+  sur le bloc qu'elles touchent ; en bas les acteurs (flèches qui montent).
+- **Toute la zone est cliquable** : une zone qui a sa vue devient une carte `g.blk` entière, avec loupe.
+- **Sous-vues** : bouton retour, légende en tête, **flèche pointillée « depuis … »** qui vient du haut
+  (amont de la vue, sinon la vue parente), chaîne de traitement de gauche à droite, sorties en dessous,
+  la suite cliquable en bout de chaîne ; les zones filles qui ont leur vue sont repliées en cartes.
+- **Diagrammes de séquence** : vue `kind: "sequence"` (`participants`, `messages` avec `kind: auth|return`,
+  `caption`, `notes`), rendue comme « Applications partenaires » : en-têtes, lignes de vie pointillées,
+  messages numérotés, échanges d'authentification en rose pointillé.
+- **Import draw.io par vue** : bouton « Importer un draw.io » sur chaque vue ; un diagramme de séquence
+  (`umlLifeline`) est rendu en séquence, sinon en boîtes et zones ; pages multiples au choix ; conservé dans
+  le navigateur, « Revenir au schéma généré » pour l'annuler. Pour le **figer dans le modèle** :
+  `python3 import_view.py model.json --view <id> fichier.drawio [--page N|nom] [-o sortie.json]`.
 - **Couleurs de rôle** via `color` : `core` violet, `service` vert, `auth` rose, `storage` orange,
-  `db` bleu, `cluster` bleu k8s, `risk` rouge, `ops` ambre, `partner` cyan, `ext` gris.
-- **Encarts d'équipe** : `zone.style: "team"` (tirets colorés, titre gras).
-- **Animations** : flux `main: true` animés, apparition des vues, survol des blocs ; `prefers-reduced-motion` respecté.
+  `db` bleu (cylindre), `cluster` bleu k8s, `risk` rouge, `ops` ambre, `partner` cyan, `ext` gris.
+- **Logos** : ceux du modèle, complétés par la bibliothèque partagée (`framework/assets/logos`).
 
 ## Importer un draw.io (symétrique de l'export)
 
@@ -109,14 +128,30 @@ ajouterait à la main, **sans rien inventer** :
 
 `--page` choisit la page draw.io (une page = une vue) ; une page inconnue est refusée avec la liste.
 
+## Le kit à envoyer (`dist/archi-kit.zip`)
+
+Un zip autonome pour qu'une autre personne utilise le générateur sans le plugin : Python 3.9+, aucune
+dépendance, `LISEZMOI.md` (démarrage, import draw.io, modèle, séquences, import par vue, export,
+contrôle), `archi.py` (point d'entrée : `demo`, `build`, `import`, `import-view`, `export`, `check`),
+exemples. Aucune donnée de mission (garde-fou), et le kit se teste lui-même (il doit générer sa démo)
+avant d'être écrit.
+
+- **Toujours à jour, sans action** : le hook `PostToolUse` du plugin (`framework/hooks/archi_kit.py`)
+  relance `pack_kit.py --if-stale` après toute modification du générateur, des logos partagés ou du
+  modèle de démo ; `publish.sh` le reconstruit à chaque version. Copie sur le Bureau
+  (`~/Desktop/archi-kit.zip`, ou `ARCHI_KIT_COPY`).
+- À la main : `python3 framework/generators/archi/pack_kit.py`.
+- **Toute évolution du générateur met à jour le `LISEZMOI.md` du kit** (texte dans `pack_kit.py`) si
+  une commande, une option ou un comportement visible change.
+
 ## Les pièces
 
 - **Contrat** : `SCHEMA.md` (structure du modèle, alignée sur le harness).
-- **Moteur générique** : `build_html.py` (modèle → HTML validé), `validate.py` (7 invariants),
+- **Moteur générique** : `build_html.py` (modèle → HTML validé, délègue à `golden.py` + `golden_style.css` + `golden_import.js`), `import_view.py` (fige un draw.io dans une vue), `validate.py` (7 invariants),
   `export_drawio.py` (modèle → .drawio par écran), `import_drawio.py` (.drawio → modèle, logos déduits),
   `enrich.py` (import brut → rôles, couleurs, chemin principal, loupes, cadre EKS, étages, questions),
   `abstraction.py` (couches : modes, propositions, questions), `render.py`/`KNOWLEDGE.md` (primitives, conventions).
-- **Tests** : `framework/harness/test_archi.py` (couches, loupes, couleurs, aller-retour et import draw.io).
+- **Tests** : `framework/harness/test_archi.py` (couches, loupes, style de référence, séquences, import figé, aller-retour et import draw.io).
 - **Config de mission** : `profiles/<mission>/architecture.yml` (chemin du modèle, artefacts, cibles).
 - **Artefacts** : le `model.json` et le HTML vivent côté mission ; la config les pointe.
 

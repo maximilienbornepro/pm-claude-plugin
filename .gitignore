@@ -30,5 +30,8 @@ profiles/demo/architecture/demo.html
 # Registre de comptes (chemins de config dirs du poste) - jamais publie
 config/accounts.yml
 
+# Kit portable du generateur d archi (reconstruit automatiquement)
+dist/
+
 # Profil(s) reel(s) : hors depot partage
 profiles/sinbad/

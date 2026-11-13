@@ -62,6 +62,19 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/archi_kit.py\"",
+            "timeout": 150,
+            "statusMessage": "Kit du generateur d'archi (zip) a jour"
+          }
+        ]
+      }
     ]
   }
 }

@@ -161,3 +161,14 @@ du public, pas du modèle. Dans le même lot, le rendu reprend le style du sché
 rôle, encarts d'équipe, flux animés) et l'import draw.io gère les schémas dessinés à la main (zones par
 imbrication, flèches sans accroche, logos déduits du schéma par défaut). Rien n'est publié par défaut.
 Tests `framework/harness/test_archi.py`.
+
+## DM-023 - Générateur d'archi : style de référence à l'identique, import draw.io par vue, kit portable  *(13/11/2026)*
+Le rendu par défaut (`golden.py`) reprend **à l'identique** la feuille de style et la coquille du schéma
+d'architecture de référence publié (gh-pages) : mêmes tokens, mêmes cartes cliquables en entier, même
+harmonie (colonne centrale cloud / cluster / namespace, sources à gauche, exploitation et partenaires à
+droite, acteurs en bas), flèche « depuis … » dans les sous-vues, séquences au dessin de la référence.
+Chaque vue peut être remplacée par un draw.io (bouton dans la page, ou figé dans le modèle par
+`import_view.py`) ; un draw.io de séquence est rendu en séquence. Un **kit portable** (`dist/archi-kit.zip`)
+est reconstruit automatiquement (hook `archi_kit.py`, `publish.sh`). **Pourquoi :** le rendu générique
+« ne ressemblait pas » au schéma de référence (couleurs, fonds, structure) ; et l'outil doit pouvoir
+s'envoyer à quelqu'un d'autre avec ses instructions, toujours dans sa dernière version.
