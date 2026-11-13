@@ -104,7 +104,9 @@ générateur : une Synthèse de 5-10 lignes là où le porteur n'en met pas).
 
 **Le style, tel que le porteur l'écrit (règle figée) :**
 - **Puces imbriquées, groupées par thème.** Un thème porte ses sous-items (ex. `Pilotage` → Planning,
-  Roadmap, Sprint, Rapport d'avancement). **Un seul niveau** de sous-puces.
+  Roadmap, Sprint, Rapport d'avancement). **Indentation et sous-indentation** : un item dense se
+  découpe en sous-puces courtes, pas une ligne à rallonge (jusqu'à deux niveaux de sous-puces).
+- **Phrase courte : 10 à 15 mots maximum par puce.** Au-delà, on coupe en deux puces ou en sous-puces.
 - **Télégraphique** : groupes nominaux courts, pas de phrases rédigées, pas de justification tartinée.
   « Architecture : schéma mis à jour et publié », pas trois lignes d'explication.
 - **Pas d'URL dans les puces.** Les liens, si besoin, vont dans la ligne de sources en pied.

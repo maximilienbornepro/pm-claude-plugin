@@ -149,3 +149,15 @@ structure Excel, mais n'avait **aucun moyen de créer** un fichier Office ; et i
 l'écriture Office = disque synchronisé, jamais le connecteur. Stdlib → compatible avec le garde-fou
 `garde_office` (qui refuse openpyxl / `.save()` / `rm`/`mv`). `writes: office` → renvoie au `_deroule-office`
 (fraîcheur, écriture unique). Tests `framework/harness/test_office.py` (4 cas), ajoutés à `publish.sh`.
+
+## DM-022 - Schéma d'archi : la vue d'ensemble se construit avec la personne (couches abstrayables)  *(12/11/2026)*
+Un modèle d'archi peut déclarer des **couches** (`layers`) ; dans la vue d'ensemble, chacune est **dépliée**,
+**abstraite** (un bloc avec loupe, détail au clic) ou **masquée**. Le générateur **propose** une profondeur par
+couche, avec sa raison (public, puis densité ≥ 4 entités ou ≥ 5 flux, puis chemin principal de la donnée), et
+produit les **questions** à poser (`--suggest`) ; la personne tranche, ses choix sont gardés dans
+`abstraction.json`. Une couche du chemin principal ne se masque pas. **Pourquoi :** sur SINBAD, le niveau 1
+reconstruit du draw.io était trop dense pour un COPIL et trop pauvre pour l'équipe : la bonne profondeur dépend
+du public, pas du modèle. Dans le même lot, le rendu reprend le style du schéma par défaut (loupes, couleurs de
+rôle, encarts d'équipe, flux animés) et l'import draw.io gère les schémas dessinés à la main (zones par
+imbrication, flèches sans accroche, logos déduits du schéma par défaut). Rien n'est publié par défaut.
+Tests `framework/harness/test_archi.py`.

@@ -76,6 +76,11 @@ construit à côté ; **rien n'écrit dehors sans dry-run + validation + carte d
       (drill-down : `link` sur entité/zone → `data-go` HTML + lien cross-page draw.io). Deux entrées :
       édition du modèle ou **gros prompt** (agent `architecture`). `pm run architecture <mission>
       [--render|--export drawio]`. Publication 3 cibles = écriture gardée. Reste : re-modéliser SINBAD.
+- [x] **archi : co-construction + style du schéma par défaut** : couches `layers` (détail / abstrait /
+      masqué) dans la vue d'ensemble, propositions motivées (public, densité, chemin de la donnée) et
+      questions `--suggest` posées à la personne ; loupes, couleurs de rôle, encarts d'équipe, flux animés ;
+      import draw.io dessiné à la main (zones par imbrication, flèches flottantes, logos déduits).
+      Tests `framework/harness/test_archi.py` (10 cas).
 - [x] Entrées **transcriptions** (imposées par le framework) : lecteur `generators/transcripts/read_transcripts.py`
       (sources pluggables - dump Notion meeting notes par défaut, ou dossier de fichiers), normalise vers
       `{date, title, url, text}` et filtre par fenêtre ; sortie `--json` pour sujets / CR / risques / synthèse.

@@ -26,6 +26,11 @@ draw.io par écran. Résultat : partir de 0 et monter un schéma complexe par un
   "flows":  [ { "from":"frontend", "to":"bff", "label":"HTTPS", "kind":"call" },
               { "from":"bff", "to":"db", "label":"récupère", "kind":"pull" } ],  // pull/read = double flèche
 
+  "layers": [ { "id":"donnees", "label":"Données et services", "sub":"service · base",
+                "members":["api","db","queue"], "main":true, "role":"data",
+                "color":"service", "logo":null, "link":"donnees", "default":"detail" } ],
+              // couches abstrayables de la vue d'ensemble (voir « Couches et abstraction »)
+
   "views":  [
     { "id":"overview", "label":"Vue d'ensemble", "members":["frontend","bff","db","airbus"] },
     { "id":"data", "label":"Données", "members":["airbus","s3","aifa"],
@@ -51,8 +56,42 @@ draw.io par écran. Résultat : partir de 0 et monter un schéma complexe par un
   `data-go="<vue cible>"` + liseré accent et petit « › » (le clic appelle `go()`). En draw.io : lien
   **cross-page** `link="data:page/id,<vue cible>"` sur le shape (chaque `<diagram>` porte un `id`= id de
   vue). Un `link` qui pointe vers une vue inexistante, ou vers la vue courante, est ignoré (aucun effet).
+- **Élément cliquable = loupe** (coin haut-droit), comme le schéma par défaut ; le générateur la pose
+  sur toute entité ou zone qui a un `link`.
+- **`color`** (optionnel) sur une **entity**, une **zone** ou une **couche** : bordure + titre colorés.
+  Valeur = token de rôle (`core` violet, `service` vert, `auth` rose, `storage` orange, `db` bleu,
+  `cluster` bleu k8s, `risk` rouge, `ops` ambre, `partner` cyan, `partner2` vert clair, `ext` gris ;
+  tous posés sur `:root`, surchargeables par `palette`) ou un `#hex`.
+- **`zone.style: "team"`** = **encart d'équipe** (tirets colorés, titre gras), ex. Enix en vert, SOC en rouge.
+- **`flow.main: true`** = flux du **chemin principal** de la donnée, **animé** ; `kind: "auth"` = pointillés roses.
 - Chaque vue a un **`viewBox`** (invariant « viewBox »), et l'équilibre SVG/`<g>` est tenu par le
   générateur (invariant « Équilibre »).
+
+## Couches et abstraction (vue d'ensemble construite AVEC la personne)
+
+`layers[]` regroupe des entités en **couches** (données, traitement, API, identité, partenaires,
+exploitation, acteurs…). Dans la **vue d'ensemble** (première vue), chaque couche a un mode :
+
+| Mode | Effet |
+|---|---|
+| `detail` | les entités de la couche sont affichées telles quelles |
+| `abstrait` | la couche devient **un bloc** (label/sub/logo/color de la couche) avec loupe, qui mène à `link` ; flux rebranchés sur le bloc, flux internes retirés, doublons fusionnés (libellés réunis) |
+| `masque` | la couche et ses flux disparaissent de la vue d'ensemble (les autres vues ne changent pas) |
+
+- `main: true` = couche du **chemin principal** : elle **ne peut pas être masquée** (le schéma mentirait).
+- `role` (`data`, `processing`, `api`, `identity`, `front`, `partners`, `ops`, `actors`) oriente les
+  préréglages par public. `default` = mode initial (sinon `abstrait`).
+- Sans `link` vers une vue existante, une vue de détail `couche-<id>` est **créée** (membres de la couche).
+- Les choix sont enregistrés dans **`abstraction.json`** à côté du modèle (`{"_public": …, "<couche>": "<mode>"}`).
+
+**Le générateur propose, la personne décide.** `pm run architecture <mission> --suggest` rend les
+questions à poser, dans l'ordre : le **public** (`direction`, `tech`, `exploitation`, `partenaires`),
+puis chaque couche avec une **proposition motivée** :
+1. le public prime s'il est connu (ex. direction : tout en blocs, exploitation masquée) ;
+2. sinon la **densité** : 4 entités ou plus, ou 5 flux internes ou plus → `abstrait` ;
+3. sinon le **chemin de la donnée** : petite couche `main` → `detail` ; couche annexe → `abstrait` (masquable).
+
+Appliquer : `--render --public <p>` puis `--set couche=mode,…` (ou `--apply-suggestions`).
 
 ## Le process, de 0 à un schéma
 

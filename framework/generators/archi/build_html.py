@@ -16,7 +16,12 @@ Par vue (`views[]`) :
   - logos via window.LOGOS (plate blanche) ; entite sans logo = boite titree (label + sub) ;
   - palette -> variables CSS sur :root ;
   - navigation : objet JS `names`, elements `data-go`, fonctions go()/back(), fil d'Ariane ;
-  - viewBox sur chaque SVG ; une seule vue visible a la fois.
+  - viewBox sur chaque SVG ; une seule vue visible a la fois ;
+  - element cliquable (`link`) = loupe (comme le schema par defaut) ;
+  - `color` (token de palette ou #hex) sur entite / zone / couche : bordure + titre colores ;
+    zone `style: "team"` = encart d'equipe (tirets colores, titre gras) ;
+  - flux `main: true` = anime (chemin principal de la donnee) ; `kind: auth` = pointilles roses ;
+  - couches (`layers`) : la vue d'ensemble est abstraite selon les modes (voir abstraction.py).
 """
 import json
 import math
@@ -38,11 +43,47 @@ DEFAULT_PALETTE = {
     "bg": "#0f141b", "surface": "#19212c", "ink": "#e8ebf0",
     "ink2": "#a2abba", "accent": "#6fa2d6", "border": "#2a303b",
 }
+# Couleurs de ROLE (reprises du schema SINBAD par defaut) : toujours posees sur :root, surchargeables
+# par la palette du modele. Une entite/zone/couche les reference par `color`.
+ROLE_COLORS = {
+    "core": "#a66bff",      # plateforme / coeur (violet)
+    "service": "#44c07a",   # services applicatifs, namespace (vert)
+    "auth": "#f07ab8",      # identite / OIDC (rose)
+    "storage": "#e2571e",   # stockage objet S3 (orange)
+    "db": "#2e73b8",        # base de donnees (bleu)
+    "cluster": "#326ce5",   # Kubernetes (bleu k8s)
+    "risk": "#ff5757",      # securite / SOC (rouge)
+    "ops": "#e0b35a",       # exploitation (ambre)
+    "partner": "#3fcbe6",   # partenaire (cyan)
+    "partner2": "#8fc457",  # partenaire 2 (vert clair)
+    "ext": "#9aa6b4",       # acteur externe (gris)
+}
 
 
 # ------------------------------------------------------------------- utils
 def esc(t):
     return (str(t) if t is not None else "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+_PAL = {}
+
+
+def _col(c):
+    """`color` d'un element -> valeur CSS : token de palette (var(--x)) ou #hex ; sinon None."""
+    if not c:
+        return None
+    c = str(c)
+    if c in _PAL:
+        return f"var(--{c})"
+    if c.startswith("#") and len(c) in (4, 7, 9):
+        return c
+    return None
+
+
+def _zoom(cx, cy):
+    """Loupe (coin haut-droit d'un bloc cliquable), comme le schema par defaut."""
+    return (f'<circle class="zoom" cx="{_num(cx)}" cy="{_num(cy)}" r="6"/>'
+            f'<path class="zoom" d="M{_num(cx + 4)} {_num(cy + 4)} l5 5"/>')
 
 
 def _num(v):
@@ -213,16 +254,24 @@ def _layout_explicit(member_ids, ent_by_id, zones, layout):
         return False
 
     zone_rects = []
-    depths = {z["id"]: depth(z["id"]) for z in zones}
-    max_depth = max(depths.values()) if depths else 0
+    # zones presentes DANS CETTE VUE, et pour chacune le nombre de niveaux de sous-zones presentes
+    # sous elle : la marge d'un cadre depend de ce qu'il contient ici, pas de tout le modele.
+    present = {z["id"] for z in zones if any(in_zone(e, z["id"]) for e in nodes)}
+
+    def height(zid, seen=()):
+        kids = [z["id"] for z in zones if z.get("parent") == zid and z["id"] in present and z["id"] not in seen]
+        return 0 if not kids else 1 + max(height(k, seen + (zid,)) for k in kids)
+
     for z in zones:
         zid = z["id"]
-        pts = [nodes[e] for e in nodes if in_zone(e, zid)]
-        if not pts:
+        if zid not in present:
             continue
-        pad = ZPAD + (max_depth - depths[zid]) * (ZPAD // 2 + 6)
+        pts = [nodes[e] for e in nodes if in_zone(e, zid)]
+        hz = height(zid)
+        pad = ZPAD + hz * (ZPAD // 2 + 6)
         x0 = min(p[0] for p in pts) - pad
-        y0 = min(p[1] for p in pts) - pad - ZTITLE
+        # un bandeau de titre par niveau d'imbrication : le titre d'une zone ne passe pas sous sa sous-zone
+        y0 = min(p[1] for p in pts) - pad - ZTITLE * (1 + hz)
         x1 = max(p[0] + p[2] for p in pts) + pad
         y1 = max(p[1] + p[3] for p in pts) + pad
         zone_rects.append((x0, y0, x1 - x0, y1 - y0, z.get("label", zid), zid))
@@ -230,12 +279,41 @@ def _layout_explicit(member_ids, ent_by_id, zones, layout):
 
 
 # ------------------------------------------------------------------- rendu SVG
-def _node_svg(x, y, label, sub, logo_key, logos, link=None):
-    """Noeud. Si `link` (id de vue cible) : cliquable (data-go) + liseré accent + chevron."""
+def _wrap(label, width_px, px_per_char=7.2, max_lines=2):
+    """Coupe un libelle en <= max_lines lignes tenant dans width_px (estimation 13px gras).
+    Retourne (lignes, tronque?)."""
+    cap = max(4, int(width_px / px_per_char))
+    words, lines, cur = str(label).split(), [], ""
+    for w in words:
+        while len(w) > cap:                           # mot plus long qu'une ligne : coupe dure
+            if cur:
+                lines.append(cur); cur = ""
+            lines.append(w[:cap]); w = w[cap:]
+        cand = (cur + " " + w).strip()
+        if len(cand) <= cap:
+            cur = cand
+        else:
+            lines.append(cur); cur = w
+    if cur:
+        lines.append(cur)
+    cut = len(lines) > max_lines
+    if cut:
+        lines = lines[:max_lines]
+        lines[-1] = lines[-1][: max(1, cap - 1)].rstrip() + "\u2026"
+    return lines, cut
+
+
+def _node_svg(x, y, label, sub, logo_key, logos, link=None, color=None):
+    """Noeud. `color` : bordure + titre colores. Si `link` (id de vue cible) : cliquable (data-go) + loupe.
+    Le libelle tient dans le bloc (2 lignes max, ellipse sinon, libelle complet en infobulle) et ne passe
+    jamais sous le logo."""
     cls = "node linked" if link else "node"
+    c = _col(color)
+    st = f' style="stroke:{c}"' if c else ""
+    tc = f' style="fill:{c}"' if c else ""
     s = [f'<rect class="{cls}" x="{_num(x)}" y="{_num(y)}" width="{_num(NODE_W)}" '
-         f'height="{_num(NODE_H)}" rx="11"/>']
-    text_cx = x + NODE_W / 2
+         f'height="{_num(NODE_H)}" rx="11"{st}/>']
+    left, right = x + 12, x + NODE_W - (22 if link else 12)
     if logo_key and logo_key in logos:
         lw, lh = 26, 26
         lx, ly = x + 12, y + NODE_H / 2 - lh / 2
@@ -244,34 +322,52 @@ def _node_svg(x, y, label, sub, logo_key, logos, link=None):
                  f'height="{_num(lh + 2 * p)}" rx="4" fill="#ffffff"/>')
         s.append(f'<image data-logo="{esc(logo_key)}" x="{_num(lx)}" y="{_num(ly)}" '
                  f'width="{_num(lw)}" height="{_num(lh)}" preserveAspectRatio="xMidYMid meet"/>')
-        text_cx = x + 12 + lw + (NODE_W - (12 + lw)) / 2
+        left = lx + lw + p + 8
+    text_cx = (left + right) / 2
+    lines, cut = _wrap(label, right - left, max_lines=2 if sub else 3)
+    n = len(lines) + (1 if sub else 0)
+    lh_ = 15
+    y0 = y + NODE_H / 2 - (n - 1) * lh_ / 2 + 4
+    for i, ln in enumerate(lines):
+        s.append(f'<text class="nlabel" x="{_num(text_cx)}" y="{_num(y0 + i * lh_)}" '
+                 f'text-anchor="middle"{tc}>{esc(ln)}</text>')
     if sub:
-        s.append(f'<text class="nlabel" x="{_num(text_cx)}" y="{_num(y + NODE_H / 2 - 2)}" '
-                 f'text-anchor="middle">{esc(label)}</text>')
-        s.append(f'<text class="nsub" x="{_num(text_cx)}" y="{_num(y + NODE_H / 2 + 15)}" '
-                 f'text-anchor="middle">{esc(sub)}</text>')
-    else:
-        s.append(f'<text class="nlabel" x="{_num(text_cx)}" y="{_num(y + NODE_H / 2 + 5)}" '
-                 f'text-anchor="middle">{esc(label)}</text>')
+        sl, _ = _wrap(sub, right - left, px_per_char=6.2, max_lines=1)
+        s.append(f'<text class="nsub" x="{_num(text_cx)}" y="{_num(y0 + len(lines) * lh_)}" '
+                 f'text-anchor="middle">{esc(sl[0])}</text>')
+    if cut or (sub and len(str(sub)) > int((right - left) / 6.2)):
+        s.insert(0, f'<title>{esc(label)}{(" - " + esc(sub)) if sub else ""}</title>')
     if link:
-        # chevron discret (coin haut-droit) = signe « on peut y aller »
-        s.append(f'<text class="linkcue" x="{_num(x + NODE_W - 14)}" y="{_num(y + 19)}" '
-                 f'text-anchor="middle">&#8250;</text>')
+        # loupe (coin haut-droit) = signe « on peut y aller », comme le schema par defaut
+        s.append(_zoom(x + NODE_W - 15, y + 14))
         return (f'<g class="nodelink" data-go="{esc(link)}" role="button" tabindex="0" '
                 f'aria-label="{esc(label)} - voir {esc(link)}">{"".join(s)}</g>')
+    if cut:
+        return f'<g>{"".join(s)}</g>'
     return "".join(s)
 
 
-def _zone_svg(x, y, w, h, label, link=None):
-    """Cadre de zone. Si `link` : cliquable (data-go) + liseré accent + chevron au titre."""
+def _zone_svg(x, y, w, h, label, link=None, color=None, style=None, logo=None, logos=None):
+    """Cadre de zone. `color` : tirets + titre colores ; `style: team` = encart d'equipe.
+    `logo` : petit logo devant le titre (cle de `logos`). Si `link` : cliquable (data-go) + loupe au titre."""
     cls = "zone linked" if link else "zone"
+    if style == "team":
+        cls += " team"
+    c = _col(color)
+    st = f' style="stroke:{c}"' if c else ""
+    tc = f' style="fill:{c}"' if c else ""
     s = (f'<rect class="{cls}" x="{_num(x)}" y="{_num(y)}" width="{_num(w)}" '
-         f'height="{_num(h)}" rx="14"/>'
-         f'<text class="ztitle" x="{_num(x + 16)}" y="{_num(y + 21)}" '
-         f'text-anchor="start">{esc(label)}</text>')
+         f'height="{_num(h)}" rx="14"{st}/>')
+    tx = x + 16
+    if logo and logos and logo in logos:
+        s += (f'<rect x="{_num(x + 12)}" y="{_num(y + 7)}" width="20" height="20" rx="4" fill="#ffffff"/>'
+              f'<image data-logo="{esc(logo)}" x="{_num(x + 14)}" y="{_num(y + 9)}" width="16" height="16" '
+              f'preserveAspectRatio="xMidYMid meet"/>')
+        tx = x + 40
+    s += (f'<text class="ztitle" x="{_num(tx)}" y="{_num(y + 21)}" '
+          f'text-anchor="start"{tc}>{esc(label)}</text>')
     if link:
-        s += (f'<text class="linkcue" x="{_num(x + w - 16)}" y="{_num(y + 21)}" '
-              f'text-anchor="middle">&#8250;</text>')
+        s += _zoom(x + w - 18, y + 15)
         return (f'<g class="zonelink" data-go="{esc(link)}" role="button" tabindex="0" '
                 f'aria-label="{esc(label)} - voir {esc(link)}">{s}</g>')
     return s
@@ -301,12 +397,14 @@ def _orth(ra, rb):
     return d, lx, ly
 
 
-def _flow_svg(ra, rb, label, double, mid):
+def _flow_svg(ra, rb, label, double, mid, kind=None, main=False):
     d, lx, ly = _orth(ra, rb)
     start = f' marker-start="url(#{mid})"' if double else ""
-    s = f'<path class="flow" d="{d}" marker-end="url(#{mid})"{start}/>'
+    cls = "flow" + (" main" if main else "") + (" auth" if kind == "auth" else "")
+    s = f'<path class="{cls}" d="{d}" marker-end="url(#{mid})"{start}/>'
     if label:
-        s += (f'<text class="flabel" x="{_num(lx)}" y="{_num(ly)}" '
+        lc = " lauth" if kind == "auth" else (" lmain" if main else "")
+        s += (f'<text class="flabel{lc}" x="{_num(lx)}" y="{_num(ly)}" '
               f'text-anchor="middle">{esc(label)}</text>')
     return s
 
@@ -331,24 +429,29 @@ def _render_view(view, ent_by_id, zones, flows, logos, view_ids):
         nodes, zone_rects = _layout_explicit(members, ent_by_id, zones, layout)
     else:
         nodes, zone_rects = _layout_auto(members, ent_by_id, zones)
-    zone_link = {z["id"]: z.get("link") for z in zones}
+    zone_by_id = {z["id"]: z for z in zones}
 
     mid = f"arw-{vid}"
     body = [_marker(mid)]
     # zones d'abord (fond), puis flux, puis noeuds (au-dessus)
     for (x, y, w, h, label, zid) in zone_rects:
-        link = _resolve_link(zone_link.get(zid), view_ids, vid)
-        body.append(_zone_svg(x, y, w, h, label, link))
+        z = zone_by_id.get(zid, {})
+        link = _resolve_link(z.get("link"), view_ids, vid)
+        body.append(_zone_svg(x, y, w, h, label, link, z.get("color"), z.get("style"), z.get("logo"), logos))
     mset = set(nodes)
     for f in flows:
+        if f.get("_only_in") and f["_only_in"] != vid:
+            continue                       # flux rebranche sur un bloc de couche : vue d'ensemble seule
         a, b = f.get("from"), f.get("to")
         if a in mset and b in mset and a != b:
             double = f.get("kind") in PULL_KINDS
-            body.append(_flow_svg(nodes[a], nodes[b], f.get("label", ""), double, mid))
+            body.append(_flow_svg(nodes[a], nodes[b], f.get("label", ""), double, mid,
+                                  f.get("kind"), bool(f.get("main"))))
     for eid, (x, y, w, h) in nodes.items():
         e = ent_by_id[eid]
         link = _resolve_link(e.get("link"), view_ids, vid)
-        body.append(_node_svg(x, y, e.get("label", eid), e.get("sub"), e.get("logo"), logos, link))
+        body.append(_node_svg(x, y, e.get("label", eid), e.get("sub"), e.get("logo"), logos, link,
+                              e.get("color")))
 
     # viewBox : etendue des noeuds et zones + marge
     xs = [MARGIN]
@@ -361,9 +464,18 @@ def _render_view(view, ent_by_id, zones, flows, logos, view_ids):
         ys.append(y + h)
         xs.append(x)
         ys.append(y)
-    vb_w = max(xs) + MARGIN
-    vb_h = max(ys) + MARGIN
-    svg = (f'<svg viewBox="0 0 {_num(vb_w)} {_num(vb_h)}" role="img" '
+    # origine = coin haut-gauche réel (un cadre de zone peut déborder à gauche/en haut d'un layout explicite)
+    x_min = min([MARGIN] + [x for (x, _y, _w, _h) in nodes.values()]
+                + [x for (x, _y, _w, _h, _l, _z) in zone_rects]) - MARGIN
+    y_min = min([MARGIN] + [y for (_x, y, _w, _h) in nodes.values()]
+                + [y for (_x, y, _w, _h, _l, _z) in zone_rects]) - MARGIN
+    x_min, y_min = min(0, x_min), min(0, y_min)
+    if layout:                                   # couche masquée : on recadre sur ce qui reste
+        x_min = min([x for (x, _y, _w, _h) in nodes.values()] + [x for (x, _y, _w, _h, _l, _z) in zone_rects] or [0]) - MARGIN
+        y_min = min([y for (_x, y, _w, _h) in nodes.values()] + [y for (_x, y, _w, _h, _l, _z) in zone_rects] or [0]) - MARGIN
+    vb_w = max(xs) + MARGIN - x_min
+    vb_h = max(ys) + MARGIN - y_min
+    svg = (f'<svg viewBox="{_num(x_min)} {_num(y_min)} {_num(vb_w)} {_num(vb_h)}" role="img" '
            f'aria-label="{esc(view.get("label", vid))}" preserveAspectRatio="xMidYMid meet">'
            f'{"".join(body)}</svg>')
     return svg
@@ -404,6 +516,20 @@ svg{width:100%;height:auto;max-width:1200px;display:block}
 .nodelink:focus,.zonelink:focus{outline:none}
 .linkcue{fill:var(--accent);font-weight:700;font-size:15px;
 font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.zoom{fill:none;stroke:var(--ink2);stroke-width:1.4}
+.nodelink:hover .zoom,.zonelink:hover .zoom{stroke:var(--accent)}
+.nodelink,.zonelink{transition:transform .15s ease}
+.nodelink:hover{transform:translateY(-2px)}
+.zone.team{stroke-width:1.5;stroke-dasharray:6 5;opacity:1}
+.zone.team + .ztitle,.team ~ .ztitle{font-weight:800}
+.flow.main{stroke-width:2.4;stroke-dasharray:7 7;animation:dash 1s linear infinite}
+.flow.auth{stroke:var(--auth);stroke-dasharray:3 4}
+.flabel.lmain{fill:var(--accent);font-weight:600}
+.flabel.lauth{fill:var(--auth);font-weight:600}
+@keyframes dash{to{stroke-dashoffset:-14}}
+.view:not([hidden]){animation:vin .35s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.flow.main,.view:not([hidden]){animation:none}.nodelink:hover{transform:none}}
 [hidden]{display:none!important}
 """
 
@@ -449,12 +575,19 @@ render("__OV__");
 """
 
 
-def build_html(model):
-    """Genere la page HTML complete (chaine) depuis un dict modele conforme a SCHEMA.md."""
+def build_html(model, modes=None):
+    """Genere la page HTML complete (chaine) depuis un dict modele conforme a SCHEMA.md.
+    `modes` : profondeur des couches dans la vue d'ensemble ({couche: detail|abstrait|masque}) ;
+    sans couches (`layers`) dans le modele, rien ne change."""
+    import abstraction as ABS  # sibling (archi/)
+    model = ABS.apply(model, modes)
     meta = model.get("meta", {})
     title = meta.get("project") or "Architecture"
     palette = dict(DEFAULT_PALETTE)
+    palette.update(ROLE_COLORS)
     palette.update(model.get("palette") or {})
+    _PAL.clear()
+    _PAL.update(palette)
     logos = model.get("logos") or {}
     zones = model.get("zones") or []
     entities = model.get("entities") or []
@@ -531,9 +664,13 @@ def build_html(model):
     return html
 
 
-def build_html_file(model_path, out_path):
+def build_html_file(model_path, out_path, modes=None):
+    """Rend le modele. Sans `modes`, lit `abstraction.json` a cote du modele s'il existe."""
     model = json.load(open(model_path, encoding="utf-8"))
-    html = build_html(model)
+    if modes is None:
+        import abstraction as ABS  # sibling (archi/)
+        _pub, modes = ABS.load(Path(model_path).with_name("abstraction.json"))
+    html = build_html(model, modes)
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     Path(out_path).write_text(html, encoding="utf-8")
     return out_path
