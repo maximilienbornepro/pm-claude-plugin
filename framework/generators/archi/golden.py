@@ -15,9 +15,9 @@ Mise en page de la vue d'ensemble (l'harmonie du schema de reference) :
 Sous-vues : bouton retour, legende en tete, fleche pointillee « depuis … » qui montre d'ou l'on vient,
 chaine de traitement de gauche a droite, sorties en dessous, la suite cliquable en bout de chaine.
 Sequences : participants, lignes de vie pointillees, messages numerotes (vues `kind: sequence`).
-Import draw.io par vue : bouton « Importer un draw.io » ; un diagramme de sequence importe est rendu en
-sequence, un schema en boites et zones (cote navigateur, conserve dans ce navigateur) ; un import peut
-aussi etre fige dans le modele (`views[].drawio`, voir architecture.py import-view).
+Import draw.io : uniquement fige dans le modele (`views[].drawio`, via architecture.py import-view, par
+prompt) ; un diagramme de sequence importe est rendu en sequence, un schema en boites et zones. Aucune
+edition ni import dans le navigateur (decision du 24/11/2026 : le schema se construit par prompt + template).
 """
 import json
 import re
@@ -1014,11 +1014,7 @@ def build_page(model, drawio_b64=None):
         tools = ['<div class="vtools">']
         if vid != ov:
             tools.append(f'<button class="back" data-back>&lsaquo; {esc(names[ov])}</button>')
-        tools.append('<span class="grow"></span><span class="impinfo" data-impinfo></span>'
-                     '<span data-imppages></span>'
-                     '<button class="imp" data-impreset hidden>&#8634; Revenir au schéma généré</button>'
-                     '<label class="imp" title="Remplacer cette vue par un diagramme draw.io (schéma ou séquence)">'
-                     '&#8679; Importer un draw.io<input type="file" accept=".drawio,.xml,.drawio.xml" data-impfile></label></div>')
+        tools.append('<span class="grow"></span></div>')
         if v.get("kind") == "sequence":
             seq[vid] = {k: v.get(k) for k in ("caption", "participants", "messages", "notes")}
             svg = f'<svg viewBox="0 0 1180 420" role="img" aria-label="{esc(v.get("label", vid))}" data-seq="{esc(vid)}"></svg>'
@@ -1027,7 +1023,8 @@ def build_page(model, drawio_b64=None):
         else:
             svg = render_subview(M, v, ov)
         if v.get("drawio"):
-            imports[vid] = {"name": v.get("drawio_name") or "modèle", "xml": v["drawio"], "page": v.get("drawio_page")}
+            imports[vid] = {"name": v.get("drawio_name") or "modèle", "xml": v["drawio"], "page": v.get("drawio_page"),
+                            "mode": v.get("drawio_mode") or "schema"}
         hidden = "" if vid == ov else " hidden"
         sections.append(f'<!-- ============ {esc(names[vid]).upper()} ============ -->\n'
                         f'    <div class="view" id="v-{esc(vid)}"{hidden}>\n      {"".join(tools)}\n      '

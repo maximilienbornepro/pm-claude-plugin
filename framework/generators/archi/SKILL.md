@@ -6,8 +6,13 @@ meta:
   consumes: []
   mcp_deps: []
   cost: heavy-local
-  status: stable
+  status: draft
 ---
+
+> **Statut (23/11/2026) : expérimental.** Le rendu automatique depuis le modèle n'est pas fiable (« éclaté »
+> sur un vrai schéma). **Méthode recommandée : construire le schéma à la main, par prompting**, en partant
+> de la source HTML artisanale de référence (agent `archi-audit` / skill `stack-imagery` de la mission),
+> puis valider avec `validate.py`. Le modèle reste utile comme inventaire et pour l'export draw.io.
 
 # Générateur : architecture (stack-imagery, model-first)
 
@@ -82,9 +87,8 @@ coquille (menu, thème clair / sombre, fil d'Ariane, scène), même vocabulaire 
 - **Diagrammes de séquence** : vue `kind: "sequence"` (`participants`, `messages` avec `kind: auth|return`,
   `caption`, `notes`), rendue comme « Applications partenaires » : en-têtes, lignes de vie pointillées,
   messages numérotés, échanges d'authentification en rose pointillé.
-- **Import draw.io par vue** : bouton « Importer un draw.io » sur chaque vue ; un diagramme de séquence
-  (`umlLifeline`) est rendu en séquence, sinon en boîtes et zones ; pages multiples au choix ; conservé dans
-  le navigateur, « Revenir au schéma généré » pour l'annuler. Pour le **figer dans le modèle** :
+- **Import draw.io par vue** : toujours **figé dans le modèle**, jamais dans le navigateur (aucun bouton) ;
+  un diagramme de séquence (`umlLifeline`) est rendu en séquence, sinon en boîtes et zones :
   `python3 import_view.py model.json --view <id> fichier.drawio [--page N|nom] [-o sortie.json]`.
 - **Couleurs de rôle** via `color` : `core` violet, `service` vert, `auth` rose, `storage` orange,
   `db` bleu (cylindre), `cluster` bleu k8s, `risk` rouge, `ops` ambre, `partner` cyan, `ext` gris.
@@ -127,6 +131,14 @@ ajouterait à la main, **sans rien inventer** :
   question (« l'ajouter ou la laisser à une autre vue ? ») : jamais de nœud fabriqué.
 
 `--page` choisit la page draw.io (une page = une vue) ; une page inconnue est refusée avec la liste.
+
+## Pas d'interface d'édition (décision du 24/11/2026)
+
+Le schéma se construit **uniquement par prompt, avec un template** : on décrit (ou on importe un draw.io
+par la commande `import`), on obtient le modèle (`SCHEMA.md`), `build_html.py` le rend au style de
+référence. Aucun éditeur graphique, aucun bouton d'import ni d'édition dans la page rendue : un import
+draw.io se fige dans le modèle (`import-view`), jamais dans le navigateur. L'ancien éditeur (`editor/`,
+13/11) a été retiré du plugin et du kit.
 
 ## Le kit à envoyer (`dist/archi-kit.zip`)
 

@@ -29,6 +29,7 @@ GEN = {
     "poc":                 ("framework/generators/poc/poc.py",                       "POC React + Material UI depuis les recits (launcher auto)", True),
     "archi":               ("framework/generators/archi/architecture.py",            "harness du schema d'archi (validate, lecture seule)", True),
     "activity":            ("framework/generators/activity/activity.py",             "suivi d'activite : collect / check / weekly / sync (dry-run)", True),
+    "planning":            ("framework/generators/planning/planning.py",             "planning technique : Gantt PPTX + slide echeances derivee (sync) + situation (statut/levier) + tableaux ; Gantt Excel en alternative", True),
     "deck-gate":           ("framework/generators/deck-gate/deck_gate.py",           "contenu du deck GATE (slides markdown/JSON ; assemblage pptx garde)", True),
     "transcripts":         ("framework/generators/transcripts/read_transcripts.py",  "normalise transcriptions/CR vers {date,title,url,text} (--dump|--files)", True),
     "slack":               ("framework/generators/slack/read_slack.py",              "normalise un export Slack (canaux+DM, threads) vers {date,author,channel,thread,text,url} ; lecture via Claude in Chrome, jamais d'ecriture", True),

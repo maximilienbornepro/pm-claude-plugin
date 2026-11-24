@@ -59,11 +59,12 @@ Chaque générateur lit le **profil** (où est le Jira, le Drive, les dates…) 
 | `sprint-audit` | audit des sprints Jira (charge, estimations, blocages) | profil `jira` |
 | `ticket-changes` | qui a modifié quels tickets, quand, quoi (écrasements) | profil `jira` |
 | `jira-image` | images des tickets via API (check ; `--apply` gardé) | `jira_ticket.yml` |
+| `planning` | planning technique : Gantt PPTX + slide échéances **dérivée du Gantt** (toujours synchro) + situation (statut / levier) + tableaux (responsabilités, RACI) ; **Gantt Excel** en alternative | `planning.json` |
 | `gate-deck` | contenu du deck GATE (slides ; assemblage pptx gardé) | `gate_deck.yml` |
 | `poc` | POC React + Material UI depuis les récits (launcher auto) | `poc.yml` |
 | `raci` | matrice RACI + extraits par rôle | `raci.yml` |
 | `risks` | registre des risques (lecture ; écriture gardée) | `risks.yml` |
-| `architecture` | harness du schéma d'archi (validate, lecture seule) | `architecture.yml` |
+| `architecture` | harness du schéma d'archi (validate, export draw.io). **Expérimental** : le schéma se construit à la main par prompting, le rendu auto n'est pas fiable | `architecture.yml` |
 | `suivi` | suivi d'activité : collect / check / weekly / sync | `suivi.yml` |
 | `cr-partenaire` | mail de suivi d'un call partenaire (`--input` ; jamais d'envoi) | `cr_partenaire.yml` |
 | `notion-sujets` | valide le format d'un sujet Notion (`--body`) | `notion_sujets.yml` |

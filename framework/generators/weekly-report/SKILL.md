@@ -21,7 +21,17 @@ collecte**, le **modèle synthétise** - chaque ligne traçable, rien d'inventé
 
 1. `pm run weekly-report --list` - liste les semaines (prompts disponibles + CR déjà en historique ✓).
 2. **Demander à l'utilisateur quelle semaine** il veut (AskUserQuestion, les semaines en options).
+   Exception (24/11/2026) : « prépare mon weekly, reprends le dernier pour le format » sans autre
+   précision = **la semaine qui suit le dernier CR en historique**, jusqu'au jour du CR inclus ; on le
+   dit en une ligne et on produit, sans reposer la question.
 3. Rendre celle qu'il choisit (voir ci-dessous). Jamais en produire une sans qu'il l'ait choisie.
+
+**Date du CR = date du jour** où il est rédigé (titre « Semaine du JJ/MM - CR du JJ/MM », bloc Notion
+titré JJ/MM du jour), pas le lundi de la semaine. La matière court jusqu'à ce jour : un fait du
+lundi/mardi (ouverture d'un environnement, mail partenaire du matin) entre dans le CR.
+
+**Le format de référence est le dernier CR tel que le porteur l'a retouché dans Notion**, pas la copie
+locale : on relit le dernier bloc de la page de destination (voir « Publier ») avant de rédiger.
 
 ## Produire (ou rendre) une semaine
 
@@ -42,6 +52,25 @@ collecte**, le **modèle synthétise** - chaque ligne traçable, rien d'inventé
   4. **Synthèse** : regrouper la matière en **grandes lignes** (thèmes), croiser prompts ↔ artefacts
      pour distinguer **demandé** de **fait**, sortir difficultés (blocages, questions ouvertes) et plan
      (items non clos).
+  5. **Revérifier les faits récents** dans les mails/Slack avant de figer : un statut dit dans la
+     conversation peut être dépassé (le 24/11, le front annoncé « pas encore ouvert » l'était depuis
+     la veille au soir, d'après un mail envoyé). En fin de rendu, lister en une ligne chacun les faits
+     non confirmés (« tenu » sans CR, date non confirmée par le client).
+
+## Publier dans la page de suivi (sur go explicite)
+
+Quand le porteur valide (« go », « met à jour ») :
+
+- **Destination** : la page déclarée par le profil (`activity.yml > weekly_report_page`), section
+  « Weekly report ». On **insère un bloc toggle (titre h2) daté du jour** du CR, **au-dessus** du bloc de
+  la semaine précédente (ordre antichronologique), via `update_content` ciblé sur le titre du bloc
+  précédent ; jamais `replace_content` (la page porte des 1o1, des tableaux, des commentaires).
+- **Contenu** : les trois sections en gras (`Activités réalisées`, `Difficultés / Points d'attention`,
+  `Plan d'action`), puces imbriquées identiques au fichier d'historique.
+- **Aucune notification** : pas de mention `@`, pas de commentaire, pas de lien vers une personne.
+- **Une correction de titre ou de date** (« mets la date du jour ») se fait par `update_content` sur le
+  seul titre du bloc.
+- Le fichier d'historique `weekly-reports/<AAAA-Www>.md` reste la source ; il porte le même titre.
 
 ## Couverture : ne RIEN oublier (règle dure)
 
@@ -204,8 +233,9 @@ Plan d'action - sujets à cadrer et faire avancer
 
 ## Garde-fous
 
-- **Lecture seule** côté systèmes : rien n'est envoyé, posté ni publié. Le CR est un **draft** que
-  l'utilisateur relit et colle lui-même dans son CR Notion (partagé à son équipe).
-- La seule écriture est le fichier d'**historique** local `weekly-reports/<semaine>.md`.
+- **Lecture seule** côté systèmes tant que le porteur n'a pas dit go : rien n'est envoyé ni posté. Le CR
+  est d'abord rendu dans la conversation.
+- Écritures permises : le fichier d'**historique** local `weekly-reports/<semaine>.md`, puis, **après go
+  explicite**, l'insertion du bloc daté dans la page de suivi (section « Publier »). Rien d'autre.
 - **Rien d'inventé** : chaque ligne tient à un prompt / mail / artefact ; sinon « à confirmer ».
 - **Account** : safran pour mails et Notion (by-cost) ; les prompts se lisent en local.

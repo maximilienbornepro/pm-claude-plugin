@@ -76,13 +76,14 @@ def test_questions_public_d_abord_puis_chaque_couche():
 
 def test_style_du_schema_de_reference():
     """Meme design system que le schema de reference : tokens, coquille (menu, theme, fil d'Ariane),
-    cartes cliquables en entier, flux anime, couleurs de role en tokens golden, import draw.io par vue."""
+    cartes cliquables en entier, flux anime, couleurs de role en tokens golden, AUCUNE interface d'edition ni d'import."""
     html = B.build_html(DEMO)
     assert "--bg:#f4f3f7" in html and "--sai:#7e14ff" in html and '.blk rect.bg' in html
     assert 'id="xmenu"' in html and 'id="xtheme"' in html and 'id="trail"' in html
     assert 'class="flow"' in html                                # flux principal anime
     assert re.search(r'style="stroke:var\(--(?:grn|sai|kc|amb|air|s3|rds)\)"', html)
-    assert html.count("data-impfile>") == html.count("<div class=\"view\"")      # un import draw.io par vue
+    assert "data-impfile" not in html and 'type="file"' not in html          # pas d'import cote navigateur (24/11)
+    assert "Importer un draw.io" not in html and "contenteditable" not in html  # schema par prompt + template seulement
     assert 'class="back" data-back' in html
 
 
@@ -174,6 +175,7 @@ def test_vue_sequence_et_import_fige():
     assert re.search(r'window\.IMPORTS=\{"' + re.escape(sub) + '"', html)
     assert "umlLifeline" in html and "seqSVG" in html
     assert not _invariants(html)
+
 
 
 if __name__ == "__main__":

@@ -248,7 +248,12 @@ def profiles_root():
 
 
 def mission_dir(mission):
-    return profiles_root() / mission
+    d = profiles_root() / mission
+    # le profil fictif « demo » est livre avec le framework : on le trouve meme si les profils
+    # du projet sont ailleurs ($PMF_PROFILES)
+    if not d.is_dir() and (ROOT / 'profiles' / mission).is_dir():
+        return ROOT / 'profiles' / mission
+    return d
 
 
 def mission_file(mission, name):

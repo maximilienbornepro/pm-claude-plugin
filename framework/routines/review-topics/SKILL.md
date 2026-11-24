@@ -25,6 +25,36 @@ La methode (signaux qui declenchent une question, gabarit de la question, filtre
 5. N'applique que ce qui a recu un oui (au-dela de 5 sujets, le premier sert d'essai, relu, puis le reste enchaine sans reposer la question), sujet par sujet, avec `redaction_skill` (titre a l'infinitif, Contexte court et stable, actions realisees barrees, modifications manuelles de l'utilisateur prioritaires).
 6. **Restitue dans la conversation les actions attendues de chaque sujet mis a jour**, telles que relues apres ecriture, et ce qui a ete refuse ou laisse en attente. Ecris l'etat dans `reads.state_file` (dont `derniere_passe_mails`).
 7. **Enchaine `revue-risques`** : repercuter sur le registre les sujets qui viennent de changer.
+8. **Synchronise la page de synthese** quand le profil declare `reads.suivi_page` (depuis le 23/11/2026) : le tableau de situation par pilier de cette page est reecrit a partir des sujets **tels qu'ecrits apres la revue** (lignes touchees seulement, titre de section date du jour, statut en picto). **Sens unique : des sujets vers le tableau, jamais l'inverse** ; on ne modifie jamais un sujet pour l'aligner sur le tableau ou sur le deck de planning. Les lignes avant -> apres font partie de la proposition de l'etape 4 et s'ecrivent avec le meme oui (`update_content` cible, balise de la base intacte). Le deck de planning n'est pas touche par cette etape : un ecart se signale et se propose a part.
+
+## Gabarit d'un sujet aligne sur le deck de situation (depuis le 20/11/2026)
+
+Quand la mission tient un deck de situation (generateur `planning`, slides Sujet / Statut / Situation /
+Levier / Echeance), le corps du sujet reprend **mot pour mot** la ligne du deck :
+
+```
+**Statut : En cours** - echeance 27/11
+**Contexte**
+<la Situation de la slide, telle quelle>
+**Action attendue**
+- De X : action.            (un acteur par puce ; plusieurs actions -> une par sous-puce)
+**Reperes**                  (facultatif : ce qui sert encore - liste, cadence, liens)
+```
+
+- **Charge de texte (23/11/2026)** : le Contexte resume la situation comme le deck, en une ou deux phrases ; les
+  actions attendues restent toujours, une ligne courte chacune (environ 15 mots), 4 acteurs et 8 lignes au plus ;
+  une action faite reste barree une seule revue puis sort ; pas de bloc Reperes ni de « Fait : » sauf liste
+  unique. **La colonne Action attendue donne toujours la prochaine action a faire** (une phrase « De X : faire Y, echeance »), mise a jour a chaque ecriture : c'est le Levier du deck, le Contexte en est la Situation. Le detail du gabarit est dans le `redaction_skill` du profil.
+- **Slack n'engendre pas d'action attendue (23/11/2026)** : une suggestion, une question ou un « il faudrait » lu dans Slack ne devient jamais une action ; Slack ne sert qu'a constater un fait (Contexte) ou a barrer une action existante. Une action vient d'une transcription, d'un mail ou du sujet existant ; ce qu'un agent rapporte de Slack se revérifie mot pour mot.
+- **Dates (23/11/2026)** : seulement les echeances des attendus ; jamais la date d'un fait passe (« recu le 23/11 ») ni d'une reunion ou se discutera l'action (« a l'hebdo du 24/11 »). Action faite barree sans date.
+- **Mode « nettoyage »** (« clean les descriptions ») : on garde l'Action attendue, on retire ce qui est
+  depasse ou deja dit par le Contexte (« Point au JJ/MM », listes « Fait : », notes de travail), on ne garde en
+  **Reperes** que l'utile ; chaque retrait est dit dans la proposition. Une action rendue caduque par le deck
+  (ex. « deja deploye ») sort, en le disant.
+- **Leviers** : tout levier du deck absent des actions devient une action (acteur + verbe a l'infinitif).
+- **Sync deck <-> Notion** : une ligne du deck sans sujet se signale (creation seulement sur demande) ; un
+  sujet dont le Contexte diverge du deck se signale. Le deck en ligne fait foi s'il a ete retouche a la main.
+- Ecriture : sujet d'essai d'abord, puis le reste ; fraicheur `Derniere modification` verifiee juste avant.
 
 ## Condensation des sujets a rallonge
 

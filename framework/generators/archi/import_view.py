@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """import_view - fige un draw.io dans UNE vue du modele (remplace son rendu genere).
 
-    python3 import_view.py <model.json> --view <id_de_vue> <fichier.drawio> [--page <n|nom>] [-o sortie.json]
+    python3 import_view.py <model.json> --view <id_de_vue> <fichier.drawio> [--page <n|nom>] [--sequence] [-o sortie.json]
     python3 import_view.py <model.json> --view <id_de_vue> --clear [-o sortie.json]
 
 - Le XML est stocke tel quel dans `views[].drawio` (+ `drawio_name`, `drawio_page`) ; la page HTML le rend
-  au chargement avec le meme moteur que le bouton « Importer un draw.io » (golden_import.js) :
-  diagramme de sequence (umlLifeline) -> sequence au style du schema de reference, sinon boites et zones.
+  au chargement avec le moteur de rendu golden_import.js (aucun import cote navigateur) :
+  rendu en schema (boites et zones) par defaut ; `--sequence` pour un rendu en diagramme de sequence.
 - La vue d'ensemble reste generee depuis le modele ; on importe typiquement dans une sous-vue.
 - Sans `-o`, ecrit `<model>.import.json` a cote : le modele d'origine n'est jamais ecrase par defaut.
 """
@@ -29,7 +29,7 @@ def main(argv=None):
         print(f"Vue inconnue : {vid}. Vues : {', '.join(v.get('id', '?') for v in m.get('views') or [])}")
         return 1
     if "--clear" in a:
-        for k in ("drawio", "drawio_name", "drawio_page"):
+        for k in ("drawio", "drawio_name", "drawio_page", "drawio_mode"):
             view.pop(k, None)
     else:
         rest = [x for i, x in enumerate(a[1:], 1)
@@ -44,6 +44,7 @@ def main(argv=None):
             return 1
         view["drawio"] = xml
         view["drawio_name"] = src.name
+        view["drawio_mode"] = "sequence" if "--sequence" in a else "schema"
         if "--page" in a:
             p = a[a.index("--page") + 1]
             if p.isdigit():

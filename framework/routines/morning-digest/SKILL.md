@@ -9,6 +9,15 @@ le recap **exhaustif** des sujets que l'utilisateur doit faire avancer. Reponds 
 (`profile.yml > lang`). Tout le propre-a-la-mission (base de suivi, canal, sources, heure) vit dans
 `routines.yml > routines.<mission>-morning-digest`. Ce SKILL porte le deroule et les garde-fous.
 
+## Avant tout : le bon navigateur
+
+Plusieurs Chrome peuvent etre relies a Claude (un par ordinateur). Avant toute action Slack :
+`list_connected_browsers`, puis `select_browser` sur celui qui porte `onThisComputer: true` (l'ordinateur
+qui execute la routine). Aucun Chrome de cet ordinateur : ne rien poster, le signaler. Ne jamais se rabattre
+sur le Chrome d'un autre ordinateur (le 16/11, la routine pilotait le Chrome d'un autre Mac, ou Slack etait
+deconnecte : rien n'a ete poste trois jours de suite). Si Slack demande une connexion, ne pas la faire :
+le signaler.
+
 ## Regle absolue : on n'ecrit QUE dans le canal dedie
 
 - Le seul endroit ou l'on ecrit est `post.channel_url` (identifiant de canal `post.channel_id`). On y navigue

@@ -144,6 +144,12 @@ python3 archi.py demo
 Puis ouvrir `exemples/demo.html` dans le navigateur. Cliquer sur un bloc avec une loupe pour
 descendre dans son détail ; le fil d'Ariane et le bouton retour ramènent à la vue d'ensemble.
 
+## Le principe : par prompt, avec un template
+
+Le schéma ne s'édite pas dans le navigateur. On le décrit (prompt) ou on part d'un draw.io, on obtient
+un **modèle** (`model.json`, format `SCHEMA.md`), et `build` le rend au style de référence. Pour le
+faire évoluer, on modifie le modèle (à la main ou en le demandant à Claude), puis on relance `build`.
+
 ## Les trois façons de faire un schéma
 
 ### 1. Depuis un draw.io existant
@@ -188,14 +194,12 @@ Dans le modèle, une vue `"kind": "sequence"` :
 
 ## Remplacer une vue par un draw.io
 
-- **Dans la page** : chaque vue a un bouton **« Importer un draw.io »**. Un diagramme de séquence
-  draw.io (formes « UML Lifeline ») est redessiné en séquence, sinon en boîtes et zones. Si le
-  fichier a plusieurs pages, un menu permet de choisir. L'import reste **dans votre navigateur** ;
-  « Revenir au schéma généré » l'annule. Essai : `exemples/sequence.drawio`.
-- **Pour que tout le monde le voie**, le figer dans le modèle puis regénérer :
+- Pas de bouton dans la page : l'import se fige **dans le modèle**, puis on regénère. Le draw.io est
+  rendu en **schéma** (boîtes et zones) par défaut, `--sequence` pour un diagramme de séquence.
+  Essai : `exemples/sequence.drawio`.
 
 ```bash
-python3 archi.py import-view mon_modele.json --view <id_de_la_vue> mon_detail.drawio -o mon_modele.json
+python3 archi.py import-view mon_modele.json --view <id_de_la_vue> mon_detail.drawio [--sequence] -o mon_modele.json
 python3 archi.py build mon_modele.json -o mon_schema.html
 ```
 
@@ -217,7 +221,7 @@ partager : `python3 archi.py check mon_schema.html` doit afficher « TOUT PASSE 
 
 - `archi.py` : point d'entrée (les commandes ci-dessus).
 - `framework/generators/archi/` : le générateur (Python, sans dépendance), la feuille de style de
-  référence (`golden_style.css`) et le moteur d'import draw.io du navigateur (`golden_import.js`).
+  référence (`golden_style.css`) et le moteur de rendu des séquences et des imports figés (`golden_import.js`).
 - `framework/assets/logos/` : logos partagés (Kubernetes, AWS, Keycloak, React…). Pour un logo
   à vous, ajoutez-le au modèle dans `logos` (`"nom": "data:image/png;base64,..."`) et référencez-le
   par `"logo": "nom"`.

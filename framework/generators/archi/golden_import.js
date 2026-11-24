@@ -1,7 +1,6 @@
 /* golden_import.js - sequences et import draw.io par vue, au style du schema de reference.
    - window.SEQ[vid] : vues `kind: sequence` du modele, rendues ici (participants, lignes de vie, messages numerotes).
-   - bouton « Importer un draw.io » de chaque vue : le diagramme remplace la vue dans ce navigateur
-     (localStorage) ; un diagramme de sequence (umlLifeline) est rendu en sequence, sinon en boites et zones.
+   - aucun bouton ni import cote navigateur : tout passe par le modele (prompt + template).
    - window.IMPORTS[vid] : import fige dans le modele (views[].drawio), applique au chargement. */
 (function(){
   var A=window.__archi||{}, L=window.LOGOS||{};
@@ -85,9 +84,12 @@
   var RX_LIFE=/umlLifeline|shape=umlActor|participant=/;
   function toSeq(cells,title){
     var all=Object.keys(cells).map(function(k){return cells[k];});
-    var lifes=all.filter(function(c){return c.vertex&&RX_LIFE.test(c.style);}).sort(function(a,b){return a._abs.x-b._abs.x;});
+    var lifes=all.filter(function(c){return c.vertex&&RX_LIFE.test(c.style);});
+    if(lifes.length<2)lifes=all.filter(function(c){return c.vertex&&c._abs&&c.value&&!/edgeLabel|text;/.test(c.style)&&!(cells[c.parent]&&(cells[c.parent].vertex||cells[c.parent].edge));});
+    lifes.sort(function(a,b){return a._abs.x-b._abs.x;});
+    var lifeIds={};lifes.forEach(function(l){lifeIds[l.id]=1;});
     var P=lifes.map(function(c){return {id:c.id,label:c.value||'?',color:/umlActor/.test(c.style)?'ext':null};});
-    function lifeOf(id,pt){var c=cells[id],d=0;while(c&&d<30){if(RX_LIFE.test(c.style)&&c.vertex)return c.id;c=cells[c.parent];d++;}
+    function lifeOf(id,pt){var c=cells[id],d=0;while(c&&d<30){if(lifeIds[c.id])return c.id;c=cells[c.parent];d++;}
       if(pt){var best=null,bd=1e9;lifes.forEach(function(l){var cx=l._abs.x+l._abs.w/2,dd=Math.abs(cx-pt.x);if(dd<bd){bd=dd;best=l.id;}});return best;}return null;}
     var msgs=[];
     all.filter(function(c){return c.edge;}).forEach(function(e,k){
@@ -149,43 +151,29 @@
     var H=70+(y1-y0)*s+50;
     return '<svg viewBox="0 0 '+N(VW)+' '+N(H)+'" role="img" aria-label="Schéma importé">'+marker(mid)+o.join('')+ar.join('')+'</svg>';
   }
-  function renderXML(xml,pageIdx,name,id){
+  /* mode : 'schema' (defaut) ou 'sequence' ; jamais choisi a la place de la personne, seulement suggere */
+  function renderXML(xml,pageIdx,name,id,mode){
     return pages(xml).then(function(ps){
       if(!ps.length)throw new Error('vide');
       var p=ps[Math.min(pageIdx||0,ps.length-1)],cells=cellsOf(p.model),title=name+(ps.length>1?' / '+p.name:'');
-      var isSeq=Object.keys(cells).filter(function(k){return cells[k].vertex&&RX_LIFE.test(cells[k].style);}).length>=2;
+      var nLife=Object.keys(cells).filter(function(k){return cells[k].vertex&&RX_LIFE.test(cells[k].style);}).length;
+      var isSeq=(mode==='sequence');
       var svg=isSeq?seqSVG(toSeq(cells,title),id):boxesSVG(cells,title,id);
       if(!svg)throw new Error('vide');
-      return {svg:svg,pages:ps.map(function(q){return q.name;}),seq:isSeq};
+      return {svg:svg,pages:ps.map(function(q){return q.name;}),seq:isSeq,suggestSeq:nLife>=2};
     });
   }
 
-  /* ---------------- branchement des vues */
-  function skey(vid){return 'archi-import:'+(A.KEY||'archi')+':'+vid;}
-  function sget(vid){try{var v=localStorage.getItem(skey(vid));return v?JSON.parse(v):null;}catch(e){return null;}}
-  function sset(vid,v){try{if(v)localStorage.setItem(skey(vid),JSON.stringify(v));else localStorage.removeItem(skey(vid));}catch(e){}}
+  /* ---------------- branchement des vues : rendu seul (sequences + imports figes dans le modele).
+     Aucune edition ni import cote navigateur (24/11/2026 : le schema se construit par prompt + template). */
   var SEQ=window.SEQ||{},IMP=window.IMPORTS||{};
   document.querySelectorAll('svg[data-seq]').forEach(function(sv){var id=sv.getAttribute('data-seq');if(SEQ[id]){var d=document.createElement('div');d.innerHTML=seqSVG(SEQ[id],id);sv.parentNode.replaceChild(d.firstChild,sv);}});
   if(A.logos)A.logos(document);
   document.querySelectorAll('.view').forEach(function(v){
-    var vid=v.id.slice(2),box=v.querySelector('.vsvg');if(!box)return;
-    var orig=box.innerHTML,info=v.querySelector('[data-impinfo]'),pg=v.querySelector('[data-imppages]'),rs=v.querySelector('[data-impreset]'),fi=v.querySelector('[data-impfile]');
-    function show(imp,local){
-      renderXML(imp.xml,imp.page||0,imp.name,vid).then(function(r){
-        box.innerHTML=r.svg;if(A.logos)A.logos(box);if(A.bind)A.bind(box);
-        info.textContent=(r.seq?'Séquence importée':'Schéma importé')+' : '+imp.name+(local?' (dans ce navigateur)':'');
-        rs.hidden=!local;
-        if(r.pages.length>1){pg.innerHTML='<label class="imp" style="cursor:default">Page <select>'+r.pages.map(function(p,i){return '<option value="'+i+'"'+(i===(imp.page||0)?' selected':'')+'>'+esc(p)+'</option>';}).join('')+'</select></label>';
-          pg.querySelector('select').addEventListener('change',function(e){imp.page=+e.target.value;if(local)sset(vid,imp);show(imp,local);});}
-        else pg.innerHTML='';
-      }).catch(function(){info.textContent='Fichier draw.io illisible';});
-    }
-    function reset(){box.innerHTML=orig;if(A.logos)A.logos(box);if(A.bind)A.bind(box);pg.innerHTML='';rs.hidden=true;
-      if(IMP[vid])show(IMP[vid],false);else info.textContent='';}
-    fi.addEventListener('change',function(){var f=fi.files&&fi.files[0];if(!f)return;var rd=new FileReader();
-      rd.onload=function(){var imp={name:f.name,xml:String(rd.result),page:0};sset(vid,imp);show(imp,true);fi.value='';};rd.readAsText(f);});
-    rs.addEventListener('click',function(){sset(vid,null);reset();});
-    var loc=sget(vid);if(loc)show(loc,true);else if(IMP[vid])show(IMP[vid],false);
+    var vid=v.id.slice(2),box=v.querySelector('.vsvg'),imp=IMP[vid];if(!box||!imp)return;
+    renderXML(imp.xml,imp.page||0,imp.name,vid,imp.mode||'schema').then(function(r){
+      box.innerHTML=r.svg;if(A.logos)A.logos(box);if(A.bind)A.bind(box);
+    }).catch(function(){});
   });
   window.__archiImport={seqSVG:seqSVG,renderXML:renderXML};
 })();

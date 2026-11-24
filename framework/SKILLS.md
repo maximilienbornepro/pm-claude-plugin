@@ -11,7 +11,8 @@ Catalogues liés : tons -> `framework/REDACTION.md` · agents -> `framework/AGEN
 
 | Skill | Ce qu'il produit | Tags |
 |---|---|---|
-| `architecture` (stack-imagery) | schéma d'archi interactif (modèle -> HTML validé, export draw.io, 3 cibles) | archi, publication |
+| `planning` | Gantt PPTX + échéances dérivées (sync) + situation statut/levier + tableaux ; Gantt Excel | planning, office |
+| `architecture` (stack-imagery) | **expérimental** : schéma construit à la main par prompting ; le modèle sert d'inventaire, `validate.py` de contrôle, export draw.io | archi, publication |
 | `projection` (projection-report) | rapport de projection (charge/réalisé/reste, par version) | jira, publication |
 | `plan` (plan-sprints) | page « Avancement et sprints » : design réutilisable (gabarit + contrat + render + validate) + pipeline Jira config-driven, burn-downs réels | jira, publication |
 | `sprint-plan` / `sprint-audit` | plan de sprints + audit plan vs board (lecture seule) | jira, publication |
