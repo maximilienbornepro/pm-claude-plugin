@@ -63,6 +63,10 @@ Redémarrer Claude Code (ou l'app) après une mise à jour.
 
 En ligne de commande, l'équivalent : `python3 framework/pm.py list | run | demo | missions`.
 
+![pm list](img/cmd-list.png)
+
+![pm demo : tout le framework sur un projet fictif, sans écriture](img/cmd-demo.png)
+
 ### Démarrer une nouvelle mission
 
 1. Ouvrir Claude Code dans le dossier du projet.
@@ -71,6 +75,8 @@ En ligne de commande, l'équivalent : `python3 framework/pm.py list | run | demo
 3. Demander : *« Lance le setup de la mission atlas. »* (`setup` liste ce qui manque : Jira, Notion,
    SharePoint, dates, équipe, et propose des valeurs).
 4. Avant la première écriture : *« Vérifie qu'on est connecté aux bons systèmes. »* (`preflight`).
+
+![Preflight : aucune écriture tant que les connecteurs ne sont pas renseignés](img/cmd-preflight.png)
 
 Détail : [`docs/nouvelle-mission.md`](nouvelle-mission.md).
 
@@ -255,21 +261,17 @@ existant (agent `archi-audit`). Un exemple plus simple, au rendu de départ :
 
 ![Vue d'ensemble de démo](img/archi-vue-ensemble.png)
 
-### 5.4 Les gates et le cockpit
+### 5.4 Les gates, le cockpit et la méthode
 
-```
-Cockpit de la mission demo
-Phase : build
-Portes (GTF) :
-  franchies  : gate0, gate1
-  ⛔ bloquée  : gate3 (Release freeze) - bloquant G3.2
-  ⚠ à acter  : gate2 (Implementation kickoff) - seuil atteint, acte humain manquant
-Traçabilité : 2/4 item(s) en rupture
-Prochaines actions (calculé depuis l'état) :
-  1. Lever le bloquant de gate3 (puis tracer l'acte de franchissement)
-  2. Tracer l'acte humain de franchissement de gate2 (rôle, date, motif)
-  3. Résorber 2 rupture(s) de traçabilité
-```
+![Cockpit](img/cmd-cockpit.png)
+
+![Portes (gates)](img/cmd-gate.png)
+
+![Traçabilité](img/cmd-trace.png)
+
+![Contenu du deck GATE](img/deck-gate.png)
+
+![Méthode de la mission](img/cmd-method.png)
 
 - *« Fais-moi le cockpit de la mission. »*
 - *« Prépare la checklist de la gate 2 avec ce qui est couvert, partiel ou à faire. »*
@@ -286,12 +288,22 @@ Le générateur **recommande** ; le franchissement d'une porte reste un acte hum
 - **Relances** : *« Prépare les relances de la semaine. »* (brouillons de mail non envoyés, messages
   Slack à copier).
 
+![Revue des sujets dans la conversation](img/revue-sujets.png)
+
+![CR de call partenaire](img/cr-partenaire.png)
+
+![Agenda de réunion](img/agenda.png)
+
 ### 5.6 Les risques et la RACI
 
 - *« Passe en revue le registre des risques à partir des sujets qui ont bougé. »* : propositions en
   formulaire (probabilité, impact avant → après, justification), puis écriture chirurgicale du xlsx
   après accord (sauvegarde, contrôle de fraîcheur, une seule écriture).
 - *« Sors la RACI du rôle SRE. »*
+
+![Revue des risques](img/revue-risques.png)
+
+![Matrice RACI](img/raci.png)
 
 ### 5.7 Les transcriptions et le weekly report
 

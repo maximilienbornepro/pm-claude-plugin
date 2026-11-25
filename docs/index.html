@@ -74,6 +74,7 @@ td:first-child{white-space:nowrap}
 .chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .count{font:12px var(--mono);color:var(--muted)}
 figure{margin:16px 0 22px}
+figure a{display:block;cursor:zoom-in}
 figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
 figcaption{font-size:13px;color:var(--muted);margin-top:8px}
 .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
@@ -110,7 +111,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:v
     <li><a href="#planning">Planning technique</a></li>
     <li><a href="#avancement">Avancement et sprints</a></li>
     <li><a href="#archi">Schéma d'architecture</a></li>
-    <li><a href="#gates">Gates et cockpit</a></li>
+    <li><a href="#gates">Gates, cockpit, méthode</a></li>
     <li><a href="#suivi">Sujets, CR, relances</a></li>
     <li><a href="#autres">Risques, RACI, transcriptions</a></li>
     <li><a href="#routines">Routines</a></li>
@@ -150,6 +151,10 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:v
 claude plugin install pm-framework@pm-framework-market
 claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle version</code></pre>
   <p>Redémarrer Claude Code (ou l'app) après une mise à jour.</p>
+  <div class="shots">
+    <figure><a href="img/cmd-list.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-list.png" alt="Sortie de pm list : la liste des générateurs" loading="lazy"></a><figcaption><code>pm list</code> : tous les générateurs, avec leur mode (lecture seule ou écriture gardée).</figcaption></figure>
+    <figure><a href="img/cmd-demo.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-demo.png" alt="Sortie de pm demo : actions simulées sur un projet fictif" loading="lazy"></a><figcaption><code>pm demo</code> : tout le framework rejoué sur un projet fictif, chaque action annoncée, aucune exécutée.</figcaption></figure>
+  </div>
   <div class="tablebox"><table>
     <thead><tr><th>Commande</th><th>Ce qu'elle fait</th></tr></thead>
     <tbody>
@@ -167,6 +172,7 @@ claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle 
     <li>Demander : « Lance le setup de la mission atlas. » Claude liste ce qui manque et propose des valeurs.</li>
     <li>Avant la première écriture : « Vérifie qu'on est connecté aux bons systèmes. »</li>
   </ol>
+  <figure><a href="img/cmd-preflight.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-preflight.png" alt="Sortie du preflight : connecteurs bloquants tant que le profil n'est pas renseigné" loading="lazy"></a><figcaption>Le preflight bloque toute écriture tant que chaque connecteur n'est pas renseigné dans le profil et vérifié.</figcaption></figure>
 </section>
 
 <section id="parler">
@@ -242,10 +248,10 @@ claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle 
   <h2>Planning technique (PPT)</h2>
   <p>Un deck de comité calculé depuis une seule source, <code>profiles/&lt;mission&gt;/planning.json</code>, dans le gabarit PowerPoint de l'entreprise.</p>
   <div class="shots">
-    <figure><img src="img/planning-gantt.png" alt="Slide Gantt : couloirs, barres, jalons et traits verticaux"><figcaption>1. Le Gantt : couloirs, barres, jalons, traits (aujourd'hui, signature, ouverture).</figcaption></figure>
-    <figure><img src="img/planning-echeances.png" alt="Slide des échéances en deux tableaux"><figcaption>2. Les échéances, calculées depuis le Gantt : elles ne peuvent pas diverger.</figcaption></figure>
-    <figure><img src="img/planning-situation.png" alt="Slide de situation : domaine, sujet, statut, situation, levier, échéance"><figcaption>3. La situation, depuis le suivi des sujets ; le titre dit le message clé.</figcaption></figure>
-    <figure><img src="img/planning-tableau.png" alt="Slide tableau des responsabilités"><figcaption>4. Les tableaux : responsabilités et charge, RACI résumée.</figcaption></figure>
+    <figure><a href="img/planning-gantt.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/planning-gantt.png" alt="Slide Gantt : couloirs, barres, jalons et traits verticaux"></a><figcaption>1. Le Gantt : couloirs, barres, jalons, traits (aujourd'hui, signature, ouverture).</figcaption></figure>
+    <figure><a href="img/planning-echeances.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/planning-echeances.png" alt="Slide des échéances en deux tableaux"></a><figcaption>2. Les échéances, calculées depuis le Gantt : elles ne peuvent pas diverger.</figcaption></figure>
+    <figure><a href="img/planning-situation.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/planning-situation.png" alt="Slide de situation : domaine, sujet, statut, situation, levier, échéance"></a><figcaption>3. La situation, depuis le suivi des sujets ; le titre dit le message clé.</figcaption></figure>
+    <figure><a href="img/planning-tableau.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/planning-tableau.png" alt="Slide tableau des responsabilités"></a><figcaption>4. Les tableaux : responsabilités et charge, RACI résumée.</figcaption></figure>
   </div>
   <h3>Comment faire</h3>
   <ol class="steps">
@@ -259,7 +265,7 @@ claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle 
 <section id="avancement">
   <h2>Avancement et plan de sprints</h2>
   <p>Une page web qui répond à une question : la V1 tient-elle la date, à capacité réelle ?</p>
-  <figure><img src="img/plan-avancement.png" alt="Page Avancement et sprints : jalons, avancement par pôle, burn-down, plan de sprints"><figcaption>Jalons, avancement V1 et par pôle, burn-down, plan de sprints avec charge par pôle (exemple fictif).</figcaption></figure>
+  <figure><a href="img/plan-avancement.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/plan-avancement.png" alt="Page Avancement et sprints : jalons, avancement par pôle, burn-down, plan de sprints"></a><figcaption>Jalons, avancement V1 et par pôle, burn-down, plan de sprints avec charge par pôle (exemple fictif).</figcaption></figure>
   <div class="prompts">
     <div class="prompt"><q>Régénère la page d'avancement et montre-moi ce qui a bougé depuis la dernière publication.</q><button type="button">Copier</button></div>
     <div class="prompt"><q>Le ticket X passe au sprint 5 : déplace-le et réécris le texte des sprints concernés.</q><button type="button">Copier</button></div>
@@ -270,7 +276,8 @@ claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle 
 <section id="archi">
   <h2>Schéma d'architecture interactif</h2>
   <p>Un HTML unique et navigable : une vue par zone, une loupe pour entrer dans le détail, un fil d'Ariane, thème clair ou sombre, logos des technos et des partenaires.</p>
-  <figure><img src="img/archi-showcase.png" alt="Schéma d'architecture interactif avec zones, flux et logos"><figcaption>Vue d'ensemble d'un schéma (exemple fictif).</figcaption></figure>
+  <figure><a href="img/archi-showcase.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/archi-showcase.png" alt="Schéma d'architecture interactif avec zones, flux et logos"></a><figcaption>Vue d'ensemble d'un schéma (exemple fictif).</figcaption></figure>
+  <figure><a href="img/archi-vue-ensemble.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/archi-vue-ensemble.png" alt="Vue d'ensemble repliée du schéma d'architecture" loading="lazy"></a><figcaption>Les couches techniques (cluster, namespace) se replient en un bloc cliquable : la vue d'ensemble reste lisible.</figcaption></figure>
   <p><b>Tout se fait en conversation</b> : aucun déplacement de bloc à la souris, aucun bouton d'import. Après chaque modification, le harness contrôle 7 invariants (SVG équilibré, flèches droites, marqueurs résolus, couleurs déclarées, navigation cohérente, logos résolus, viewBox) avant de proposer la publication.</p>
   <div class="prompts">
     <div class="prompt"><q>Sur la vue Données, ajoute un flux du service d'alertes vers Redis, libellé "cache".</q><button type="button">Copier</button></div>
@@ -281,19 +288,15 @@ claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle 
 </section>
 
 <section id="gates">
-  <h2>Gates et cockpit</h2>
-  <pre><code>Cockpit de la mission demo
-Phase : build
-Portes (GTF) :
-  franchies  : gate0, gate1
-  ⛔ bloquée  : gate3 (Release freeze) - bloquant G3.2
-  ⚠ à acter  : gate2 (Implementation kickoff) - seuil atteint, acte humain manquant
-Traçabilité : 2/4 item(s) en rupture
-Prochaines actions :
-  1. Lever le bloquant de gate3
-  2. Tracer l'acte humain de franchissement de gate2
-  3. Résorber 2 rupture(s) de traçabilité</code></pre>
-  <p>Le générateur recommande ; le franchissement d'une porte reste un acte humain tracé.</p>
+  <h2>Gates, cockpit et méthode</h2>
+  <p>Le cockpit dit où en est la mission et ce qu'il faut faire ensuite. Le générateur de portes recommande ; le franchissement reste un acte humain tracé.</p>
+  <div class="shots">
+    <figure><a href="img/cmd-cockpit.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-cockpit.png" alt="Sortie du cockpit : portes, traçabilité, prochaines actions" loading="lazy"></a><figcaption>Cockpit : état des portes, ruptures de traçabilité, actions priorisées.</figcaption></figure>
+    <figure><a href="img/cmd-gate.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-gate.png" alt="Sortie de pm run gate : score des 7 portes" loading="lazy"></a><figcaption>Portes : score, franchissement, alertes (seuil atteint sans acte humain, bloquant ouvert).</figcaption></figure>
+    <figure><a href="img/cmd-trace.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-trace.png" alt="Sortie de trace-audit : exigences en rupture" loading="lazy"></a><figcaption>Traçabilité : chaque exigence suivie du besoin au test, et qui doit agir.</figcaption></figure>
+    <figure><a href="img/deck-gate.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/deck-gate.png" alt="Contenu d'un deck GATE généré" loading="lazy"></a><figcaption>Deck GATE : le contenu des slides, jalons lus dans le profil ; l'assemblage du .pptx est gardé.</figcaption></figure>
+  </div>
+  <figure><a href="img/cmd-method.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cmd-method.png" alt="Sortie de pm run method : barèmes, seuils, trames" loading="lazy"></a><figcaption>La méthode de la mission est une donnée (barèmes, seuils, trames, chaîne de traçabilité) : les outils calculent à partir d'elle.</figcaption></figure>
 </section>
 
 <section id="suivi">
@@ -302,6 +305,11 @@ Prochaines actions :
     <div class="card"><h4>Revue des sujets</h4><p>Claude lit mails, Slack (lecture seule) et transcriptions, propose un bloc par sujet, écrit après « ok tout » ou « ok sauf 3 », puis relit.</p></div>
     <div class="card"><h4>CR partenaire</h4><p>Une ligne de situation et une prochaine étape datée par sujet, dans la langue du partenaire. Jamais envoyé.</p></div>
     <div class="card"><h4>Relances</h4><p>Brouillons de mail non envoyés et messages Slack à copier.</p></div>
+  </div>
+  <figure><a href="img/revue-sujets.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/revue-sujets.png" alt="Proposition de revue des sujets dans la conversation" loading="lazy"></a><figcaption>Revue des sujets : sources lues, un bloc par sujet (actions faites barrées, nouvelles signalées), validation en une phrase.</figcaption></figure>
+  <div class="shots">
+    <figure><a href="img/cr-partenaire.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/cr-partenaire.png" alt="Mail de suivi d'un call partenaire" loading="lazy"></a><figcaption>CR partenaire : une situation et une prochaine étape datée par sujet. Jamais envoyé.</figcaption></figure>
+    <figure><a href="img/agenda.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/agenda.png" alt="Agenda de réunion proposé dans la conversation" loading="lazy"></a><figcaption>Agenda de réunion : 4 à 6 points, sous-points courts, dernier point Next steps.</figcaption></figure>
   </div>
 </section>
 
@@ -312,6 +320,10 @@ Prochaines actions :
     <div class="card"><h4>RACI</h4><p>Matrice complète et extraits par rôle.</p></div>
     <div class="card"><h4>Transcriptions et Omi</h4><p>Transcriptions Notion ou pendentif Omi, classées et fusionnées, pour alimenter le suivi.</p></div>
     <div class="card"><h4>Weekly report</h4><p>Depuis les prompts, mails et artefacts de la semaine, avec contrôle de la couverture de chaque thème.</p></div>
+  </div>
+  <div class="shots">
+    <figure><a href="img/revue-risques.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/revue-risques.png" alt="Proposition de mise à jour du registre des risques" loading="lazy"></a><figcaption>Revue des risques : avant → après et justification par risque, contrôle de fraîcheur, puis une seule écriture.</figcaption></figure>
+    <figure><a href="img/raci.png" target="_blank" rel="noopener" title="Agrandir"><img src="img/raci.png" alt="Matrice RACI et extrait par rôle" loading="lazy"></a><figcaption>RACI : la matrice et l'extrait de chaque rôle, depuis une seule source.</figcaption></figure>
   </div>
 </section>
 
@@ -423,7 +435,7 @@ Prochaines actions :
       <tr><td>Slack non lu</td><td>L'extension Chrome doit être connectée dans le profil où Slack est ouvert.</td></tr>
     </tbody>
   </table></div>
-  <footer>Guide du plugin pm-framework. Version texte : <code>docs/GUIDE.md</code>. Les captures viennent de projets fictifs.</footer>
+  <footer>Guide du plugin pm-framework. Version texte : <code>docs/GUIDE.md</code>. Toutes les captures viennent du projet fictif « demo » livré avec le plugin.</footer>
 </section>
 </main>
 </div>

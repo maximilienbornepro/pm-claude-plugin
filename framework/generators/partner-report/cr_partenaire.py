@@ -30,10 +30,10 @@ sys.path.insert(0, str(ROOT / "framework" / "lib"))
 import profile as prof   # noqa: E402
 
 L = {
-    "en": {"subject": "SAI x {p} - {m}, follow-up {d}", "hello": "Hello everyone,",
+    "en": {"subject": "{p} - {m}, follow-up {d}", "hello": "Hello everyone,",
            "next": "Next step: {t}", "closed": "Next step: none, this topic is closed.",
            "regards": "Best regards,"},
-    "fr": {"subject": "SAI x {p} - {m}, suivi du {d}", "hello": "Bonjour à tous,",
+    "fr": {"subject": "{p} - {m}, suivi du {d}", "hello": "Bonjour à tous,",
            "next": "Prochaine étape : {t}", "closed": "Prochaine étape : aucune, ce point est clos.",
            "regards": "Bien cordialement,"},
 }
@@ -60,7 +60,8 @@ def render(data, cfg):
 
     out = []
     out.append("Subject: " if lang == "en" else "Objet : ")
-    out[-1] += t["subject"].format(p=label, m=data.get("meeting", ""), d=ddmm(data.get("date", "")))
+    us = (cfg.get("us") or "").strip()   # nom court de notre societe (profil), ex. « ACME » -> « ACME x Partenaire »
+    out[-1] += t["subject"].format(p=f"{us} x {label}" if us else label, m=data.get("meeting", ""), d=ddmm(data.get("date", "")))
     out.append("")
     out.append(t["hello"])
     out.append("")
