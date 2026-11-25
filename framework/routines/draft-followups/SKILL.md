@@ -25,7 +25,7 @@ de voix, dossier de sortie) vit dans **`routines.yml > routines.brouillons-relan
 - **Mails depuis la derniere passe** (recherche mail puis lecture des fils utiles) : **ne pas proposer une relance
   deja faite ou deja repondue**. Verifier aussi les envoyes : une relance reprend la suite du dernier message, elle
   ne le repete pas.
-- **Transcriptions recentes** (`reads.transcriptions_window_days`) pour les engagements pris en reunion.
+- **Transcriptions recentes** (`reads.transcriptions_window_days`, toutes les sources `transcripts_sources` du profil, Omi compris) pour les engagements pris en reunion.
 
 ## Etape 2 : rediger une relance par destinataire et par sujet
 

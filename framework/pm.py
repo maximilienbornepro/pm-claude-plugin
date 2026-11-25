@@ -32,6 +32,7 @@ GEN = {
     "planning":            ("framework/generators/planning/planning.py",             "planning technique : Gantt PPTX + slide echeances derivee (sync) + situation (statut/levier) + tableaux ; Gantt Excel en alternative", True),
     "deck-gate":           ("framework/generators/deck-gate/deck_gate.py",           "contenu du deck GATE (slides markdown/JSON ; assemblage pptx garde)", True),
     "transcripts":         ("framework/generators/transcripts/read_transcripts.py",  "normalise transcriptions/CR vers {date,title,url,text} (--dump|--files)", True),
+    "omi-sync":            ("framework/generators/omi-sync/omi_sync.py",             "pendentif Omi -> Notion perso : --fetch / --import (classes, fusionnes) ; --unlock complete les pages verrouillees", False),
     "slack":               ("framework/generators/slack/read_slack.py",              "normalise un export Slack (canaux+DM, threads) vers {date,author,channel,thread,text,url} ; lecture via Claude in Chrome, jamais d'ecriture", True),
     "partner-report":      ("framework/generators/partner-report/cr_partenaire.py",  "mail de suivi d'un call partenaire (--input ; rendu texte, jamais d'envoi)", True),
     # --- domaine Jira ---

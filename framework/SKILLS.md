@@ -21,6 +21,7 @@ Catalogues liés : tons -> `framework/REDACTION.md` · agents -> `framework/AGEN
 | `scaffold` | miroir Drive + Notion, **dry-run** (scaffold_drive, scaffold_notion) | drive, notion |
 | `suivi` | suivi d'activité : requêtes Claude -> store -> DB Notion privée + rapport hebdo | notion |
 | `transcripts` | lecteur de transcriptions / CR (sources pluggables), alimente l'aval | lecture seule |
+| `omi-sync` | pendentif Omi -> Notion perso (classe, fusionne ; complete les pages verrouillees) | 2 bases Notion perso |
 | `cr-partenaire` | mail de suivi après un call partenaire (rendu texte, sans envoi) | **partenaire** |
 
 ## Tons (`framework/skills/`) - détail dans `REDACTION.md`

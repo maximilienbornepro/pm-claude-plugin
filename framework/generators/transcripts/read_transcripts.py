@@ -13,6 +13,10 @@ Deux sources, au choix :
   - `--files <dossier>` : fichiers .md/.txt locaux (source pluggable). La date vient
     d'un frontmatter `date:` ou du nom de fichier (AAAA-MM-JJ) ; le titre du `# titre`
     ou du nom de fichier.
+  - `--notion-db <id>` : base Notion lue par l'API officielle (integration interne,
+    jeton NOTION_TOKEN ou ~/.config/pm-framework/notion.env). Filtre la colonne
+    « Catégorie » (--category, Omi par defaut) : transcriptions du pendentif Omi
+    rangees dans « Notes de réunion » du Notion perso.
 
 Filtre : --since / --until (ISO AAAA-MM-JJ) ou --date (un seul jour). Sortie lisible,
 ou --json pour la passer telle quelle a un generateur aval.
@@ -77,11 +81,91 @@ def from_files(folder):
     return out
 
 
+def _load_token(env_file):
+    """Jeton d'integration Notion : variable NOTION_TOKEN, sinon fichier env (cle=valeur)."""
+    import os
+    tok = os.environ.get("NOTION_TOKEN")
+    if tok:
+        return tok
+    p = Path(os.path.expanduser(env_file))
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            if line.startswith("NOTION_TOKEN="):
+                return line.split("=", 1)[1].strip()
+    sys.exit(f"Aucun jeton Notion : definir NOTION_TOKEN ou {env_file}")
+
+
+def from_notion_db(db_id, category, token, since=None, until=None):
+    """Lit une base Notion par l'API officielle (integration interne), LECTURE SEULE.
+
+    Garde les lignes dont la colonne multi-select « Catégorie » contient `category`
+    (ex. Omi), filtre la colonne Date cote Notion, et lit le corps de chaque page
+    (resume + transcription) en texte brut.
+    """
+    import time, urllib.request, urllib.error
+    H = {"Authorization": "Bearer " + token, "Notion-Version": "2022-06-28", "Content-Type": "application/json"}
+
+    def api(method, path, data=None):
+        for att in range(6):
+            time.sleep(0.35)
+            req = urllib.request.Request("https://api.notion.com/v1" + path,
+                                         json.dumps(data).encode() if data is not None else None, H, method=method)
+            try:
+                return json.load(urllib.request.urlopen(req, timeout=60))
+            except urllib.error.HTTPError as e:
+                if e.code in (429, 500, 502, 503):
+                    time.sleep(2 * (att + 1)); continue
+                raise
+        raise RuntimeError("API Notion indisponible")
+
+    filters = []
+    if category:
+        filters.append({"property": "Catégorie", "multi_select": {"contains": category}})
+    if since:
+        filters.append({"property": "Date", "date": {"on_or_after": since}})
+    if until:
+        filters.append({"property": "Date", "date": {"on_or_before": until + "T23:59:59"}})
+    body = {"page_size": 100}
+    if filters:
+        body["filter"] = {"and": filters} if len(filters) > 1 else filters[0]
+
+    out, cursor = [], None
+    while True:
+        if cursor:
+            body["start_cursor"] = cursor
+        res = api("POST", f"/databases/{db_id}/query", body)
+        for pg in res["results"]:
+            props = pg["properties"]
+            title = "".join(t["plain_text"] for v in props.values() if v["type"] == "title" for t in v["title"])
+            d = (props.get("Date") or {}).get("date") or {}
+            lines, bc = [], None
+            while True:
+                q = f"/blocks/{pg['id']}/children?page_size=100" + (f"&start_cursor={bc}" if bc else "")
+                ch = api("GET", q)
+                for b in ch["results"]:
+                    v = b.get(b["type"], {})
+                    if isinstance(v, dict) and "rich_text" in v:
+                        lines.append("".join(r.get("plain_text", "") for r in v["rich_text"]))
+                if not ch.get("has_more"):
+                    break
+                bc = ch["next_cursor"]
+            out.append({"date": _day(d.get("start", "")), "title": title or "(sans titre)",
+                        "url": pg["url"], "text": "\n".join(lines).strip()})
+        if not res.get("has_more"):
+            break
+        cursor = res["next_cursor"]
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--dump", help="export JSON/JSONL des meeting notes (connecteur Notion)")
     src.add_argument("--files", help="dossier de .md/.txt")
+    src.add_argument("--notion-db", help="id d'une base Notion lue par l'API (integration interne)")
+    ap.add_argument("--category", default="Omi", help="valeur de la colonne Catégorie a garder (--notion-db)")
+    ap.add_argument("--token-env", default="~/.config/pm-framework/notion.env",
+                    help="fichier contenant NOTION_TOKEN=... (--notion-db)")
     ap.add_argument("--since")
     ap.add_argument("--until")
     ap.add_argument("--date", help="un seul jour (ISO)")
@@ -91,7 +175,10 @@ def main():
 
     since = a.date or a.since
     until = a.date or a.until
-    recs = from_dump(a.dump) if a.dump else from_files(a.files)
+    if a.notion_db:
+        recs = from_notion_db(a.notion_db, a.category, _load_token(a.token_env), since, until)
+    else:
+        recs = from_dump(a.dump) if a.dump else from_files(a.files)
     recs = [r for r in recs if r["date"]]
     recs = [r for r in recs if (not since or r["date"] >= since) and (not until or r["date"] <= until)]
     recs.sort(key=lambda r: (r["date"], r["title"]))

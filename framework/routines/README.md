@@ -34,6 +34,7 @@ Dans l'app (section **Scheduled**), chaque tâche porte **à la fois** :
 | `suivi` | cron (ex. 19h) | `suivi` (collect + weekly + sync) | store local + DB Notion **privee** (4 categories ; aucune notif) ; jamais la page Weekly report de Greg |
 | `revue-sujets` | manuel | `revue-risques` (sauf mode `condensation`) | base de suivi (sujets valides, condensation des sujets a rallonge comprise via le mode `condensation`), puis registre des risques via `revue-risques` |
 | `revue-risques` | manuel (planifiable) | `risks`, `projection` | registre des risques (Office, en place) || `brouillons-relances` | manuel | - | brouillons Outlook ouverts en redaction (`mailto:`, nouveau fil) ou reponse dans le fil d'origine (presse-papiers / Outlook web) + copie `.eml` locale ; messages Slack internes rendus a copier, **rien n'est envoye ni poste** |
+| `omi-sync` | cron `*/5 * * * *` (transverse, hors mission) | generateur `omi-sync` | 2 bases Notion **perso** (pro « Notes de reunion » + perso), pages Omi classees et fusionnees ; `--unlock` (a la demande) complete les pages verrouillees ; aucune notif |
 
 `chains` ne reference que des generateurs du framework (`python3 framework/pm.py list`) ou une autre
 routine. L'horaire reel est dans le frontmatter `schedule` du SKILL (valeur `config`, qui renvoie a

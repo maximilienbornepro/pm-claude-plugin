@@ -69,6 +69,7 @@ Chaque générateur lit le **profil** (où est le Jira, le Drive, les dates…) 
 | `cr-partenaire` | mail de suivi d'un call partenaire (`--input` ; jamais d'envoi) | `cr_partenaire.yml` |
 | `notion-sujets` | valide le format d'un sujet Notion (`--body`) | `notion_sujets.yml` |
 | `transcripts` | normalise transcriptions/CR (`--dump`/`--files`) | profil |
+| `omi-sync` | pendentif Omi -> Notion perso (`--fetch`/`--import`, `--unlock` apres abonnement) | `~/.config/pm-framework` |
 | `coherence` | une sortie est-elle à jour vs ses sources | `coherence.yml` |
 | `gate` | score les portes (GTF : 7 gates) et recommande ; franchissement = acte humain | `gate.yml` |
 | `method` | montre la méthode en donnée (barèmes, seuils, trames, traçabilité) | `method.yaml` |
