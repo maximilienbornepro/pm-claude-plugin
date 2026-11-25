@@ -63,9 +63,33 @@ Dates hors fenêtre, fin avant début, libellés en double, statut inconnu, levi
 3. **Situation** : une slide par groupe de sujets, titre = message clé (règle : jamais un titre descriptif).
 4. **Tableaux libres** : responsabilités et charge, RACI résumée, etc.
 
-Le deck est **autonome** (thème neutre, police Arial). Pour l'intégrer à un deck d'entreprise : ouvrir le
-fichier en ligne, **clic droit > Copier** sur la miniature, puis coller dans le deck cible (le Ctrl/Cmd+C
-clavier ne remplit pas toujours le presse-papier de PowerPoint Online : vérifier avant de coller).
+Sans gabarit, le deck est **autonome** (thème neutre, police Arial).
+
+## Dans le gabarit de l'entreprise (`--pptx-template`)
+
+Pour sortir le deck **dans le PowerPoint de l'entreprise** (logo, pied de page, police et couleur des titres) :
+
+```bash
+python3 framework/pm.py run planning <mission> --pptx out.pptx --pptx-template gabarit.pptx --layout "Titre seul"
+```
+
+- `gabarit.pptx` : **n'importe quel PPT de l'entreprise** (un deck existant suffit) : on garde ses masques,
+  mises en page, thème et médias, et on retire ses slides.
+- `--layout` : la mise en page à utiliser (nom affiché dans PowerPoint). Sans `--layout`, la première
+  mise en page qui a un emplacement titre. Un nom inconnu affiche la liste des mises en page disponibles.
+- Le **titre** de chaque slide va dans l'emplacement titre de la mise en page (style du gabarit) ; le
+  contenu (Gantt, tableaux) est **recalé** dans la zone utile : sous le titre et son trait décoratif,
+  jusqu'au bas de la zone de texte de la mise en page.
+- À mettre une fois pour toutes dans `planning.json` :
+  `"template": {"pptx": "templates/mon_gabarit.pptx", "layout": "Titre seul"}` (chemin relatif au
+  fichier de données) ; option `"box": [x, y, largeur, hauteur]` en EMU pour forcer la zone utile.
+- `"gantt_title"` : titre-message de la slide Gantt (sinon `title`).
+
+Pour intégrer une slide dans un autre deck en ligne : **clic droit > Copier** sur la miniature, puis
+coller dans le deck cible (le Ctrl/Cmd+C clavier ne remplit pas toujours le presse-papier de
+PowerPoint Online : vérifier avant de coller).
+
+Skill de bout en bout (sources, mise à jour, rendu, relecture, dépôt) : `framework/skills/technical-planning`.
 
 ## Le Gantt Excel (alternative au PPT)
 `templates/gantt_template.xlsx` : une ligne par **tâche**, regroupées par **section** (le couloir du Gantt).

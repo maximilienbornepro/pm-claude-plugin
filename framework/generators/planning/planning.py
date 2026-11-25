@@ -216,6 +216,14 @@ class Slide:
         return tot
 
     def header(self, title, subtitle=None):
+        if TPL:  # gabarit d'entreprise : le titre va dans l'emplacement titre de la mise en page (style du gabarit)
+            self.shapes.append(
+                '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>'
+                '<p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>'
+                f'<a:p><a:r><a:rPr lang="fr-FR" dirty="0"/><a:t>{escape(title)}</a:t></a:r></a:p></p:txBody></p:sp>')
+            if subtitle:
+                self.box(300000, 640000, SW - 600000, 200000, subtitle, sz=1000, bold=True, color=self.t["secondary"], anchor="t")
+            return
         self.box(300000, 140000, SW - 600000, 420000, title, sz=1600, bold=True, color=self.t["primary"], wrap=True, anchor="t")
         if subtitle:
             self.box(300000, 700000, SW - 600000, 200000, subtitle, sz=1000, bold=True, color=self.t["secondary"], anchor="t")
@@ -223,10 +231,123 @@ class Slide:
             self.box(300000, SH - 260000, SW - 600000, 180000, self.t["footer"], sz=600, color="7F7F7F")
 
     def xml(self):
+        shapes = [_fit(s) for s in self.shapes] if TPL else self.shapes
         return (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld {NS}><p:cSld><p:spTree>'
                 '<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>'
                 '<p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'
-                + "".join(self.shapes) + '</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>')
+                + "".join(shapes) + '</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>')
+
+
+# --------------------------------------------------------------------------- gabarit d'entreprise (--pptx-template)
+# Le contenu est dessiné dans le repère du deck neutre (SW x SH), puis recalé dans la zone utile de la mise en
+# page du gabarit : sous l'emplacement titre, au-dessus du pied de page. Le titre de chaque slide va dans
+# l'emplacement titre du gabarit (police, couleur et logo du gabarit).
+TPL = None          # dict : x0, y0, sx, sy (rempli par load_template)
+SRC_TOP = 600000    # dans le repère neutre, tout ce qui est sous cette ordonnée est du contenu
+
+
+def _fit(shape):
+    if '<p:ph type="title"/>' in shape:
+        return shape
+    T = TPL
+
+    def xy(m):
+        x, y, cx, cy = (int(v) for v in m.groups())
+        return (f'<a:off x="{int(T["x0"] + x * T["sx"])}" y="{int(T["y0"] + max(0, y - SRC_TOP) * T["sy"])}"/>'
+                f'<a:ext cx="{max(1, int(cx * T["sx"]))}" cy="{max(1, int(cy * T["sy"]))}"/>')
+    shape = re.sub(r'<a:off x="(-?\d+)" y="(-?\d+)"/><a:ext cx="(\d+)" cy="(\d+)"/>', xy, shape)
+    shape = re.sub(r'<a:gridCol w="(\d+)"/>', lambda m: f'<a:gridCol w="{int(int(m.group(1)) * T["sx"])}"/>', shape)
+    shape = re.sub(r'<a:tr h="(\d+)">', lambda m: f'<a:tr h="{int(int(m.group(1)) * T["sy"])}">', shape)
+    return shape
+
+
+def _ph_box(xml, kind):
+    """(x, y, cx, cy) de l'emplacement `kind` (title, body...) d'une mise en page ou d'un masque, ou None."""
+    for m in re.finditer(r'<p:sp>.*?</p:sp>', xml, re.S):
+        s = m.group(0)
+        if re.search(rf'<p:ph[^>]*type="{kind}"', s) or (kind == "body" and re.search(r'<p:ph(?![^>]*type=)[^>]*idx="1"', s)):
+            o = re.search(r'<a:off x="(\d+)" y="(\d+)"/><a:ext cx="(\d+)" cy="(\d+)"/>', s)
+            if o:
+                return tuple(int(v) for v in o.groups())
+    return None
+
+
+def load_template(path, layout_name=None, box=None):
+    """Lit le gabarit, choisit la mise en page, calcule la zone utile. Retourne (fichiers, chemin de la mise en page)."""
+    global TPL
+    z = zipfile.ZipFile(path)
+    files = {n: z.read(n) for n in z.namelist()}
+    pres = files["ppt/presentation.xml"].decode("utf-8")
+    m = re.search(r'<p:sldSz cx="(\d+)" cy="(\d+)"', pres)
+    W, H = (int(m.group(1)), int(m.group(2))) if m else (SW, SH)
+    layouts = {}
+    for n, b in files.items():
+        if re.match(r'ppt/slideLayouts/slideLayout\d+\.xml$', n):
+            nm = re.search(r'<p:cSld name="([^"]*)"', b.decode("utf-8"))
+            layouts[nm.group(1) if nm else n] = n
+    if layout_name:
+        if layout_name not in layouts:
+            sys.exit(f"mise en page « {layout_name} » absente du gabarit. Disponibles : {', '.join(sorted(layouts))}")
+        lay = layouts[layout_name]
+    else:  # premiere mise en page qui a un emplacement titre
+        lay = next((p for p in sorted(layouts.values()) if 'type="title"' in files[p].decode("utf-8")), sorted(layouts.values())[0])
+    lx = files[lay].decode("utf-8")
+    master = re.search(r'Target="\.\./slideMasters/(slideMaster\d+\.xml)"', files[lay.replace("slideLayouts/", "slideLayouts/_rels/") + ".rels"].decode("utf-8"))
+    mx = files.get(f"ppt/slideMasters/{master.group(1)}", b"").decode("utf-8") if master else ""
+    title = _ph_box(lx, "title") or _ph_box(mx, "title")
+    body = _ph_box(lx, "body") or _ph_box(mx, "body")
+    if box:
+        x0, y0, w, h = box
+    else:
+        top = (title[1] + title[3] + 300000) if title else int(H * 0.18)   # sous le titre et son trait decoratif
+        bottom = (body[1] + body[3]) if body else int(H * 0.92)
+        x0, w = (body[0], body[2]) if body else (int(W * 0.03), int(W * 0.94))
+        y0, h = top, max(bottom - top, int(H * 0.5))
+    sx = w / (SW - 600000)
+    TPL = {"x0": x0 - 300000 * sx, "y0": y0, "sx": sx, "sy": h / (SH - 280000 - SRC_TOP)}
+    return files, lay
+
+
+def write_pptx_template(slides, tpl_path, out, layout_name=None, box=None):
+    """Deck dans le gabarit d'entreprise : on garde masques, mises en page, thème et médias, on retire ses slides."""
+    files, lay = load_template(tpl_path, layout_name, box)
+    pres = files["ppt/presentation.xml"].decode("utf-8")
+    prels = files["ppt/_rels/presentation.xml.rels"].decode("utf-8")
+    ct = files["[Content_Types].xml"].decode("utf-8")
+    # 1. retirer les slides du gabarit (et leurs notes)
+    old = set(re.findall(r'<Relationship [^>]*Id="(rId\d+)"[^>]*Type="[^"]*/slide"[^>]*/>', prels))
+    old |= set(re.findall(r'<Relationship [^>]*Type="[^"]*/slide"[^>]*Id="(rId\d+)"[^>]*/>', prels))
+    prels = re.sub(r'<Relationship [^>]*Type="[^"]*/slide"[^>]*/>', '', prels)
+    pres = re.sub(r'<p:sldIdLst>.*?</p:sldIdLst>', '<p:sldIdLst/>', pres, flags=re.S)
+    pres = re.sub(r'<p14:sectionLst.*?</p14:sectionLst>', '', pres, flags=re.S)
+    pres = re.sub(r'<p:custShowLst>.*?</p:custShowLst>', '', pres, flags=re.S)
+    for n in list(files):
+        if n.startswith(("ppt/slides/", "ppt/notesSlides/")):
+            del files[n]
+    ct = re.sub(r'<Override PartName="/ppt/(slides|notesSlides)/[^"]*"[^>]*/>', '', ct)
+    # 2. ajouter nos slides sur la mise en page choisie
+    ids = [int(v) for v in re.findall(r'<p:sld(?:Master)?Id id="(\d+)"', pres)] or [255]
+    base = 256
+    srels = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="{PKG}">'
+             f'<Relationship Id="rId1" Type="{REL}/slideLayout" Target="../slideLayouts/{lay.rsplit("/", 1)[1]}"/></Relationships>')
+    lst, rel_add, ct_add = [], [], []
+    for i, s in enumerate(slides):
+        files[f"ppt/slides/slide{i + 1}.xml"] = s.xml().encode("utf-8")
+        files[f"ppt/slides/_rels/slide{i + 1}.xml.rels"] = srels.encode("utf-8")
+        lst.append(f'<p:sldId id="{base + i}" r:id="rIdPmf{i + 1}"/>')
+        rel_add.append(f'<Relationship Id="rIdPmf{i + 1}" Type="{REL}/slide" Target="slides/slide{i + 1}.xml"/>')
+        ct_add.append(f'<Override PartName="/ppt/slides/slide{i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>')
+    pres = pres.replace('<p:sldIdLst/>', '<p:sldIdLst>' + "".join(lst) + '</p:sldIdLst>')
+    prels = prels.replace('</Relationships>', "".join(rel_add) + '</Relationships>')
+    ct = ct.replace('</Types>', "".join(ct_add) + '</Types>')
+    files["ppt/presentation.xml"] = pres.encode("utf-8")
+    files["ppt/_rels/presentation.xml.rels"] = prels.encode("utf-8")
+    files["[Content_Types].xml"] = ct.encode("utf-8")
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zo:
+        zo.writestr("[Content_Types].xml", files.pop("[Content_Types].xml"))
+        for n, b in files.items():
+            zo.writestr(n, b)
+    return lay
 
 
 def nlines(txt, cpl):
@@ -248,7 +369,7 @@ def theme_of(data):
 
 def gantt_slide(data, t):
     s = Slide(t)
-    s.header(data.get("title", "Planning"), data.get("subtitle"))
+    s.header(data.get("gantt_title") or data.get("title", "Planning"), data.get("subtitle"))
     start = D(data["start"]); start -= dt.timedelta(days=start.weekday())
     weeks = int(data.get("weeks", 14)); days = weeks * 7
     X0, X1 = 1650000, SW - 260000
@@ -673,9 +794,22 @@ def main(argv):
         return 0
     did = False
     if opt("--pptx"):
-        slides = build_deck(data)
-        write_pptx(slides, opt("--pptx"))
-        print(f"deck : {opt('--pptx')} ({len(slides)} slides : Gantt, echeances, situation, tableaux)"); did = True
+        tpl = opt("--pptx-template") or (data.get("template") or {}).get("pptx")
+        layout = opt("--layout") or (data.get("template") or {}).get("layout")
+        box = (data.get("template") or {}).get("box")
+        if tpl:
+            tplp = Path(tpl).expanduser()
+            if not tplp.is_absolute() and src:
+                tplp = (Path(src).parent / tplp) if (Path(src).parent / tplp).exists() else tplp
+            load_template(str(tplp), layout, box)        # fixe la zone utile avant de dessiner
+            slides = build_deck(data)
+            lay = write_pptx_template(slides, str(tplp), opt("--pptx"), layout, box)
+            print(f"deck : {opt('--pptx')} ({len(slides)} slides, gabarit {tplp.name}, mise en page {lay.rsplit('/', 1)[1]})")
+        else:
+            slides = build_deck(data)
+            write_pptx(slides, opt("--pptx"))
+            print(f"deck : {opt('--pptx')} ({len(slides)} slides : Gantt, echeances, situation, tableaux)")
+        did = True
     if opt("--xlsx"):
         n = write_xlsx(data, opt("--xlsx"), opt("--template"))
         print(f"Gantt Excel : {opt('--xlsx')} ({n} lignes)"); did = True

@@ -4,6 +4,7 @@ Framework de gestion de projet portable, extrait de SINBAD. **Une mission = un p
 le moteur ne change pas. Le SINBAD d'origine (`~/Documents/Sinbad`) tourne tel quel et n'est
 pas modifié : on bâtit ici, à côté, par copies généralisées.
 
+- **Guide d'utilisation (capacités, captures, pas à pas, prompts)** : [docs/GUIDE.md](docs/GUIDE.md)
 - **Cadrage** : [FRAMEWORK.md](FRAMEWORK.md) · **Feuille de route / état** : [ROADMAP.md](ROADMAP.md)
 - **Profils de mission** : [profiles/README.md](profiles/README.md) (SINBAD = exemple de référence)
 - **Nouvelle mission en 10 min** : [docs/nouvelle-mission.md](docs/nouvelle-mission.md)
@@ -27,7 +28,7 @@ claude plugin update pm-framework@pm-framework-market
 > Dépôt **public** → les commandes ci-dessus marchent partout, sans aucune auth (recommandé si
 > aucune donnée sensible, ce qui est le cas ici : le profil réel est exclu).
 
-Les commandes du plugin s'invoquent ensuite sous `/pm-framework:` : `list`, `demo`, `run`, `setup`.
+Les commandes du plugin s'invoquent ensuite sous `/pm-framework:` : `list`, `demo`, `run`, `setup`, `technical-planning`.
 
 **Côté mainteneur** (livrer une nouvelle version) : depuis le dépôt de travail,
 ```bash

@@ -1,0 +1,423 @@
+# Guide d'utilisation - plugin pm-framework
+
+Le plugin **pm-framework** outille un chef de projet technique (TPM / PMO) dans Claude Code : il produit
+les livrables de pilotage (planning, avancement, risques, RACI, schéma d'architecture, comptes rendus…)
+à partir des sources du projet (Jira, Notion, SharePoint / OneDrive, Slack, transcriptions), et il le fait
+**en conversation** : on demande, Claude prépare, montre, et n'écrit qu'après accord.
+
+Ce guide couvre tout le plugin : ce qu'il sait faire, comment on s'en sert, quels prompts utiliser.
+
+**Sommaire**
+
+1. [L'essentiel en deux minutes](#1-lessentiel-en-deux-minutes)
+2. [Installer et démarrer](#2-installer-et-démarrer)
+3. [Comment on s'en sert : parler à Claude](#3-comment-on-sen-sert--parler-à-claude)
+4. [Catalogue de ce que sait faire le plugin](#4-catalogue)
+5. [Guides pas à pas](#5-guides-pas-à-pas)
+6. [Les routines (tâches planifiées)](#6-les-routines)
+7. [Les agents](#7-les-agents)
+8. [Les tons de rédaction](#8-les-tons-de-rédaction)
+9. [Les garde-fous](#9-les-garde-fous)
+10. [Modèles de prompts](#10-modèles-de-prompts)
+11. [Dépannage](#11-dépannage)
+
+---
+
+## 1. L'essentiel en deux minutes
+
+- **Une mission = un profil.** Tout ce qui est propre à un projet (où est le Jira, le Notion, le
+  SharePoint, les dates, l'équipe, les partenaires) vit dans `profiles/<mission>/` du dossier projet.
+  Le moteur (le plugin) ne change pas d'une mission à l'autre.
+- **Des générateurs.** Chaque livrable a son générateur (`planning`, `plan`, `risks`, `raci`, `archi`…).
+  Ils se lancent par `pm run <générateur> <mission>` ou, plus simplement, en le demandant à Claude.
+- **Lecture seule par défaut.** Un générateur lit et rend un résultat (fichier local, aperçu, markdown).
+  Toute écriture dans un système partagé (Jira, Notion, Office, GitHub Pages) passe par un flag explicite
+  et **votre accord dans la conversation**.
+- **Aucune notification ne part à cause de l'outil** : pas de mention, pas de partage, pas de mail envoyé.
+  Les mails sont des **brouillons**, les messages Slack du **texte à copier**.
+- **Une démo sans risque** : `/pm-framework:demo` joue tout sur un projet fictif sans rien écrire.
+
+---
+
+## 2. Installer et démarrer
+
+### Installer (une fois) et mettre à jour
+
+```bash
+claude plugin marketplace add maximilienbornepro/pm-claude-plugin
+claude plugin install pm-framework@pm-framework-market
+claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle version
+```
+
+Redémarrer Claude Code (ou l'app) après une mise à jour.
+
+### Les commandes du plugin
+
+| Commande | Ce qu'elle fait |
+|---|---|
+| `/pm-framework:list` | liste tous les générateurs et les missions disponibles |
+| `/pm-framework:demo` | rejoue tout le framework sur un projet fictif, **sans aucune écriture** |
+| `/pm-framework:run <générateur> <mission>` | lance un générateur (lecture seule / dry-run par défaut) |
+| `/pm-framework:setup <mission>` | onboarding : détecte les champs manquants du profil, propose, écrit après accord |
+| `/pm-framework:technical-planning <mission>` | produit ou met à jour le PPT de planning technique |
+
+En ligne de commande, l'équivalent : `python3 framework/pm.py list | run | demo | missions`.
+
+### Démarrer une nouvelle mission
+
+1. Ouvrir Claude Code dans le dossier du projet.
+2. Demander : *« Amorce une nouvelle mission "atlas" avec le pm-framework. »* (générateur `init` : crée
+   `profiles/atlas/` depuis les gabarits, en dry-run puis après accord).
+3. Demander : *« Lance le setup de la mission atlas. »* (`setup` liste ce qui manque : Jira, Notion,
+   SharePoint, dates, équipe, et propose des valeurs).
+4. Avant la première écriture : *« Vérifie qu'on est connecté aux bons systèmes. »* (`preflight`).
+
+Détail : [`docs/nouvelle-mission.md`](nouvelle-mission.md).
+
+---
+
+## 3. Comment on s'en sert : parler à Claude
+
+On n'a pas besoin de connaître les commandes : on décrit le résultat voulu, Claude choisit le générateur,
+le lance, **montre** ce qu'il propose, puis applique après accord.
+
+Le cycle est toujours le même :
+
+```
+Vous demandez  ->  Claude lit les sources  ->  il propose (aperçu, avant / après, tableau)
+               ->  vous validez (« ok », « ok sauf 3 », ou vous corrigez)  ->  il écrit, puis relit
+```
+
+Ce qui rend une demande efficace :
+
+- **Nommer le livrable et la mission** : « le planning technique de la mission atlas ».
+- **Dire ce qui change**, pas comment le faire : « le pentest est décalé au 08/12 ».
+- **Donner la source** si elle est précise : un mail, un call, une transcription, un fichier.
+- **Dire jusqu'où aller** : « propose d'abord », « applique directement », « ne publie pas ».
+
+Exemples de demandes à la section [10](#10-modèles-de-prompts).
+
+---
+
+## 4. Catalogue
+
+`[lecture]` = ne fait que lire et rendre ; `[écriture gardée]` = peut écrire, uniquement avec un flag
+explicite et après accord.
+
+### Pilotage et planning
+
+| Générateur | Ce qu'il produit | Exemple de demande |
+|---|---|---|
+| `planning` `[lecture]` | **Planning technique** : Gantt PPTX, slide des échéances **calculée** depuis le Gantt (jamais désynchronisée), slides de situation (statut / levier), tableaux ; dans le **gabarit PowerPoint de l'entreprise** ; Gantt Excel en alternative | « Refais le planning technique au 02/12. » |
+| `projection` `[lecture]` | Charge restante vs capacité de l'équipe → date de fin projetée | « À ce rythme, quand finit la V1 ? » |
+| `plan` `[lecture]` | Page web « Avancement et sprints » : avancement V1, pôles, burn-down, plan de sprints, depuis Jira | « Régénère la page d'avancement. » |
+| `gate` `[lecture]` | Score des 7 portes GTF et recommandation (le franchissement reste un acte humain) | « Où en est-on sur la gate 2 ? » |
+| `cockpit` `[lecture]` | Porte d'entrée : où en est la mission et que faire ensuite (suite priorisée) | « Fais-moi le cockpit de la mission. » |
+| `method` `[lecture]` | Montre la méthode de la mission (barèmes, seuils, trames, traçabilité) | « Rappelle-moi les barèmes des risques. » |
+| `trace-audit` `[lecture]` | Ruptures de la chaîne besoin → ticket → POC → test, et où agir | « Quelles exigences n'ont pas de ticket ? » |
+| `weekly-report` `[lecture]` | CR hebdo du projet depuis les prompts, mails et artefacts de la semaine | « Fais le weekly report de la semaine 47. » |
+
+### Architecture
+
+| Générateur / agent | Ce qu'il produit | Exemple de demande |
+|---|---|---|
+| `archi` + agent `archi-audit` | Schéma d'architecture **interactif** (HTML navigable, vues cliquables, thème clair / sombre, logos), contrôlé par un harness (7 invariants), export / import draw.io. **Pas d'éditeur graphique** : tout se fait en conversation | « Ajoute un flux du BFF vers Redis sur la vue Données. » |
+
+### Jira
+
+| Générateur / agent | Ce qu'il fait | Exemple de demande |
+|---|---|---|
+| `jira-sprints-audit` + agent `jira-sprints-audit` | Audit du plan de sprints vs le board : charge, estimations, blocages inversés | « Le plan de sprints est-il cohérent avec Jira ? » |
+| `jira-changes-audit` + agent | Qui a modifié quels tickets, quand, quoi (repère les écrasements) | « Qu'est-ce qui a bougé dans le backlog depuis hier soir ? » |
+| agent `jira-tickets-audit` | Détecte et répare les régressions de description (réparation après accord) | « Le ticket X n'est plus à jour, vérifie. » |
+| `jira-images` `[écriture gardée]` | Images des tickets via l'API (contrôle ; pose avec `--apply`) | « Remets les maquettes dans les tickets du sprint. » |
+| agent `front-audit` | Écarts POC ↔ tickets ↔ contrat d'API | « Qu'est-ce qui manque côté front ? » |
+
+### Notion, suivi et communication
+
+| Générateur / agent | Ce qu'il fait | Exemple de demande |
+|---|---|---|
+| `notion-topics-audit` + agent | Contrôle le format des sujets de suivi (Contexte / Action attendue) | « Relis les sujets modifiés cette semaine. » |
+| `notion-scaffold` `[lecture]` | Arborescence Notion miroir : pages manquantes | « Quelles pages manquent dans l'espace projet ? » |
+| `transcripts` `[lecture]` | Normalise transcriptions et CR (Notion, fichiers, pendentif Omi) | « Récupère la transcription du call de ce matin. » |
+| `slack` `[lecture]` | Normalise les conversations Slack lues (canaux, DM, fils) ; jamais d'écriture | « Fais le point sur Slack depuis lundi. » |
+| `omi-sync` `[écriture gardée]` | Pendentif Omi → Notion perso (classé pro / perso, fusionné par échange) | « Synchronise mes conversations Omi. » |
+| `partner-report` `[lecture]` | Mail de suivi d'un call partenaire (texte, jamais envoyé) | « Fais le CR du weekly avec le partenaire A. » |
+| `activity` `[lecture]` | Suivi d'activité : ce que vous avez fait avec Claude, vers une base Notion privée | « Résume mon activité de la semaine. » |
+
+### Office et documents
+
+| Générateur | Ce qu'il produit | Exemple de demande |
+|---|---|---|
+| `risks` `[écriture gardée]` | Registre des risques : revue proposée en formulaire, écriture chirurgicale du xlsx après accord | « Passe en revue les risques après le call d'hier. » |
+| `raci` `[lecture]` | Matrice RACI + extraits par rôle | « Sors la RACI du rôle SRE. » |
+| `deck-gate` `[lecture]` | Contenu d'un deck GATE (slides) | « Prépare le contenu du deck de la gate 2. » |
+| `office` `[écriture gardée]` | Crée un xlsx depuis un template ou l'édite chirurgicalement (sans casser images et mises en forme) | « Crée le tracker de risques depuis le template. » |
+| `docs-coherence-audit` `[lecture]` | Une sortie est-elle à jour par rapport à ses sources ? | « Le deck GATE est-il aligné sur les Excel ? » |
+| `drive-scaffold` `[écriture gardée]` | Arborescence Drive / SharePoint : ce qui manque (création avec `--apply`) | « Vérifie l'arborescence du SharePoint projet. » |
+| `templates` `[lecture]` | Registre des templates disponibles (sujets, planning, RACI, risques ; Notion / Excel) | « Quels templates ai-je pour le planning ? » |
+
+### Mise en place et outillage
+
+| Générateur | Ce qu'il fait |
+|---|---|
+| `init` | Amorce une mission depuis les gabarits (dry-run, `--apply` écrit) |
+| `setup` | Champs manquants d'un profil et suggestions |
+| `preflight` | Vérifie qu'on est connecté aux **bons** espaces (Notion, SharePoint, Jira) avant d'écrire |
+| `tones` | Aligne le ton des agents sur la config de la mission |
+| `agent` | Lance une sous-tâche sur un autre compte, modèle ou agent spécialisé |
+| `poc` | POC React + Material UI depuis les récits (lanceur automatique) |
+| `reset` | (test) remet à zéro un dossier de projet, sauvegarde obligatoire |
+
+---
+
+## 5. Guides pas à pas
+
+### 5.1 Le planning technique (PPT)
+
+Un deck de comité **tout calculé depuis une seule source** (`profiles/<mission>/planning.json`), dans le
+gabarit PowerPoint de l'entreprise.
+
+**1. Le Gantt** : couloirs par équipe ou partenaire, barres, jalons, traits verticaux (aujourd'hui,
+signature, ouverture).
+
+![Gantt](img/planning-gantt.png)
+
+**2. Les échéances** : calculées depuis le Gantt, élément par élément. Elles ne peuvent pas diverger.
+
+![Échéances](img/planning-echeances.png)
+
+**3. La situation** : Domaine / Sujet / Statut / Situation / Levier en cours / Échéance. Les lignes
+viennent du suivi des sujets ; le titre de chaque slide dit **le message clé**.
+
+![Situation](img/planning-situation.png)
+
+**4. Les tableaux** : responsabilités et charge, RACI résumée…
+
+![Tableau](img/planning-tableau.png)
+
+**Comment faire**
+
+1. *« Refais le planning technique de la mission atlas au 02/12 à partir des sujets. »*
+2. Claude relit `planning.json`, la version en ligne du deck et les sujets modifiés, met à jour la
+   source, génère le deck et vous montre les aperçus et ce qui a changé (**toute date qui bouge est
+   signalée**).
+3. Vous validez ; il dépose le deck (une seule écriture, ou report en ligne si quelqu'un a modifié le
+   fichier entre-temps).
+
+**Dans le gabarit de l'entreprise** : déposer n'importe quel PPT de l'entreprise dans
+`profiles/<mission>/templates/` et déclarer dans `planning.json` :
+`"template": {"pptx": "templates/gabarit.pptx", "layout": "Titre seul"}`. Le titre de chaque slide va
+dans l'emplacement titre de la mise en page (logo, police, pied de page de l'entreprise), le contenu est
+recalé dans la zone utile.
+
+Skill complet : `/pm-framework:technical-planning` (`framework/skills/technical-planning/SKILL.md`).
+
+### 5.2 La page d'avancement et le plan de sprints
+
+Une page web publiée (GitHub Pages) qui répond à : **la V1 tient-elle la date, à capacité réelle ?**
+Jalons, avancement V1 et par pôle, burn-down, plan de sprints avec charge par pôle, burn-down par sprint.
+
+![Avancement et sprints](img/plan-avancement.png)
+
+**Comment faire**
+
+- *« Régénère la page d'avancement et montre-moi ce qui a bougé depuis la dernière publication. »*
+- *« Le ticket X passe au sprint 5 : déplace-le et réécris le texte des sprints concernés. »*
+- *« Publie la page. »* (après relecture locale)
+
+Règle : la page suit Jira pour les tickets, **pas pour le texte** : tout déplacement de tickets
+s'accompagne de la réécriture du texte des sprints, dans le même passage.
+
+Contrat de données et design réutilisable : `framework/generators/plan/` (`CONTRACT.md`,
+`plan_design.tmpl.html`, `render.py --example`).
+
+### 5.3 Le schéma d'architecture interactif
+
+Un HTML unique, navigable (une vue par zone, loupe pour entrer dans le détail, fil d'Ariane), thémable,
+avec les logos des technos et des partenaires.
+
+![Schéma d'architecture](img/archi-showcase.png)
+
+**Comment faire** : tout passe par la conversation, **il n'y a pas d'éditeur graphique** (aucun
+déplacement de bloc à la souris, aucun bouton d'import).
+
+- *« Sur la vue Données, ajoute un flux du service d'alertes vers Redis, libellé "cache". »*
+- *« Déplace le bloc Keycloak sous le BFF et aligne-le à gauche. »*
+- *« Remplace le logo de Keycloak par celui-ci. »* (joindre l'image)
+- *« Importe ce draw.io comme nouvelle vue "Exploitation". »*
+- *« Vérifie le schéma et publie-le. »*
+
+Après chaque modification, Claude passe le **harness** (7 invariants : SVG équilibré, flèches droites,
+marqueurs résolus, couleurs déclarées, navigation cohérente, logos résolus, viewBox) avant de proposer la
+publication. Démarrage d'un schéma : depuis une description en langage naturel, un draw.io ou un modèle
+existant (agent `archi-audit`). Un exemple plus simple, au rendu de départ :
+
+![Vue d'ensemble de démo](img/archi-vue-ensemble.png)
+
+### 5.4 Les gates et le cockpit
+
+```
+Cockpit de la mission demo
+Phase : build
+Portes (GTF) :
+  franchies  : gate0, gate1
+  ⛔ bloquée  : gate3 (Release freeze) - bloquant G3.2
+  ⚠ à acter  : gate2 (Implementation kickoff) - seuil atteint, acte humain manquant
+Traçabilité : 2/4 item(s) en rupture
+Prochaines actions (calculé depuis l'état) :
+  1. Lever le bloquant de gate3 (puis tracer l'acte de franchissement)
+  2. Tracer l'acte humain de franchissement de gate2 (rôle, date, motif)
+  3. Résorber 2 rupture(s) de traçabilité
+```
+
+- *« Fais-moi le cockpit de la mission. »*
+- *« Prépare la checklist de la gate 2 avec ce qui est couvert, partiel ou à faire. »*
+
+Le générateur **recommande** ; le franchissement d'une porte reste un acte humain tracé.
+
+### 5.5 Le suivi des sujets, les CR et les relances
+
+- **Revue des sujets** : *« Récupère les derniers mails et messages Slack et mets à jour les sujets. »*
+  Claude lit mails, Slack (lecture seule), transcriptions ; propose un bloc par sujet (statut, actions
+  faites barrées, nouvelles actions) ; écrit après votre « ok tout » / « ok sauf 3 », puis relit.
+- **CR partenaire** : *« Fais le CR du weekly avec le partenaire A. »* (texte prêt à envoyer, une
+  ligne de situation et une prochaine étape datée par sujet, dans la langue du partenaire).
+- **Relances** : *« Prépare les relances de la semaine. »* (brouillons de mail non envoyés, messages
+  Slack à copier).
+
+### 5.6 Les risques et la RACI
+
+- *« Passe en revue le registre des risques à partir des sujets qui ont bougé. »* : propositions en
+  formulaire (probabilité, impact avant → après, justification), puis écriture chirurgicale du xlsx
+  après accord (sauvegarde, contrôle de fraîcheur, une seule écriture).
+- *« Sors la RACI du rôle SRE. »*
+
+### 5.7 Les transcriptions et le weekly report
+
+- *« Récupère la transcription du call de ce matin et reporte les décisions dans les sujets. »*
+- *« Synchronise mes conversations Omi. »* (pendentif Omi : classement pro / perso, fusion des
+  morceaux d'un même échange, import dans le Notion **perso**).
+- *« Fais le weekly report de la semaine 47. »* (depuis prompts, mails et artefacts ; couverture de
+  chaque thème contrôlée).
+
+---
+
+## 6. Les routines
+
+Des tâches planifiées qui rejouent un générateur à heure fixe, définies une fois dans le plugin
+(`framework/routines/<nom>/SKILL.md`) et paramétrées par mission (`profiles/<mission>/routines.yml`).
+Aucune n'envoie de notification à l'équipe.
+
+| Routine | Ce qu'elle fait |
+|---|---|
+| `publish-projection` | publie la page d'avancement (et l'avancement par exigence), aligne les objectifs des sprints, alerte si un texte de sprint est périmé |
+| `align-sprint-goals` | aligne les objectifs des sprints Jira sur le fichier éditorial (aucun ticket déplacé) |
+| `audit-scope` | audite périmètre, couverture des exigences et plan de sprints (lecture seule) |
+| `track-progress` | reporte l'avancement dans le planning Notion (un champ) |
+| `review-topics` | revue des sujets depuis transcriptions, mails et Slack |
+| `review-risks` | revue du registre des risques |
+| `draft-followups` | brouillons de relances (mails non envoyés, messages à copier) |
+| `collect-activity` | suivi d'activité du jour vers une base Notion privée |
+| `morning-digest` | récap du matin des sujets ouverts dans un canal privé |
+| `omi-sync` | synchro du pendentif Omi vers Notion perso (toutes les 5 min) |
+
+Activer : *« Enregistre les routines de la mission atlas selon leur planning. »* Première exécution :
+approuver une fois les permissions demandées (« Always allow »), sinon la tâche reste bloquée.
+
+---
+
+## 7. Les agents
+
+Des sous-agents spécialisés, appelés par Claude quand une tâche le justifie.
+
+| Agent | Ce qu'il fait |
+|---|---|
+| `archi-audit` | monte et fait évoluer le schéma d'architecture (modèle, rendu, harness, draw.io) |
+| `jira-sprints-audit` | audit du plan de sprints vs le board (lecture seule) |
+| `jira-changes-audit` | qui a modifié quels tickets, quand, quoi (lecture seule) |
+| `jira-tickets-audit` | régressions de description ; réparation après accord |
+| `front-audit` | écarts POC ↔ tickets ↔ contrat d'API (lecture seule) |
+| `notion-topics-audit` | relit beaucoup de sujets d'un coup, mot pour mot (lecture seule) |
+| `doc-writer` | rédige les chapitres d'un livrable (plan qualité…) chapitre par chapitre |
+| `adservio-writer` | note de fond / dossier à la charte éditoriale Adservio |
+
+---
+
+## 8. Les tons de rédaction
+
+| Ton | Pour quoi |
+|---|---|
+| `voice-deliverable` | livrables, tickets, pages de référence : sobre, factuel |
+| `voice-maximilien` | sujets de suivi, CR, messages signés par la personne (sa voix) |
+| `voice-casual` | échanges informels, messages courts |
+| `voice-adservio` | notes de fond, dossiers, decks à la charte Adservio |
+
+*« Écris ce mail dans le ton voice-casual. »* Le ton par défaut de chaque agent se règle dans
+`profiles/<mission>/pipeline.yml`.
+
+---
+
+## 9. Les garde-fous
+
+- **Rien n'est écrit sans validation** (Jira, Notion, SharePoint / OneDrive, Teams, mails) : Claude
+  montre le contenu exact ou un aperçu avant d'appliquer.
+- **Aucune notification** : pas de mention, pas de partage, pas d'invitation ; mails en brouillon,
+  Slack en lecture seule (jamais de saisie dans une zone de message).
+- **Office** : jamais d'écriture dans un fichier modifié récemment par quelqu'un d'autre (contrôle de la
+  date en ligne) ; une sauvegarde, puis **une seule écriture** par fichier ; écriture chirurgicale des
+  xlsx (sans détruire images et dessins) ; contrôle de la taille en ligne après synchronisation.
+- **Jira** : relecture juste avant toute écriture de description, refus si elle a changé ; une image
+  vérifiée après chaque modification de ticket.
+- **Modification en masse** : toujours un élément d'essai d'abord, montré et validé, puis le reste.
+- **Secrets** : jetons dans des fichiers locaux hors dépôt, jamais affichés ni committés.
+- **Ne rien inventer** : un inconnu s'écrit « à confirmer ».
+
+---
+
+## 10. Modèles de prompts
+
+**Lire et faire le point**
+
+- « Fais-moi un état des lieux du projet : sujets critiques, ce qui a bougé, ce qui est bloqué. »
+- « Récupère les discussions Slack depuis lundi et dis-moi si les tests de charge ont été faits. »
+- « Qui a modifié les tickets du sprint depuis ce matin ? »
+
+**Mettre à jour (proposer d'abord)**
+
+- « Mets à jour les sujets à partir des derniers mails et de Slack. Propose avant d'écrire. »
+- « Le partenaire A a livré son plan de test : mets à jour le sujet et la slide de situation. »
+- « Décale la mise en production au 18/12 dans le planning, et montre-moi ce que ça change. »
+
+**Produire un livrable**
+
+- « Refais le planning technique au 02/12 dans le gabarit de l'entreprise. »
+- « Génère quatre slides pour la gate : exigences, avancement V1, avancement par exigence, checklist. »
+- « Fais le CR du weekly avec le partenaire B, en anglais. »
+- « Rédige une page de documentation sur la livraison des images. »
+
+**Modifier un rendu**
+
+- « Sur la slide de situation, remplace le titre par le message clé. »
+- « Dans le schéma d'archi, ajoute le logo de Redis à côté du cache. »
+- « Rends la slide plus lisible : phrases courtes, pas de chiffres sans explication. »
+
+**Contrôler avant de publier**
+
+- « Vérifie que le schéma passe le harness et publie-le. »
+- « Le Gantt et la slide des échéances sont-ils cohérents ? »
+- « Relis le deck en ligne : quelqu'un l'a-t-il modifié depuis ma dernière version ? »
+
+---
+
+## 11. Dépannage
+
+| Symptôme | Cause probable / solution |
+|---|---|
+| Une routine reste « en attente » | permissions jamais approuvées : l'ouvrir, « Run now », puis « Always allow » |
+| Une commande du plugin est inconnue | redémarrer Claude Code après `claude plugin update` |
+| Le deck planning déborde | une slide de situation a trop de lignes : la scinder (le contrôle le signale) |
+| « Mise en page absente du gabarit » | le message liste les mises en page disponibles : reprendre le nom exact |
+| Une page publiée ne change pas | GitHub Pages met 1 à 2 minutes ; recharger sans cache (Cmd+Maj+R) |
+| Un fichier Office ne se synchronise pas | ne pas le réécrire plusieurs fois ; comparer la taille locale et en ligne, attendre la synchro |
+| Slack non lu | l'extension Chrome doit être connectée dans le profil où Slack est ouvert |
