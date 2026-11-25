@@ -53,8 +53,8 @@ Une écriture Office reste en plus **sous `drive.root`** et sur le bon `web_site
 3. **Aucune notification** à qui que ce soit du fait d'une action : au doute, décrire et attendre.
 4. Les hooks (`garde_office`, `garde_suppression`, `pas_ecraser_jira`, `journal_usage`) sont actifs via
    `.claude/settings.json` et refusent toute écriture Office/Drive/Jira non voulue.
-5. Chemins d'un poste : paramétrés par variables d'env (`SINBAD_ROOT`, `SINBAD_PM_ROOT`,
-   `CLAUDE_PROJECTS`, `PMF_JIRA_ENV`) avec défauts ; un clone frais exporte ces vars, n'édite pas les YAML.
+5. Chemins d'un poste : paramétrés par variables d'env déclarées dans les YAML de la mission
+   (`${VAR:-défaut}`, ex. `CLAUDE_PROJECTS`, `PMF_JIRA_ENV`) ; un clone frais exporte ces vars, n'édite pas les YAML.
 
 ## Commandes
 

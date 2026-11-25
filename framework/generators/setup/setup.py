@@ -11,7 +11,7 @@ formulaire cliquable, et l'ecriture dans le profil n'arrive qu'apres validation 
 
 N'ecrit rien.
 """
-import sys, os, json, glob, importlib.util
+import sys, os, re, json, glob, importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -65,17 +65,25 @@ def detect(mission):
         gaps.append({"id": gid, "label": label, "why": why, "current": current,
                      "suggestion": suggestion, "where": where, "kind": kind})
 
-    # 1. racine des depots locaux (SINBAD_ROOT)
-    sroot = os.environ.get("SINBAD_ROOT")
-    default_sroot = os.path.expanduser("~/Documents/Sinbad")
-    if not sroot and _exists(default_sroot):
-        add("env.SINBAD_ROOT", "Racine des depots locaux (SINBAD_ROOT)",
-            "depots stack-imagery / scan-jira (schema d'archi, images Jira)",
-            "non defini (defaut utilise)", default_sroot, "variable d'env", "env")
-    elif not sroot and not _exists(default_sroot):
-        add("env.SINBAD_ROOT", "Racine des depots locaux (SINBAD_ROOT)",
-            "depots stack-imagery / scan-jira introuvables au defaut",
-            "introuvable", "<chemin vers le dossier Sinbad clone>", "variable d'env", "env")
+    # 1. variables d'env declarees par la mission : ${VAR} / ${VAR:-defaut} dans ses YAML.
+    #    Generique : aucune variable en dur ; on ne signale que celles qui ne menent a rien.
+    used = {}
+    for f in sorted(prof.mission_dir(mission).glob("*.y*ml")):
+        for var, dflt in re.findall(r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-(.*?))?\}", "\n".join(re.split(r"(?:^|\s)#", ln, maxsplit=1)[0] for ln in f.read_text(encoding="utf-8").splitlines())):  # hors commentaires
+            u = used.setdefault(var, {"files": [], "default": None})
+            if f.name not in u["files"]:
+                u["files"].append(f.name)
+            u["default"] = u["default"] or (dflt or None)
+    for var, u in used.items():
+        if os.environ.get(var):
+            continue
+        dflt = os.path.expanduser(u["default"]) if u["default"] else None
+        if dflt and _exists(dflt):
+            continue                                   # defaut valable sur ce poste : rien a faire
+        add(f"env.{var}", f"Variable d'environnement {var}",
+            "utilisee par " + ", ".join(u["files"]),
+            "non definie" + (f" (defaut introuvable : {u['default']})" if dflt else ""),
+            "<chemin sur ce poste>", "variable d'env", "env")
 
     # 2. racine du Drive synchronise (drive.root)
     droot = (profile.get("drive") or {}).get("root")

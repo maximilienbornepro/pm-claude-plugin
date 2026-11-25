@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[2]   # .../pm-framework
 #   ${VAR:-defaut}    -> os.environ['VAR'] sinon 'defaut'   (defaut = chemin actuel)
 #   $VAR              -> os.environ['VAR']
 #   ~ en tete         -> repertoire personnel
-# Permet a un clone frais de pointer les donnees SINBAD via une variable d'env
-# (SINBAD_ROOT, SINBAD_PM_ROOT, CLAUDE_PROJECTS...) sans editer les fichiers de config.
+# Permet a un clone frais de pointer les donnees d'une mission via une variable d'env
+# (ex. PROJET_ROOT, CLAUDE_PROJECTS...) sans editer les fichiers de config.
 _ENVPAT = re.compile(r'\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-(.*?))?\}|\$([A-Za-z_][A-Za-z0-9_]*)')
 
 

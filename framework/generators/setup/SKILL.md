@@ -30,7 +30,7 @@ on propose, l'utilisateur valide dans un formulaire, puis on écrit le profil.
 3. **Validation** : l'utilisateur ajuste et valide. Rien n'est écrit avant son OK.
 4. **Écriture** : appliquer les réponses **chirurgicalement** dans `profiles/<mission>/*.yml`
    (remplacer la valeur `à confirmer` / `[]` par la valeur validée ; ne toucher qu'aux clés concernées).
-   Les variables d'env (`SINBAD_ROOT`, `SINBAD_PM_ROOT`, `CLAUDE_PROJECTS`, `PMF_JIRA_ENV`) ne vont pas
+   Les variables d'env (celles que la mission référence en `${VAR:-défaut}` dans ses YAML, ex. `CLAUDE_PROJECTS`, `PMF_JIRA_ENV`) ne vont pas
    dans le YAML : on donne la ligne `export` à poser (ou à mettre dans un `.env`), on ne les stocke pas en clair.
 5. **Contrôle** : relancer `setup <mission>` → doit afficher « Profil complet ». Puis proposer un `pm demo`.
 

@@ -48,6 +48,14 @@ def _split_commas(s):
     return parts
 
 
+def _key(k):
+    """Clé de map : retire les guillemets ("Project Manager": ...) comme le fait YAML."""
+    k = k.strip()
+    if len(k) >= 2 and k[0] == k[-1] and k[0] in "\"'":
+        return k[1:-1]
+    return k
+
+
 def _scalar(v):
     v = v.strip()
     if v == "" or v in ("null", "~"):
@@ -58,7 +66,7 @@ def _scalar(v):
         d = {}
         for p in _split_commas(v[1:-1]):
             if ":" in p:
-                k, val = p.split(":", 1); d[k.strip()] = _scalar(val)
+                k, val = p.split(":", 1); d[_key(k)] = _scalar(val)
         return d
     if v[0] == "[" and v[-1] == "]":
         inner = v[1:-1].strip()
@@ -113,7 +121,7 @@ def _parse(rows, i):
         line = rows[i][1]
         if ":" not in line:
             i += 1; continue
-        k, val = line.split(":", 1); k, val = k.strip(), val.strip()
+        k, val = line.split(":", 1); k, val = _key(k), val.strip()
         if val != "":
             d[k] = _scalar(val); i += 1
         else:

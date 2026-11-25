@@ -375,6 +375,10 @@ Toutes les captures viennent du projet fictif livré avec le plugin. Dans le gui
 
 ![Revue des risques proposée dans la conversation (exemple fictif).](img/revue-risques.png)
 
+**RACI créée par office depuis le gabarit Excel (contenu du classeur).**
+
+![RACI Excel](img/xlsx-raci.png)
+
 **Matrice RACI et extrait par rôle.**
 
 ![Matrice RACI et extrait par rôle.](img/raci.png)
@@ -442,6 +446,10 @@ Toutes les captures viennent du projet fictif livré avec le plugin. Dans le gui
 **tones : ton de chaque agent.**
 
 ![tones : ton de chaque agent.](img/cmd-tones.png)
+
+**setup : champs manquants du profil, avec une suggestion pour chacun.**
+
+![setup](img/cmd-setup.png)
 
 **pm list : tous les générateurs.**
 
