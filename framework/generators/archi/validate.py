@@ -11,7 +11,7 @@ bug réel rencontré pendant la construction : si on les respecte, le rendu ne c
 Sortie : une ligne par invariant (OK / ECHEC) + le détail des violations.
 Code retour 0 si tout passe, 1 sinon. Aucune dépendance externe (stdlib only).
 """
-import re, sys
+import json, re, sys
 
 # ---------------------------------------------------------------- utilitaires
 def svgs(h):
@@ -138,7 +138,10 @@ def check_logos(h):
                 depth -= 1
                 if depth == 0: break
             i += 1
-        keys = set(re.findall(r'["\']([\w.\- ]+)["\']\s*:', h[start:i+1]))
+        try:
+            keys = set(json.loads(h[start:i+1]))          # table JSON : tous les noms, parentheses comprises
+        except Exception:
+            keys = set(re.findall(r'["\']([^"\']+)["\']\s*:', h[start:i+1]))
     elif not used:
         return v  # ni logos ni table : rien à vérifier
     miss = sorted(used - keys)

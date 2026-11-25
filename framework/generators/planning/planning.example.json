@@ -1,280 +1,320 @@
 {
- "title": "Projet Atlas – Planning technique",
- "subtitle": "Planning technique au 14/01",
- "client": "Client Démo",
- "project": "Atlas",
- "start": "2027-01-04",
- "weeks": 12,
- "echeances_title": "Pour ouvrir le 19/03, la recette doit démarrer le 01/03",
- "echeances_subtitle": "Atlas – Échéances du planning",
- "vlines": [
-  {
-   "date": "2027-01-14",
-   "label": "Today",
-   "kind": "black",
-   "in_table": false
-  },
-  {
-   "date": "2027-03-19",
-   "label": "Ouverture",
-   "kind": "orange",
-   "in_table": false
-  }
- ],
- "lanes": [
-  {
-   "name": "Développement",
-   "rows": [
-    [
-     {
-      "type": "bar",
-      "start": "2027-01-04",
-      "end": "2027-01-15",
-      "label": "Sprint 1",
+  "title": "Projet Atlas – Planning technique",
+  "subtitle": "Planning technique au 14/01",
+  "client": "Client Démo",
+  "project": "Atlas",
+  "start": "2027-01-04",
+  "weeks": 12,
+  "echeances_title": "Pour ouvrir le 19/03, la recette doit démarrer le 01/03",
+  "echeances_subtitle": "Atlas – Échéances du planning",
+  "vlines": [
+    {
+      "date": "2027-01-14",
+      "label": "Today",
+      "kind": "black",
       "in_table": false
-     },
-     {
-      "type": "bar",
-      "start": "2027-01-18",
-      "end": "2027-01-29",
-      "label": "Sprint 2",
-      "in_table": false
-     },
-     {
-      "type": "bar",
-      "start": "2027-02-01",
-      "end": "2027-02-12",
-      "label": "Sprint 3",
-      "in_table": false
-     },
-     {
-      "type": "bar",
-      "start": "2027-02-15",
-      "end": "2027-02-26",
-      "label": "Sprint 4",
-      "in_table": false,
-      "color": "D9E9FF"
-     }
-    ],
-    [
-     {
-      "type": "bar",
-      "start": "2027-01-11",
-      "end": "2027-02-05",
-      "label": "API publique v1",
-      "label_out": true
-     }
-    ],
-    [
-     {
-      "type": "bar",
-      "start": "2027-02-08",
-      "end": "2027-02-26",
-      "label": "Portail utilisateur",
-      "side": "l"
-     },
-     {
-      "type": "milestone",
-      "date": "2027-02-26",
-      "label": "Gel du périmètre"
-     }
-    ]
-   ]
-  },
-  {
-   "name": "Plateforme",
-   "rows": [
-    [
-     {
-      "type": "bar",
-      "start": "2027-01-04",
-      "end": "2027-01-22",
-      "label": "Environnement de recette",
-      "label_out": true
-     }
-    ],
-    [
-     {
-      "type": "bar",
-      "start": "2027-01-25",
-      "end": "2027-02-19",
-      "label": "Production + supervision",
-      "label_out": true
-     }
-    ],
-    [
-     {
-      "type": "run",
-      "start": "2027-03-19",
-      "label": "Run"
-     }
-    ]
-   ]
-  },
-  {
-   "name": "Partenaire A",
-   "rows": [
-    [
-     {
-      "type": "milestone",
-      "date": "2027-01-20",
-      "label": "Accès API de test",
-      "side": "l"
-     },
-     {
-      "type": "bar",
-      "start": "2027-01-21",
-      "end": "2027-02-12",
-      "label": "Intégration des données",
-      "label_out": true
-     }
-    ]
-   ]
-  },
-  {
-   "name": "Sécurité",
-   "rows": [
-    [
-     {
-      "type": "bar",
-      "start": "2027-02-15",
-      "end": "2027-02-26",
-      "label": "Test d'intrusion"
-     },
-     {
-      "type": "bar",
-      "start": "2027-03-01",
-      "end": "2027-03-05",
-      "label": "Corrections",
-      "label_out": true
-     }
-    ]
-   ]
-  },
-  {
-   "name": "Recette",
-   "rows": [
-    [
-     {
-      "type": "bar",
-      "start": "2027-03-01",
-      "end": "2027-03-12",
-      "label": "Recette client",
-      "color": "E3B4FE",
-      "label_out": true
-     }
-    ],
-    [
-     {
-      "type": "milestone",
+    },
+    {
       "date": "2027-03-19",
-      "label": "Mise en service",
-      "kind": "orange"
-     }
+      "label": "Ouverture",
+      "kind": "orange",
+      "in_table": false
+    }
+  ],
+  "lanes": [
+    {
+      "name": "Développement",
+      "rows": [
+        [
+          {
+            "type": "bar",
+            "start": "2027-01-04",
+            "end": "2027-01-15",
+            "label": "Sprint 1",
+            "in_table": false
+          },
+          {
+            "type": "bar",
+            "start": "2027-01-18",
+            "end": "2027-01-29",
+            "label": "Sprint 2",
+            "in_table": false
+          },
+          {
+            "type": "bar",
+            "start": "2027-02-01",
+            "end": "2027-02-12",
+            "label": "Sprint 3",
+            "in_table": false
+          },
+          {
+            "type": "bar",
+            "start": "2027-02-15",
+            "end": "2027-02-26",
+            "label": "Sprint 4",
+            "in_table": false,
+            "color": "D9E9FF"
+          }
+        ],
+        [
+          {
+            "type": "bar",
+            "start": "2027-01-11",
+            "end": "2027-02-05",
+            "label": "API publique v1",
+            "label_out": true
+          }
+        ],
+        [
+          {
+            "type": "bar",
+            "start": "2027-02-08",
+            "end": "2027-02-26",
+            "label": "Portail utilisateur",
+            "side": "l"
+          },
+          {
+            "type": "milestone",
+            "date": "2027-02-26",
+            "label": "Gel du périmètre"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Plateforme",
+      "rows": [
+        [
+          {
+            "type": "bar",
+            "start": "2027-01-04",
+            "end": "2027-01-22",
+            "label": "Environnement de recette",
+            "label_out": true
+          }
+        ],
+        [
+          {
+            "type": "bar",
+            "start": "2027-01-25",
+            "end": "2027-02-19",
+            "label": "Production + supervision",
+            "label_out": true
+          }
+        ],
+        [
+          {
+            "type": "run",
+            "start": "2027-03-19",
+            "label": "Run"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Partenaire A",
+      "rows": [
+        [
+          {
+            "type": "milestone",
+            "date": "2027-01-20",
+            "label": "Accès API de test",
+            "side": "l"
+          },
+          {
+            "type": "bar",
+            "start": "2027-01-21",
+            "end": "2027-02-12",
+            "label": "Intégration des données",
+            "label_out": true
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Sécurité",
+      "rows": [
+        [
+          {
+            "type": "bar",
+            "start": "2027-02-15",
+            "end": "2027-02-26",
+            "label": "Test d'intrusion"
+          },
+          {
+            "type": "bar",
+            "start": "2027-03-01",
+            "end": "2027-03-05",
+            "label": "Corrections",
+            "label_out": true
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Recette",
+      "rows": [
+        [
+          {
+            "type": "bar",
+            "start": "2027-03-01",
+            "end": "2027-03-12",
+            "label": "Recette client",
+            "color": "E3B4FE",
+            "label_out": true
+          }
+        ],
+        [
+          {
+            "type": "milestone",
+            "date": "2027-03-19",
+            "label": "Mise en service",
+            "kind": "orange"
+          }
+        ]
+      ]
+    }
+  ],
+  "status": {
+    "subtitle": "Atlas – Situation technique au 14/01",
+    "slides": [
+      {
+        "title": "L'API avance ; la production attend la validation sécurité",
+        "sections": [
+          {
+            "domain": "Plateforme",
+            "rows": [
+              {
+                "subject": "Environnement de développement",
+                "status": "OK",
+                "situation": "Ouvert et utilisé par l'équipe depuis le 07/01.",
+                "lever": "",
+                "due": "Fait"
+              },
+              {
+                "subject": "Environnement de recette",
+                "status": "En cours",
+                "situation": "Le cluster est installé ; l'exposition attend l'avis sécurité.",
+                "lever": "Obtenir l'avis sécurité cette semaine.",
+                "due": "22/01"
+              },
+              {
+                "subject": "Production",
+                "status": "Prévu",
+                "situation": "Démarrage prévu après la recette.",
+                "lever": "Réserver les créneaux d'installation.",
+                "due": "19/02"
+              }
+            ]
+          },
+          {
+            "domain": "Partenaire A",
+            "rows": [
+              {
+                "subject": "Accès à l'API de test",
+                "status": "En discussion",
+                "situation": "Le partenaire n'a pas encore fourni ses identifiants.",
+                "lever": "Relancer au point hebdo.",
+                "due": "20/01"
+              },
+              {
+                "subject": "Format des données livrées",
+                "status": "En cours",
+                "situation": "Les fichiers d'exemple sont reçus ; deux champs restent à préciser.",
+                "lever": "Le partenaire précise les deux champs par mail.",
+                "due": "24/01"
+              }
+            ]
+          },
+          {
+            "domain": "Sécurité",
+            "rows": [
+              {
+                "subject": "Test d'intrusion",
+                "status": "Prévu",
+                "situation": "Le prestataire est choisi ; le test démarre après le gel du périmètre.",
+                "lever": "Signer le bon de commande avant le 31/01.",
+                "due": "15/02"
+              },
+              {
+                "subject": "Revue des accès",
+                "status": "En discussion",
+                "situation": "Le modèle de rôles est proposé ; le client n'a pas encore tranché sur les droits d'export.",
+                "lever": "Arbitrage au comité du 28/01.",
+                "due": "28/01"
+              }
+            ]
+          },
+          {
+            "domain": "Recette",
+            "rows": [
+              {
+                "subject": "Plan de recette",
+                "status": "À risque",
+                "situation": "Le plan n'est pas validé par le client.",
+                "lever": "Atelier de validation la semaine prochaine.",
+                "due": "01/03"
+              },
+              {
+                "subject": "Jeu de données de recette",
+                "status": "En cours",
+                "situation": "80 % des cas de test ont leurs données ; le reste dépend du partenaire A.",
+                "lever": "Compléter dès réception des données du partenaire.",
+                "due": "10/02"
+              }
+            ]
+          }
+        ]
+      }
     ]
-   ]
-  }
- ],
- "status": {
-  "subtitle": "Atlas – Situation technique au 14/01",
-  "slides": [
-   {
-    "title": "L'API avance ; la production attend la validation sécurité",
-    "sections": [
-     {
-      "domain": "Plateforme",
+  },
+  "tables": [
+    {
+      "title": "Le chef de projet technique répartit sa semaine sur cinq responsabilités",
+      "subtitle": "Atlas – Responsabilités et charge",
+      "header": [
+        "Responsabilité",
+        "Ce que ça recouvre",
+        "Charge"
+      ],
+      "widths": [
+        26,
+        43,
+        14
+      ],
       "rows": [
-       {
-        "subject": "Environnement de recette",
-        "status": "En cours",
-        "situation": "Le cluster est installé ; l'exposition attend l'avis sécurité.",
-        "lever": "Obtenir l'avis sécurité cette semaine.",
-        "due": "22/01"
-       },
-       {
-        "subject": "Production",
-        "status": "Prévu",
-        "situation": "Démarrage prévu après la recette.",
-        "lever": "Réserver les créneaux d'installation.",
-        "due": "19/02"
-       }
-      ]
-     },
-     {
-      "domain": "Partenaire A",
-      "rows": [
-       {
-        "subject": "Accès à l'API de test",
-        "status": "En discussion",
-        "situation": "Le partenaire n'a pas encore fourni ses identifiants.",
-        "lever": "Relancer au point hebdo.",
-        "due": "20/01"
-       }
-      ]
-     },
-     {
-      "domain": "Recette",
-      "rows": [
-       {
-        "subject": "Plan de recette",
-        "status": "À risque",
-        "situation": "Le plan n'est pas validé par le client.",
-        "lever": "Atelier de validation la semaine prochaine.",
-        "due": "01/03"
-       }
-      ]
-     }
-    ]
-   }
+        [
+          "Coordination de l'équipe",
+          "Daily, affinage, planification de sprint",
+          "~20 %"
+        ],
+        [
+          "Pilotage des partenaires",
+          "Points hebdo, intégration, comptes rendus",
+          "~25 %"
+        ],
+        [
+          "Plateforme",
+          "Environnements, sauvegarde, supervision",
+          "~20 %"
+        ],
+        [
+          "Recette",
+          "Plan de test, suivi d'exécution",
+          "~20 %"
+        ],
+        [
+          "Suivi projet",
+          "CR, sujets, risques, planning",
+          "~15 %"
+        ],
+        [
+          "Total",
+          "",
+          "100 %"
+        ]
+      ],
+      "bold_last": true
+    }
   ]
- },
- "tables": [
-  {
-   "title": "Le chef de projet technique répartit sa semaine sur cinq responsabilités",
-   "subtitle": "Atlas – Responsabilités et charge",
-   "header": [
-    "Responsabilité",
-    "Ce que ça recouvre",
-    "Charge"
-   ],
-   "widths": [
-    26,
-    43,
-    14
-   ],
-   "rows": [
-    [
-     "Coordination de l'équipe",
-     "Daily, affinage, planification de sprint",
-     "~20 %"
-    ],
-    [
-     "Pilotage des partenaires",
-     "Points hebdo, intégration, comptes rendus",
-     "~25 %"
-    ],
-    [
-     "Plateforme",
-     "Environnements, sauvegarde, supervision",
-     "~20 %"
-    ],
-    [
-     "Recette",
-     "Plan de test, suivi d'exécution",
-     "~20 %"
-    ],
-    [
-     "Suivi projet",
-     "CR, sujets, risques, planning",
-     "~15 %"
-    ],
-    [
-     "Total",
-     "",
-     "100 %"
-    ]
-   ],
-   "bold_last": true
-  }
- ]
 }

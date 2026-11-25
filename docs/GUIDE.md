@@ -315,6 +315,144 @@ Le générateur **recommande** ; le franchissement d'une porte reste un acte hum
 
 ---
 
+## Galerie : ce que génère chaque outil
+
+Toutes les captures viennent du projet fictif livré avec le plugin. Dans le guide web ([index.html](index.html)), chaque ligne du catalogue a un bouton « Voir le rendu ».
+
+**Planning : le Gantt (couloirs, barres, jalons, traits aujourd'hui et ouverture).**
+
+![Planning : le Gantt (couloirs, barres, jalons, traits aujourd'hui et ouverture).](img/planning-gantt.png)
+
+**Planning : les échéances, calculées depuis le Gantt.**
+
+![Planning : les échéances, calculées depuis le Gantt.](img/planning-echeances.png)
+
+**Situation technique : état des lieux de chaque sujet (statut, situation, levier, échéance).**
+
+![Situation technique : état des lieux de chaque sujet (statut, situation, levier, échéance).](img/planning-situation.png)
+
+**Planning : tableau des responsabilités.**
+
+![Planning : tableau des responsabilités.](img/planning-tableau.png)
+
+**Page web Avancement et sprints : jalons, avancement V1 par pôle, burn-down, plan de sprints.**
+
+![Page web Avancement et sprints : jalons, avancement V1 par pôle, burn-down, plan de sprints.](img/plan-avancement.png)
+
+**Deck GATE : avancement V1, burn-down et projection de fin.**
+
+![Deck GATE : avancement V1, burn-down et projection de fin.](img/gate-slide1.png)
+
+**Deck GATE : couverture des exigences.**
+
+![Deck GATE : couverture des exigences.](img/gate-slide2.png)
+
+**Deck GATE : checklist de la porte.**
+
+![Deck GATE : checklist de la porte.](img/gate-slide3.png)
+
+**Deck GATE : risques et leviers.**
+
+![Deck GATE : risques et leviers.](img/gate-slide4.png)
+
+**deck-gate : le contenu des slides généré depuis le profil (avant assemblage).**
+
+![deck-gate : le contenu des slides généré depuis le profil (avant assemblage).](img/deck-gate.png)
+
+**Schéma d'architecture interactif : vue d'ensemble avec logos.**
+
+![Schéma d'architecture interactif : vue d'ensemble avec logos.](img/archi-showcase.png)
+
+**Schéma d'architecture : couches techniques repliées en blocs cliquables.**
+
+![Schéma d'architecture : couches techniques repliées en blocs cliquables.](img/archi-vue-ensemble.png)
+
+**Registre des risques créé par office (contenu du classeur).**
+
+![Registre des risques créé par office (contenu du classeur).](img/xlsx-risks.png)
+
+**Revue des risques proposée dans la conversation (exemple fictif).**
+
+![Revue des risques proposée dans la conversation (exemple fictif).](img/revue-risques.png)
+
+**Matrice RACI et extrait par rôle.**
+
+![Matrice RACI et extrait par rôle.](img/raci.png)
+
+**CR de call partenaire en français (rendu texte, jamais envoyé).**
+
+![CR de call partenaire en français (rendu texte, jamais envoyé).](img/cr-partenaire.png)
+
+**CR de call partenaire en anglais.**
+
+![CR de call partenaire en anglais.](img/cr-partenaire-en.png)
+
+**Agenda de réunion (exemple fictif).**
+
+![Agenda de réunion (exemple fictif).](img/agenda.png)
+
+**Weekly report rédigé depuis la matière de la semaine (exemple fictif).**
+
+![Weekly report rédigé depuis la matière de la semaine (exemple fictif).](img/weekly-report.png)
+
+**Revue des sujets proposée dans la conversation (exemple fictif).**
+
+![Revue des sujets proposée dans la conversation (exemple fictif).](img/revue-sujets.png)
+
+**notion-topics-audit : défauts de format d'un sujet avant écriture.**
+
+![notion-topics-audit : défauts de format d'un sujet avant écriture.](img/cmd-topics.png)
+
+**cockpit : état de la mission et prochaines actions.**
+
+![cockpit : état de la mission et prochaines actions.](img/cmd-cockpit.png)
+
+**gate : score des 7 portes et alertes.**
+
+![gate : score des 7 portes et alertes.](img/cmd-gate.png)
+
+**trace-audit : exigences en rupture et qui doit agir.**
+
+![trace-audit : exigences en rupture et qui doit agir.](img/cmd-trace.png)
+
+**method : barèmes, seuils, trames, traçabilité.**
+
+![method : barèmes, seuils, trames, traçabilité.](img/cmd-method.png)
+
+**preflight : aucune écriture tant que les connecteurs ne sont pas vérifiés.**
+
+![preflight : aucune écriture tant que les connecteurs ne sont pas vérifiés.](img/cmd-preflight.png)
+
+**templates : registre objet × solution.**
+
+![templates : registre objet × solution.](img/cmd-templates.png)
+
+**init : amorcer une mission depuis les gabarits.**
+
+![init : amorcer une mission depuis les gabarits.](img/cmd-init.png)
+
+**notion-scaffold : arborescence Notion attendue.**
+
+![notion-scaffold : arborescence Notion attendue.](img/cmd-notion-scaffold.png)
+
+**drive-scaffold : dossiers et fichiers attendus.**
+
+![drive-scaffold : dossiers et fichiers attendus.](img/cmd-drive-scaffold.png)
+
+**tones : ton de chaque agent.**
+
+![tones : ton de chaque agent.](img/cmd-tones.png)
+
+**pm list : tous les générateurs.**
+
+![pm list : tous les générateurs.](img/cmd-list.png)
+
+**pm demo : le framework rejoué sur un projet fictif.**
+
+![pm demo : le framework rejoué sur un projet fictif.](img/cmd-demo.png)
+
+---
+
 ## 6. Les routines
 
 Des tâches planifiées qui rejouent un générateur à heure fixe, définies une fois dans le plugin
