@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pm-framework - Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Mise en page : sommaire fixe à gauche + colonne de lecture ; le catalogue est un outil (filtre). */
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --ink:#15202b; --muted:#5b6673; --line:#dfe3e8;
+  --accent:#1f6f8b; --accent-soft:#e3f0f4; --code:#eef1f4;
+  --ok:#2e7d46; --warn:#b7791f; --todo:#6b7280;
+  --display:"Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f151b; --surface:#161e26; --ink:#e6ebf0; --muted:#9aa6b2; --line:#263240;
+  --accent:#5fb4cf; --accent-soft:#16313b; --code:#1c2630; --ok:#5cc07c; --warn:#e0a84a; --todo:#9aa6b2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --surface:#161e26; --ink:#e6ebf0; --muted:#9aa6b2; --line:#263240;
+  --accent:#5fb4cf; --accent-soft:#16313b; --code:#1c2630; --ok:#5cc07c; --warn:#e0a84a; --todo:#9aa6b2; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--body)}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1240px;margin:0 auto;gap:40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding-block:32px;border-right:1px solid var(--line);padding-right:20px}
+.brand{font:700 20px/1.2 var(--display);letter-spacing:-.01em;margin:0 0 4px}
+.brand small{display:block;font:500 12px var(--mono);color:var(--muted);letter-spacing:.02em;margin-top:6px}
+nav.toc ol{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:2px}
+nav.toc a{display:block;padding:6px 10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:14px}
+nav.toc a:hover{background:var(--accent-soft);color:var(--ink)}
+nav.toc a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.theme{margin-top:20px;font:500 12px var(--body);background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 10px;cursor:pointer}
+main{padding-block:40px 80px;min-width:0}
+header.hero{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:12px}
+.kicker{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 clamp(30px,4vw,42px)/1.1 var(--display);letter-spacing:-.02em;margin:10px 0 14px;text-wrap:balance}
+.lead{font-size:17px;color:var(--muted);max-width:68ch;margin:0}
+.cycle{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;align-items:center}
+.cycle span{font:500 13px var(--body);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.cycle i{color:var(--muted);font-style:normal}
+section{padding-top:36px;scroll-margin-top:12px}
+h2{font:700 26px/1.2 var(--display);letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+h3{font:600 18px/1.3 var(--display);margin:28px 0 10px}
+p,li{max-width:72ch}
+.num{font:500 13px var(--mono);color:var(--muted);margin-right:8px}
+code,kbd{font:13px var(--mono);background:var(--code);padding:1px 6px;border-radius:4px}
+pre{font:13px/1.55 var(--mono);background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;margin:12px 0}
+pre code{background:none;padding:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.card h4{font:600 15px var(--display);margin:0 0 6px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.tablebox{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td:first-child{white-space:nowrap}
+.tag{display:inline-block;font:500 11px var(--mono);border-radius:4px;padding:1px 6px;margin-left:6px;border:1px solid var(--line);color:var(--muted)}
+.tag.w{color:var(--warn);border-color:currentColor}
+.filter{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.filter input{flex:1 1 260px;font:14px var(--body);padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{font:500 12px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:5px 10px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.count{font:12px var(--mono);color:var(--muted)}
+figure{margin:16px 0 22px}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:10px}
+.steps li{counter-increment:s;position:relative;padding-left:38px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:600 13px/26px var(--mono);text-align:center}
+.prompts{display:grid;gap:8px;margin:10px 0 18px}
+.prompt{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px}
+.prompt q{flex:1;quotes:"« " " »";font-size:14px}
+.prompt button{font:500 12px var(--body);border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:6px;padding:4px 8px;cursor:pointer;white-space:nowrap}
+.guard{display:grid;gap:10px;margin-top:12px}
+.guard div{display:flex;gap:12px;align-items:flex-start}
+.guard b{flex:0 0 auto;font:600 12px var(--mono);color:var(--ok);background:var(--accent-soft);border-radius:4px;padding:2px 6px;margin-top:2px}
+.note{background:var(--accent-soft);border-radius:8px;padding:12px 14px;font-size:14px;margin:12px 0}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media (max-width: 900px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0}
+  nav.toc{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding-right:0;padding-block:20px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  main{padding-block:24px 60px}
+  td:first-child{white-space:normal}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">pm-framework<small>Guide d'utilisation du plugin</small></p>
+  <ol id="toc">
+    <li><a href="#essentiel">L'essentiel</a></li>
+    <li><a href="#installer">Installer et démarrer</a></li>
+    <li><a href="#parler">Parler à Claude</a></li>
+    <li><a href="#catalogue">Catalogue</a></li>
+    <li><a href="#planning">Planning technique</a></li>
+    <li><a href="#avancement">Avancement et sprints</a></li>
+    <li><a href="#archi">Schéma d'architecture</a></li>
+    <li><a href="#gates">Gates et cockpit</a></li>
+    <li><a href="#suivi">Sujets, CR, relances</a></li>
+    <li><a href="#autres">Risques, RACI, transcriptions</a></li>
+    <li><a href="#routines">Routines</a></li>
+    <li><a href="#agents">Agents et tons</a></li>
+    <li><a href="#gardefous">Garde-fous</a></li>
+    <li><a href="#prompts">Modèles de prompts</a></li>
+    <li><a href="#depannage">Dépannage</a></li>
+  </ol>
+  <button class="theme" id="themeBtn" type="button">Thème clair / sombre</button>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="kicker">Plugin Claude Code · gestion de projet technique</div>
+  <h1>Piloter un projet en conversation avec Claude</h1>
+  <p class="lead">pm-framework produit les livrables d'un TPM ou d'un PMO (planning, avancement, risques, RACI, schéma
+  d'architecture, comptes rendus) à partir des sources du projet : Jira, Notion, SharePoint, Slack, transcriptions.
+  On demande, Claude prépare et montre, et il n'écrit qu'après accord.</p>
+  <div class="cycle" aria-label="Le cycle de travail">
+    <span>Vous demandez</span><i>→</i><span>Claude lit les sources</span><i>→</i><span>il propose un aperçu</span><i>→</i><span>vous validez</span><i>→</i><span>il écrit puis relit</span>
+  </div>
+</header>
+
+<section id="essentiel">
+  <h2>L'essentiel</h2>
+  <div class="grid2">
+    <div class="card"><h4>Une mission = un profil</h4><p>Tout ce qui est propre à un projet (Jira, Notion, SharePoint, dates, équipe, partenaires) vit dans <code>profiles/&lt;mission&gt;/</code>. Le plugin ne change pas d'une mission à l'autre.</p></div>
+    <div class="card"><h4>Des générateurs</h4><p>Un générateur par livrable (<code>planning</code>, <code>plan</code>, <code>risks</code>, <code>raci</code>, <code>archi</code>…). On les lance en le demandant à Claude, ou par <code>pm run</code>.</p></div>
+    <div class="card"><h4>Lecture seule par défaut</h4><p>Toute écriture dans un système partagé passe par un flag explicite et votre accord dans la conversation.</p></div>
+    <div class="card"><h4>Aucune notification</h4><p>Pas de mention, pas de partage, pas de mail envoyé. Les mails sont des brouillons, les messages Slack du texte à copier.</p></div>
+  </div>
+</section>
+
+<section id="installer">
+  <h2>Installer et démarrer</h2>
+  <pre><code>claude plugin marketplace add maximilienbornepro/pm-claude-plugin
+claude plugin install pm-framework@pm-framework-market
+claude plugin update pm-framework@pm-framework-market      # à chaque nouvelle version</code></pre>
+  <p>Redémarrer Claude Code (ou l'app) après une mise à jour.</p>
+  <div class="tablebox"><table>
+    <thead><tr><th>Commande</th><th>Ce qu'elle fait</th></tr></thead>
+    <tbody>
+      <tr><td><code>/pm-framework:list</code></td><td>Liste tous les générateurs et les missions disponibles.</td></tr>
+      <tr><td><code>/pm-framework:demo</code></td><td>Rejoue tout le framework sur un projet fictif, sans aucune écriture.</td></tr>
+      <tr><td><code>/pm-framework:run</code></td><td>Lance un générateur sur une mission (lecture seule par défaut).</td></tr>
+      <tr><td><code>/pm-framework:setup</code></td><td>Onboarding d'un profil : détecte ce qui manque, propose, écrit après accord.</td></tr>
+      <tr><td><code>/pm-framework:technical-planning</code></td><td>Produit ou met à jour le PPT de planning technique.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Démarrer une nouvelle mission</h3>
+  <ol class="steps">
+    <li>Ouvrir Claude Code dans le dossier du projet.</li>
+    <li>Demander : « Amorce une nouvelle mission "atlas" avec le pm-framework. » Le profil est créé depuis les gabarits, en dry-run puis après accord.</li>
+    <li>Demander : « Lance le setup de la mission atlas. » Claude liste ce qui manque et propose des valeurs.</li>
+    <li>Avant la première écriture : « Vérifie qu'on est connecté aux bons systèmes. »</li>
+  </ol>
+</section>
+
+<section id="parler">
+  <h2>Parler à Claude</h2>
+  <p>Pas besoin de connaître les commandes : on décrit le résultat voulu, Claude choisit le générateur, le lance,
+  montre ce qu'il propose, puis applique après accord.</p>
+  <div class="grid2">
+    <div class="card"><h4>Nommer le livrable et la mission</h4><p>« le planning technique de la mission atlas »</p></div>
+    <div class="card"><h4>Dire ce qui change</h4><p>« le pentest est décalé au 08/12 », pas comment le faire.</p></div>
+    <div class="card"><h4>Donner la source</h4><p>Un mail, un call, une transcription, un fichier.</p></div>
+    <div class="card"><h4>Dire jusqu'où aller</h4><p>« propose d'abord », « applique », « ne publie pas ».</p></div>
+  </div>
+</section>
+
+<section id="catalogue">
+  <h2>Catalogue</h2>
+  <p>Tout ce que sait faire le plugin. <span class="tag w">écriture gardée</span> = peut écrire, uniquement avec un flag explicite et après accord ; le reste ne fait que lire et rendre.</p>
+  <div class="filter">
+    <input id="q" type="search" placeholder="Filtrer : planning, Jira, risques, Slack…" aria-label="Filtrer le catalogue">
+    <div class="chips" id="chips" role="group" aria-label="Domaine">
+      <button type="button" data-d="" aria-pressed="true">Tout</button>
+      <button type="button" data-d="pilotage" aria-pressed="false">Pilotage</button>
+      <button type="button" data-d="archi" aria-pressed="false">Architecture</button>
+      <button type="button" data-d="jira" aria-pressed="false">Jira</button>
+      <button type="button" data-d="suivi" aria-pressed="false">Notion et suivi</button>
+      <button type="button" data-d="office" aria-pressed="false">Office</button>
+      <button type="button" data-d="outils" aria-pressed="false">Mise en place</button>
+    </div>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tablebox"><table id="cat">
+    <thead><tr><th>Outil</th><th>Ce qu'il fait</th><th>Exemple de demande</th></tr></thead>
+    <tbody>
+      <tr data-d="pilotage"><td><code>planning</code></td><td>Planning technique : Gantt, échéances calculées depuis le Gantt, situation (statut, levier), tableaux, dans le gabarit PowerPoint de l'entreprise ; Gantt Excel en alternative.</td><td>« Refais le planning technique au 02/12. »</td></tr>
+      <tr data-d="pilotage"><td><code>projection</code></td><td>Charge restante face à la capacité de l'équipe, et date de fin projetée.</td><td>« À ce rythme, quand finit la V1 ? »</td></tr>
+      <tr data-d="pilotage"><td><code>plan</code></td><td>Page web « Avancement et sprints » depuis Jira : avancement V1, pôles, burn-down, plan de sprints.</td><td>« Régénère la page d'avancement. »</td></tr>
+      <tr data-d="pilotage"><td><code>gate</code></td><td>Score des 7 portes GTF et recommandation ; le franchissement reste un acte humain.</td><td>« Où en est-on sur la gate 2 ? »</td></tr>
+      <tr data-d="pilotage"><td><code>cockpit</code></td><td>Où en est la mission et que faire ensuite (suite priorisée).</td><td>« Fais-moi le cockpit de la mission. »</td></tr>
+      <tr data-d="pilotage"><td><code>method</code></td><td>Montre la méthode de la mission : barèmes, seuils, trames, traçabilité.</td><td>« Rappelle-moi les barèmes des risques. »</td></tr>
+      <tr data-d="pilotage"><td><code>trace-audit</code></td><td>Ruptures de la chaîne besoin, ticket, POC, test, et où agir.</td><td>« Quelles exigences n'ont pas de ticket ? »</td></tr>
+      <tr data-d="pilotage"><td><code>weekly-report</code></td><td>CR hebdo du projet depuis les prompts, mails et artefacts de la semaine.</td><td>« Fais le weekly report de la semaine 47. »</td></tr>
+      <tr data-d="archi"><td><code>archi</code> + agent <code>archi-audit</code></td><td>Schéma d'architecture interactif (vues cliquables, thèmes, logos), contrôlé par un harness, export et import draw.io. Pas d'éditeur graphique : tout en conversation.</td><td>« Ajoute un flux du BFF vers Redis sur la vue Données. »</td></tr>
+      <tr data-d="jira"><td><code>jira-sprints-audit</code></td><td>Audit du plan de sprints face au board : charge, estimations, blocages inversés.</td><td>« Le plan de sprints est-il cohérent avec Jira ? »</td></tr>
+      <tr data-d="jira"><td><code>jira-changes-audit</code></td><td>Qui a modifié quels tickets, quand, quoi ; repère les écrasements.</td><td>« Qu'est-ce qui a bougé depuis hier soir ? »</td></tr>
+      <tr data-d="jira"><td>agent <code>jira-tickets-audit</code></td><td>Détecte et répare les régressions de description (réparation après accord).</td><td>« Le ticket X n'est plus à jour, vérifie. »</td></tr>
+      <tr data-d="jira"><td><code>jira-images</code><span class="tag w">écriture gardée</span></td><td>Images des tickets via l'API : contrôle, puis pose avec <code>--apply</code>.</td><td>« Remets les maquettes dans les tickets du sprint. »</td></tr>
+      <tr data-d="jira"><td>agent <code>front-audit</code></td><td>Écarts entre POC, tickets et contrat d'API.</td><td>« Qu'est-ce qui manque côté front ? »</td></tr>
+      <tr data-d="suivi"><td><code>notion-topics-audit</code></td><td>Contrôle le format des sujets de suivi (Contexte, Action attendue).</td><td>« Relis les sujets modifiés cette semaine. »</td></tr>
+      <tr data-d="suivi"><td><code>notion-scaffold</code></td><td>Arborescence Notion miroir : pages manquantes.</td><td>« Quelles pages manquent dans l'espace projet ? »</td></tr>
+      <tr data-d="suivi"><td><code>transcripts</code></td><td>Normalise transcriptions et CR (Notion, fichiers, pendentif Omi).</td><td>« Récupère la transcription du call de ce matin. »</td></tr>
+      <tr data-d="suivi"><td><code>slack</code></td><td>Normalise les conversations Slack lues (canaux, DM, fils), jamais d'écriture.</td><td>« Fais le point sur Slack depuis lundi. »</td></tr>
+      <tr data-d="suivi"><td><code>omi-sync</code><span class="tag w">écriture gardée</span></td><td>Pendentif Omi vers Notion perso, classé pro ou perso et fusionné par échange.</td><td>« Synchronise mes conversations Omi. »</td></tr>
+      <tr data-d="suivi"><td><code>partner-report</code></td><td>Mail de suivi d'un call partenaire, en texte, jamais envoyé.</td><td>« Fais le CR du weekly avec le partenaire A. »</td></tr>
+      <tr data-d="suivi"><td><code>activity</code></td><td>Suivi d'activité avec Claude, vers une base Notion privée.</td><td>« Résume mon activité de la semaine. »</td></tr>
+      <tr data-d="office"><td><code>risks</code><span class="tag w">écriture gardée</span></td><td>Registre des risques : revue proposée, puis écriture chirurgicale du xlsx après accord.</td><td>« Passe en revue les risques après le call d'hier. »</td></tr>
+      <tr data-d="office"><td><code>raci</code></td><td>Matrice RACI et extraits par rôle.</td><td>« Sors la RACI du rôle SRE. »</td></tr>
+      <tr data-d="office"><td><code>deck-gate</code></td><td>Contenu d'un deck GATE.</td><td>« Prépare le contenu du deck de la gate 2. »</td></tr>
+      <tr data-d="office"><td><code>office</code><span class="tag w">écriture gardée</span></td><td>Crée un xlsx depuis un template ou l'édite sans casser images et mises en forme.</td><td>« Crée le tracker de risques depuis le template. »</td></tr>
+      <tr data-d="office"><td><code>docs-coherence-audit</code></td><td>Une sortie est-elle à jour par rapport à ses sources ?</td><td>« Le deck GATE est-il aligné sur les Excel ? »</td></tr>
+      <tr data-d="office"><td><code>drive-scaffold</code><span class="tag w">écriture gardée</span></td><td>Arborescence Drive ou SharePoint : ce qui manque.</td><td>« Vérifie l'arborescence du SharePoint projet. »</td></tr>
+      <tr data-d="office"><td><code>templates</code></td><td>Registre des templates (sujets, planning, RACI, risques ; Notion ou Excel).</td><td>« Quels templates ai-je pour le planning ? »</td></tr>
+      <tr data-d="outils"><td><code>init</code></td><td>Amorce une mission depuis les gabarits.</td><td>« Amorce la mission atlas. »</td></tr>
+      <tr data-d="outils"><td><code>setup</code></td><td>Champs manquants d'un profil et suggestions.</td><td>« Lance le setup de la mission atlas. »</td></tr>
+      <tr data-d="outils"><td><code>preflight</code></td><td>Vérifie qu'on est connecté aux bons espaces avant d'écrire.</td><td>« Vérifie les connexions avant d'écrire. »</td></tr>
+      <tr data-d="outils"><td><code>tones</code></td><td>Aligne le ton des agents sur la config de la mission.</td><td>« Passe le CR partenaire en ton sobre. »</td></tr>
+      <tr data-d="outils"><td><code>agent</code></td><td>Lance une sous-tâche sur un autre compte, modèle ou agent spécialisé.</td><td>« Lance la publication sur le compte pro. »</td></tr>
+      <tr data-d="outils"><td><code>poc</code></td><td>POC React et Material UI depuis les récits.</td><td>« Monte le POC de l'écran liste. »</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="planning">
+  <h2>Planning technique (PPT)</h2>
+  <p>Un deck de comité calculé depuis une seule source, <code>profiles/&lt;mission&gt;/planning.json</code>, dans le gabarit PowerPoint de l'entreprise.</p>
+  <div class="shots">
+    <figure><img src="img/planning-gantt.png" alt="Slide Gantt : couloirs, barres, jalons et traits verticaux"><figcaption>1. Le Gantt : couloirs, barres, jalons, traits (aujourd'hui, signature, ouverture).</figcaption></figure>
+    <figure><img src="img/planning-echeances.png" alt="Slide des échéances en deux tableaux"><figcaption>2. Les échéances, calculées depuis le Gantt : elles ne peuvent pas diverger.</figcaption></figure>
+    <figure><img src="img/planning-situation.png" alt="Slide de situation : domaine, sujet, statut, situation, levier, échéance"><figcaption>3. La situation, depuis le suivi des sujets ; le titre dit le message clé.</figcaption></figure>
+    <figure><img src="img/planning-tableau.png" alt="Slide tableau des responsabilités"><figcaption>4. Les tableaux : responsabilités et charge, RACI résumée.</figcaption></figure>
+  </div>
+  <h3>Comment faire</h3>
+  <ol class="steps">
+    <li>« Refais le planning technique de la mission atlas au 02/12 à partir des sujets. »</li>
+    <li>Claude relit la source, la version en ligne du deck et les sujets modifiés, met à jour, génère et montre les aperçus. Toute date qui bouge est signalée.</li>
+    <li>Vous validez ; il dépose le deck en une seule écriture, ou reporte en ligne si quelqu'un a modifié le fichier.</li>
+  </ol>
+  <div class="note"><b>Dans le gabarit de l'entreprise</b> : déposer un PPT de l'entreprise dans <code>profiles/&lt;mission&gt;/templates/</code> et déclarer <code>"template": {"pptx": "templates/gabarit.pptx", "layout": "Titre seul"}</code> dans <code>planning.json</code>. Le titre prend le style du gabarit, le contenu est recalé dans la zone utile.</div>
+</section>
+
+<section id="avancement">
+  <h2>Avancement et plan de sprints</h2>
+  <p>Une page web qui répond à une question : la V1 tient-elle la date, à capacité réelle ?</p>
+  <figure><img src="img/plan-avancement.png" alt="Page Avancement et sprints : jalons, avancement par pôle, burn-down, plan de sprints"><figcaption>Jalons, avancement V1 et par pôle, burn-down, plan de sprints avec charge par pôle (exemple fictif).</figcaption></figure>
+  <div class="prompts">
+    <div class="prompt"><q>Régénère la page d'avancement et montre-moi ce qui a bougé depuis la dernière publication.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Le ticket X passe au sprint 5 : déplace-le et réécris le texte des sprints concernés.</q><button type="button">Copier</button></div>
+  </div>
+  <p class="note">La page suit Jira pour les tickets, pas pour le texte : déplacer des tickets oblige à réécrire le texte des sprints dans le même passage.</p>
+</section>
+
+<section id="archi">
+  <h2>Schéma d'architecture interactif</h2>
+  <p>Un HTML unique et navigable : une vue par zone, une loupe pour entrer dans le détail, un fil d'Ariane, thème clair ou sombre, logos des technos et des partenaires.</p>
+  <figure><img src="img/archi-showcase.png" alt="Schéma d'architecture interactif avec zones, flux et logos"><figcaption>Vue d'ensemble d'un schéma (exemple fictif).</figcaption></figure>
+  <p><b>Tout se fait en conversation</b> : aucun déplacement de bloc à la souris, aucun bouton d'import. Après chaque modification, le harness contrôle 7 invariants (SVG équilibré, flèches droites, marqueurs résolus, couleurs déclarées, navigation cohérente, logos résolus, viewBox) avant de proposer la publication.</p>
+  <div class="prompts">
+    <div class="prompt"><q>Sur la vue Données, ajoute un flux du service d'alertes vers Redis, libellé "cache".</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Remplace le logo de Keycloak par celui-ci.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Importe ce draw.io comme nouvelle vue "Exploitation".</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Vérifie le schéma et publie-le.</q><button type="button">Copier</button></div>
+  </div>
+</section>
+
+<section id="gates">
+  <h2>Gates et cockpit</h2>
+  <pre><code>Cockpit de la mission demo
+Phase : build
+Portes (GTF) :
+  franchies  : gate0, gate1
+  ⛔ bloquée  : gate3 (Release freeze) - bloquant G3.2
+  ⚠ à acter  : gate2 (Implementation kickoff) - seuil atteint, acte humain manquant
+Traçabilité : 2/4 item(s) en rupture
+Prochaines actions :
+  1. Lever le bloquant de gate3
+  2. Tracer l'acte humain de franchissement de gate2
+  3. Résorber 2 rupture(s) de traçabilité</code></pre>
+  <p>Le générateur recommande ; le franchissement d'une porte reste un acte humain tracé.</p>
+</section>
+
+<section id="suivi">
+  <h2>Sujets, CR et relances</h2>
+  <div class="grid2">
+    <div class="card"><h4>Revue des sujets</h4><p>Claude lit mails, Slack (lecture seule) et transcriptions, propose un bloc par sujet, écrit après « ok tout » ou « ok sauf 3 », puis relit.</p></div>
+    <div class="card"><h4>CR partenaire</h4><p>Une ligne de situation et une prochaine étape datée par sujet, dans la langue du partenaire. Jamais envoyé.</p></div>
+    <div class="card"><h4>Relances</h4><p>Brouillons de mail non envoyés et messages Slack à copier.</p></div>
+  </div>
+</section>
+
+<section id="autres">
+  <h2>Risques, RACI, transcriptions</h2>
+  <div class="grid2">
+    <div class="card"><h4>Registre des risques</h4><p>Propositions (probabilité, impact avant et après, justification), puis écriture chirurgicale du xlsx avec sauvegarde et contrôle de fraîcheur.</p></div>
+    <div class="card"><h4>RACI</h4><p>Matrice complète et extraits par rôle.</p></div>
+    <div class="card"><h4>Transcriptions et Omi</h4><p>Transcriptions Notion ou pendentif Omi, classées et fusionnées, pour alimenter le suivi.</p></div>
+    <div class="card"><h4>Weekly report</h4><p>Depuis les prompts, mails et artefacts de la semaine, avec contrôle de la couverture de chaque thème.</p></div>
+  </div>
+</section>
+
+<section id="routines">
+  <h2>Routines (tâches planifiées)</h2>
+  <p>Définies une fois dans le plugin, paramétrées par mission. Aucune n'envoie de notification à l'équipe.</p>
+  <div class="tablebox"><table>
+    <thead><tr><th>Routine</th><th>Ce qu'elle fait</th></tr></thead>
+    <tbody>
+      <tr><td><code>publish-projection</code></td><td>Publie la page d'avancement, aligne les objectifs des sprints, alerte si un texte de sprint est périmé.</td></tr>
+      <tr><td><code>align-sprint-goals</code></td><td>Aligne les objectifs des sprints Jira sur le fichier éditorial, sans déplacer de ticket.</td></tr>
+      <tr><td><code>audit-scope</code></td><td>Audite périmètre, couverture des exigences et plan de sprints (lecture seule).</td></tr>
+      <tr><td><code>track-progress</code></td><td>Reporte l'avancement dans le planning Notion.</td></tr>
+      <tr><td><code>review-topics</code></td><td>Revue des sujets depuis transcriptions, mails et Slack.</td></tr>
+      <tr><td><code>review-risks</code></td><td>Revue du registre des risques.</td></tr>
+      <tr><td><code>draft-followups</code></td><td>Brouillons de relances.</td></tr>
+      <tr><td><code>collect-activity</code></td><td>Suivi d'activité du jour vers une base Notion privée.</td></tr>
+      <tr><td><code>morning-digest</code></td><td>Récap du matin des sujets ouverts dans un canal privé.</td></tr>
+      <tr><td><code>omi-sync</code></td><td>Synchro du pendentif Omi vers Notion perso, toutes les 5 minutes.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">À la première exécution, approuver une fois les permissions (« Always allow »), sinon la tâche reste bloquée.</p>
+</section>
+
+<section id="agents">
+  <h2>Agents et tons</h2>
+  <div class="tablebox"><table>
+    <thead><tr><th>Agent</th><th>Ce qu'il fait</th></tr></thead>
+    <tbody>
+      <tr><td><code>archi-audit</code></td><td>Monte et fait évoluer le schéma d'architecture.</td></tr>
+      <tr><td><code>jira-sprints-audit</code></td><td>Audit du plan de sprints face au board (lecture seule).</td></tr>
+      <tr><td><code>jira-changes-audit</code></td><td>Modifications de tickets sur une période (lecture seule).</td></tr>
+      <tr><td><code>jira-tickets-audit</code></td><td>Régressions de description, réparation après accord.</td></tr>
+      <tr><td><code>front-audit</code></td><td>Écarts POC, tickets et contrat d'API.</td></tr>
+      <tr><td><code>notion-topics-audit</code></td><td>Relit beaucoup de sujets d'un coup, mot pour mot.</td></tr>
+      <tr><td><code>doc-writer</code></td><td>Rédige les chapitres d'un livrable, chapitre par chapitre.</td></tr>
+      <tr><td><code>adservio-writer</code></td><td>Note de fond ou dossier à la charte éditoriale Adservio.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table>
+    <thead><tr><th>Ton</th><th>Pour quoi</th></tr></thead>
+    <tbody>
+      <tr><td><code>voice-deliverable</code></td><td>Livrables, tickets, pages de référence : sobre et factuel.</td></tr>
+      <tr><td><code>voice-maximilien</code></td><td>Sujets de suivi, CR, messages signés par la personne.</td></tr>
+      <tr><td><code>voice-casual</code></td><td>Échanges informels, messages courts.</td></tr>
+      <tr><td><code>voice-adservio</code></td><td>Notes de fond, dossiers, decks à la charte Adservio.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="gardefous">
+  <h2>Garde-fous</h2>
+  <div class="guard">
+    <div><b>validation</b><span>Rien n'est écrit sans accord : Claude montre le contenu exact ou un aperçu avant d'appliquer.</span></div>
+    <div><b>notif.</b><span>Aucune notification : pas de mention, de partage ni d'invitation ; mails en brouillon, Slack en lecture seule.</span></div>
+    <div><b>office</b><span>Jamais d'écriture dans un fichier modifié récemment par quelqu'un d'autre ; sauvegarde puis une seule écriture ; xlsx édités chirurgicalement.</span></div>
+    <div><b>jira</b><span>Relecture juste avant toute écriture de description, refus si elle a changé.</span></div>
+    <div><b>masse</b><span>Toujours un élément d'essai d'abord, validé, puis le reste.</span></div>
+    <div><b>secrets</b><span>Jetons hors dépôt, jamais affichés ni committés.</span></div>
+    <div><b>vérité</b><span>Ne rien inventer : un inconnu s'écrit « à confirmer ».</span></div>
+  </div>
+</section>
+
+<section id="prompts">
+  <h2>Modèles de prompts</h2>
+  <h3>Lire et faire le point</h3>
+  <div class="prompts">
+    <div class="prompt"><q>Fais-moi un état des lieux du projet : sujets critiques, ce qui a bougé, ce qui est bloqué.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Récupère les discussions Slack depuis lundi et dis-moi si les tests de charge ont été faits.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Qui a modifié les tickets du sprint depuis ce matin ?</q><button type="button">Copier</button></div>
+  </div>
+  <h3>Mettre à jour (proposer d'abord)</h3>
+  <div class="prompts">
+    <div class="prompt"><q>Mets à jour les sujets à partir des derniers mails et de Slack. Propose avant d'écrire.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Le partenaire A a livré son plan de test : mets à jour le sujet et la slide de situation.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Décale la mise en production au 18/12 dans le planning, et montre-moi ce que ça change.</q><button type="button">Copier</button></div>
+  </div>
+  <h3>Produire un livrable</h3>
+  <div class="prompts">
+    <div class="prompt"><q>Refais le planning technique au 02/12 dans le gabarit de l'entreprise.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Génère quatre slides pour la gate : exigences, avancement V1, avancement par exigence, checklist.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Fais le CR du weekly avec le partenaire B, en anglais.</q><button type="button">Copier</button></div>
+  </div>
+  <h3>Modifier un rendu</h3>
+  <div class="prompts">
+    <div class="prompt"><q>Sur la slide de situation, remplace le titre par le message clé.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Dans le schéma d'archi, ajoute le logo de Redis à côté du cache.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Rends la slide plus lisible : phrases courtes, pas de chiffres sans explication.</q><button type="button">Copier</button></div>
+  </div>
+  <h3>Contrôler avant de publier</h3>
+  <div class="prompts">
+    <div class="prompt"><q>Vérifie que le schéma passe le harness et publie-le.</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Le Gantt et la slide des échéances sont-ils cohérents ?</q><button type="button">Copier</button></div>
+    <div class="prompt"><q>Relis le deck en ligne : quelqu'un l'a-t-il modifié depuis ma dernière version ?</q><button type="button">Copier</button></div>
+  </div>
+</section>
+
+<section id="depannage">
+  <h2>Dépannage</h2>
+  <div class="tablebox"><table>
+    <thead><tr><th>Symptôme</th><th>Solution</th></tr></thead>
+    <tbody>
+      <tr><td>Une routine reste en attente</td><td>Permissions jamais approuvées : ouvrir la tâche, « Run now », puis « Always allow ».</td></tr>
+      <tr><td>Une commande du plugin est inconnue</td><td>Redémarrer Claude Code après <code>claude plugin update</code>.</td></tr>
+      <tr><td>Le deck planning déborde</td><td>Une slide de situation a trop de lignes : la scinder (le contrôle le signale).</td></tr>
+      <tr><td>« Mise en page absente du gabarit »</td><td>Le message liste les mises en page disponibles : reprendre le nom exact.</td></tr>
+      <tr><td>Une page publiée ne change pas</td><td>GitHub Pages met 1 à 2 minutes ; recharger sans cache.</td></tr>
+      <tr><td>Un fichier Office ne se synchronise pas</td><td>Ne pas le réécrire plusieurs fois ; comparer la taille locale et en ligne.</td></tr>
+      <tr><td>Slack non lu</td><td>L'extension Chrome doit être connectée dans le profil où Slack est ouvert.</td></tr>
+    </tbody>
+  </table></div>
+  <footer>Guide du plugin pm-framework. Version texte : <code>docs/GUIDE.md</code>. Les captures viennent de projets fictifs.</footer>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  // thème : bascule clair / sombre, mémorisée si possible
+  var root=document.documentElement, KEY="pmf-doc-theme";
+  try{var t=localStorage.getItem(KEY); if(t) root.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    var dark=root.getAttribute("data-theme")==="dark"||(!root.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);
+    var n=dark?"light":"dark"; root.setAttribute("data-theme",n); try{localStorage.setItem(KEY,n);}catch(e){}
+  });
+  // catalogue : filtre texte + domaine
+  var q=document.getElementById("q"), rows=[].slice.call(document.querySelectorAll("#cat tbody tr")), dom="", count=document.getElementById("count");
+  function apply(){
+    var s=q.value.trim().toLowerCase(), n=0;
+    rows.forEach(function(r){var ok=(!dom||r.dataset.d===dom)&&(!s||r.textContent.toLowerCase().indexOf(s)>=0); r.hidden=!ok; if(ok)n++;});
+    count.textContent=n+" outil"+(n>1?"s":"");
+  }
+  q.addEventListener("input",apply);
+  document.getElementById("chips").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return; dom=b.dataset.d;
+    [].forEach.call(this.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");}); apply();
+  });
+  apply();
+  // copier un prompt
+  document.addEventListener("click",function(e){
+    var b=e.target.closest(".prompt button"); if(!b) return;
+    var txt=b.parentNode.querySelector("q").textContent;
+    function done(){b.textContent="Copié"; setTimeout(function(){b.textContent="Copier";},1400);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){sel(b);});} else sel(b);
+    function sel(btn){var r=document.createRange(); r.selectNodeContents(btn.parentNode.querySelector("q")); var w=getSelection(); w.removeAllRanges(); w.addRange(r);}
+  });
+  // sommaire : section courante
+  var links=[].slice.call(document.querySelectorAll("#toc a")), secs=links.map(function(a){return document.querySelector(a.getAttribute("href"));});
+  function cur(){var y=scrollY+120, i=0; secs.forEach(function(s,k){if(s&&s.offsetTop<=y)i=k;}); links.forEach(function(a,k){a.classList.toggle("on",k===i);});}
+  addEventListener("scroll",cur,{passive:true}); cur();
+})();
+</script>
+</body>
+</html>

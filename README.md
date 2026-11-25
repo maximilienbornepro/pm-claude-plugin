@@ -5,6 +5,7 @@ le moteur ne change pas. Le SINBAD d'origine (`~/Documents/Sinbad`) tourne tel q
 pas modifié : on bâtit ici, à côté, par copies généralisées.
 
 - **Guide d'utilisation (capacités, captures, pas à pas, prompts)** : [docs/GUIDE.md](docs/GUIDE.md)
+- **Guide web (même contenu, catalogue filtrable, prompts à copier)** : [docs/index.html](docs/index.html), à ouvrir dans un navigateur
 - **Cadrage** : [FRAMEWORK.md](FRAMEWORK.md) · **Feuille de route / état** : [ROADMAP.md](ROADMAP.md)
 - **Profils de mission** : [profiles/README.md](profiles/README.md) (SINBAD = exemple de référence)
 - **Nouvelle mission en 10 min** : [docs/nouvelle-mission.md](docs/nouvelle-mission.md)
