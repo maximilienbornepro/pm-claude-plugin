@@ -72,12 +72,12 @@ Catalogues liés : tons -> `framework/REDACTION.md` · agents -> `framework/AGEN
 | `align-sprint-goals` | Dépréciée - pointeur vers publish-projection en mode goals-only (aligne les objectifs des sprints Jira sur le JSON éditorial, aucun ticket déplacé). |
 | `audit-scope` | Audite le périmètre V1/V2 et la couverture des exigences contre Jira, et la cohérence du plan de sprints ; ne fait que proposer, cellule par cellule. |
 | `collect-activity` | Transforme les requêtes Claude Code du jour qui ont modifié le projet en activités datées, versées dans un store local et une DB Notion privée, et résumables en bloc Weekly report. |
-| `draft-followups` | Routine config-driven - prepare les relances pour obtenir les reponses attendues sur les sujets de suivi. |
-| `morning-digest` | Routine config-driven - chaque matin, poste dans UN canal Slack dedie (et lui seul) le recap exhaustif des sujets a faire avancer, a partir du tracker de suivi, des sources de la veille et de l'agenda du jour. |
-| `omi-sync` | Routine transverse (hors mission) - rapatrie les nouvelles conversations du pendentif Omi dans le Notion PERSO, classees pro / perso et fusionnees par echange. |
+| `draft-followups` | Prépare les relances pour obtenir les réponses attendues sur les sujets de suivi : brouillon de mail pour un partenaire externe (.eml local non envoyé, ouvert en rédaction), message Slack à copier pour un interne ; formulaire modifiable au clic. |
+| `morning-digest` | Chaque matin, poste dans UN canal Slack dédié (et lui seul) le récap exhaustif des sujets à faire avancer, à partir du tracker de suivi, des sources de la veille et de l'agenda du jour. |
+| `omi-sync` | Rapatrie les nouvelles conversations du pendentif Omi dans le Notion perso, classées pro / perso et fusionnées par échange (générateur omi-sync). |
 | `publish-projection` | Publie les pages d'avancement (gh-pages) puis le même HTML sur les artefacts Claude, aligne les objectifs des sprints du tracker sur le JSON éditorial, et signale tout texte de sprint périmé ; mode goals-only pour n'aligner que les objectifs. |
-| `review-risks` | Routine config-driven - relit le registre de risques, le confronte aux sujets de suivi et a la projection de livrabilite, montre le registre actualise, puis met a jour le fichier en place apres validation en seance. |
-| `review-topics` | Routine config-driven - passe en revue les sujets du tracker de suivi, propositions affichees et validees dans la conversation (transcriptions, mails et Slack en appui), applique ce qui est valide, puis enchaine sur la revue des risques. |
+| `review-risks` | Relit chaque registre de risques, le confronte aux sujets de suivi et à la projection de livrabilité, montre le registre actualisé, puis met à jour le fichier en place après validation en séance. |
+| `review-topics` | Passe en revue les sujets du tracker de suivi à partir des transcriptions, mails et Slack, propose dans la conversation, applique ce qui est validé, aligne les supports dépendants, puis enchaîne sur la revue des risques ; mode condensation pour les sujets à rallonge. |
 | `track-progress` | Pousse l'avancement V1 (un seul nombre, lu dans la projection) dans un seul champ d'une seule page du tracker Notion. |
 
 ## Agents (`framework/agents/`) - détail dans `AGENTS.md`

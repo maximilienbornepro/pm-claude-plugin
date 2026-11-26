@@ -1,61 +1,93 @@
 ---
-name: suivi
-description: Routine config-driven - transforme les requetes Claude Code du jour (celles ayant modifie le projet) en activites datees, versees dans un store local et une DB Notion PRIVEE, et en bloc Weekly report (modele actuel). Lecture des transcripts, ecriture uniquement locale + DB privee. Aucune notification.
-schedule: config   # voir routines.yml > routines.suivi.schedule (quotidien par defaut, 19h)
+name: collect-activity
+description: "Transforme les requêtes Claude Code du jour qui ont modifié le projet en activités datées, versées dans un store local et une DB Notion privée, et résumables en bloc Weekly report. Écrit : local (store), notion (DB privée). Aucune notification."
+meta:
+  kind: routine
+  scope: mission
+  schedule: config          # routines.yml > routines.<projet>-collect-activity.schedule (ex. tous les jours 19h)
+  chains: [activity]
+  writes: [local, notion]
+  validation: none          # upsert idempotent dans une DB privée ; rien n'est supprimé
+  default_mode: apply       # routine planifiée ; la sync reste en dry-run sans --apply
+  output: chat-md
+  notifies: none
+  mcp_deps: [notion]        # repli si NOTION_TOKEN est absent
+  status: stable
 ---
 
-Tient le **suivi d'activite** de Maximilien a partir de ses **requetes Claude Code** : chaque jour, les
-prompts qui ont **modifie le projet** deviennent des activites datees, rangees dans un store local et une
-**DB Notion privee**, et resumables en bloc **Weekly report** (modele actuel). Reponds dans la langue du
-profil (`profile.yml > lang`).
+# collect-activity - suivi d'activité du jour
 
-Tout le propre-a-la-mission (dossier des transcripts, store, lien Suivi des sujets, id de la DB privee) vit
-dans **`profiles/<mission>/suivi.yml`**, lu via `routines.yml > routines.suivi.reads.suivi_yml`. Ce SKILL
-porte le deroule et les garde-fous. **Racine projet** : resolue de facon portable (`routines.yml >
-project_root_env`).
+Tient le **suivi d'activité** de l'utilisateur à partir de ses **requêtes Claude Code** : chaque jour,
+les prompts qui ont **modifié le projet** deviennent des activités datées, rangées dans un store local et
+une **DB Notion privée**, et résumables en bloc **Weekly report** (modèle actuel). Réponds dans la
+langue du profil (`profile.yml > lang`).
 
-## Ce qu'elle enchaine
+## Déclencheur et modes
 
-`chains: [suivi]` - le generateur `framework/generators/suivi/` : `collect.py` (lecture des transcripts),
-le store `activites.jsonl`, `build_weekly.py` (rendu Weekly report) et `sync_notion.py` (upsert DB privee).
+- **Planifiée** (quotidienne) : étapes 0 à 4 et 6.
+- **Weekly** (sur demande) : étape 5, rendu du bloc Weekly report.
+- `--dry-run` (ou « à blanc ») : collecte et curation rendues en texte ; ni store ni DB modifiés.
 
-## Etape 1 : collecter les prompts pertinents du jour
+## Entrées
 
-`collect.py --project-dir <suivi.project_dir> --date <jour>` liste les prompts **pertinents** = suivis, avant
-le prompt suivant, d'au moins une action modifiante (Write/Edit, publication sync_*.sh/publish.sh/Artifact,
-git commit/push, ecriture Jira, ecriture Notion, Office/Drive, Teams/Outlook). Les lectures, audits,
-`--dry-run`/`--check` et apercus scratchpad sont ignores. La sortie est un **brouillon**.
+Clé d'instance `routines.<projet>-collect-activity` ; à défaut, l'ancienne clé (voir `framework/routines/README.md`, colonne « Anciennement »).
 
-## Etape 2 : curer en activites
+- Instance `routines.<projet>-collect-activity` : `reads.activity_yml` (par défaut
+  `profiles/<mission>/activity.yml`), `writes[].guard`, et les clés de mission commentées dans
+  `routines.example.yml` (ex. `weekly_report_owner`).
+- `profiles/<mission>/activity.yml` (gabarit : `framework/generators/activity/activity.example.yml`) :
+  `project_dir` (transcripts), `store`, `suivi_link`, `weekly_report_page`, `notion_db`, `themes`.
+- Racine projet : `routines.yml > project_root_env`, puis replis.
 
-Pour chaque prompt garde, ecrire **une activite courte et factuelle** : `{date, type, theme, texte, lien?,
-projet}`. `type` parmi les 4 categories : **produit** (ce que j'ai produit), **attendu_moi** (ce qu'on attend
-de moi), **attends_autres** (ce que j'attends des autres), **bloquant** (ce qui me bloque). Ne garder que ce
-qui merite d'etre suivi ; fondre les doublons. Ajouter les lignes au store (`suivi.store`).
+## Enchaînements
 
-## Etape 3 : rendre le bloc Weekly report (optionnel, sur demande)
+`chains: [activity]` : le générateur `framework/generators/activity/` (`collect.py` lit les transcripts,
+store `activites.jsonl`, `build_weekly.py` rend le Weekly report, `sync_notion.py` fait l'upsert dans
+la DB privée), lancé par `python3 framework/pm.py run activity <mission> <sous-commande>`.
 
-`build_weekly.py --store <suivi.store> --week <jour> --suivi-link <suivi.suivi_link>` rend le bloc au modele
-actuel (produit -> Activites realisees ; bloquant -> Difficultes ; attends_autres -> Ce qui manque ;
-attendu_moi -> Plan d'action). **Le report dans la page Weekly report partagee a Greg reste manuel** : la
-routine ne l'ecrit jamais.
+## Déroulé
 
-## Etape 4 : synchroniser la DB privee
+0. **Préflight** : `python3 framework/pm.py run preflight <mission>`, puis `notion-get-self` :
+   `workspace.id` + `workspace.name` == profil. BLOQUANT ou identité différente : pas de sync Notion
+   (étape 4 sautée, dite dans le rapport) ; le store local reste alimenté.
+1. **Lire** les prompts pertinents du jour :
+   `python3 framework/pm.py run activity <mission> collect --date <jour>`. Pertinent = suivi, avant le
+   prompt suivant, d'au moins une action modifiante (Write/Edit, publication sync/publish/Artifact, git
+   commit/push, écriture Jira, Notion, Office/Drive, Teams/Outlook). Lectures, audits,
+   `--dry-run`/`--check` et aperçus scratchpad sont ignorés. La sortie est un **brouillon**.
+2. **Curer en activités** : pour chaque prompt gardé, **une activité courte et factuelle**
+   `{date, type, theme, texte, lien?, projet}`. `type` parmi 4 catégories : **produit** (ce que j'ai
+   produit), **attendu_moi** (ce qu'on attend de moi), **attends_autres** (ce que j'attends des autres),
+   **bloquant** (ce qui me bloque). Ne garder que ce qui mérite d'être suivi ; fondre les doublons.
+3. **Écrire le store** : ajouter les lignes au store (`activity.yml > store`), puis
+   `python3 framework/pm.py run activity <mission> check`.
+4. **Synchroniser la DB privée** : `python3 framework/pm.py run activity <mission> sync` (dry-run), puis
+   `sync --apply` (ou le connecteur MCP si pas de `NOTION_TOKEN`). Upsert par clé `date|texte` : aucun
+   doublon, rien n'est supprimé.
+5. **Weekly report** (optionnel, sur demande) :
+   `python3 framework/pm.py run activity <mission> weekly --week <jour>` rend le bloc au modèle actuel
+   (produit -> Activités réalisées ; bloquant -> Difficultés ; attends_autres -> Ce qui manque ;
+   attendu_moi -> Plan d'action). **Le report dans la page Weekly report partagée reste manuel** : la
+   routine ne l'écrit jamais.
+6. **Vérifier et rapporter**.
 
-`sync_notion.py --store <suivi.store> --db <suivi.notion_db>` (ou via le connecteur MCP si pas de
-`NOTION_TOKEN`). Upsert par cle `date|texte` : aucun doublon, rien n'est supprime.
+## Sortie
 
-## Etape 5 : rapporter
-
-Trois lignes maximum : nombre de prompts pertinents trouves, nombre d'activites ajoutees au store, nombre de
-pages creees dans la DB privee ; toute anomalie.
+Trois lignes au plus : prompts pertinents trouvés, activités ajoutées au store, pages créées dans la DB
+privée ; toute anomalie.
 
 ## Garde-fous
 
-- **`notifies: none`** : la DB est **privee** (espace prive de l'utilisateur), elle ne notifie personne. Pas
-  de mail, pas de mention, pas de commentaire, pas de Teams.
-- **Ecritures limitees** au store local et a la DB privee (`suivi.notion_db`). **Jamais** la page Weekly
-  report de Greg, jamais une autre page/base Notion, jamais Office/Jira.
+- **`notifies: none`** : la DB est **privée** (espace privé de l'utilisateur), elle ne notifie personne.
+  Pas de mail, pas de mention, pas de commentaire, pas de Teams.
+- **Écritures limitées** au store local et à la DB privée (`activity.yml > notion_db`). **Jamais** la
+  page Weekly report partagée (`activity.yml > weekly_report_page`, tenue par `weekly_report_owner`),
+  jamais une autre page ou base Notion, jamais Office ni Jira.
 - **Lecture seule des transcripts.** Le collecteur ne modifie rien.
-- Ne garder que les prompts **ayant reellement modifie le projet** ; le reste est du bruit.
-- Respecter chaque `routines.yml > ...suivi.writes[].guard`.
+- Ne garder que les prompts **ayant réellement modifié le projet** ; le reste est du bruit.
+- Respecter chaque `writes[].guard` de l'instance.
+
+## Décisions datées
+
+- Anciennement nommée `suivi` (routine), qui enchaînait l'alias de générateur `suivi` ; le générateur
+  canonique est `activity` et sa config `profiles/<mission>/activity.yml`.

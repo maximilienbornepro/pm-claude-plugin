@@ -1,6 +1,6 @@
 ---
 date: 2026-11-26
-status: proposé
+status: en cours (phases 1 à 4 faites le 26/11/2026)
 slug: audit-harmonisation
 ---
 
@@ -85,10 +85,10 @@ Généré par une commande unique : `pm run dossier <mission>` (lecture seule, �
 | # | Phase | Livrable de fin de phase | Validation |
 |---|---|---|---|
 | 1 | Audit | ce document | ✅ fait |
-| 2 | Nettoyage code (lots : suppressions, `--mission`, `lib/`, doc) | commits par lot, `pm list` + `pm demo` + verifier verts | liste cochée par toi |
-| 3 | Routines : gabarit unique, noms = dossiers, preflight, fusions | 10 SKILL migrés, README/SKILLS/GUIDE alignés, `profiles/demo/routines.yml` | revue du gabarit |
-| 4a | Socle livrables : charte unique, `lib/slides.py`, `lib/dossier.py`, schéma JSON | maquette HTML 16:9 + PPTX du **pilote** | **on valide le format ensemble** |
-| 4b | Pilote **risques** + **avancement/sprints** | registre HTML/PPTX/XLSX, slides avancement, sprint, projection | relecture sur la démo |
+| 2 ✅ | Nettoyage code (lots : suppressions, `--mission`, `lib/`, doc) — reste : client Notion et lecture `.env` à regrouper dans `lib/` | commits par lot, `pm list` + `pm demo` + verifier verts | liste cochée par toi |
+| 3 ✅ | Routines : gabarit unique, noms = dossiers, preflight, fusions — reste : migrer les clés et tâches SINBAD vers les noms anglais | 10 SKILL migrés, README/SKILLS/GUIDE alignés, `profiles/demo/routines.yml` | revue du gabarit |
+| 4a ✅ | Socle livrables : charte (`slide-style`), `lib/slides.py`, générateur `dossier` (PPTX éditable + HTML + synchro retour) | maquette HTML 16:9 + PPTX du **pilote** | **on valide le format ensemble** |
+| 4b ✅ | Pilote **risques** + **avancement/sprints** (sur données de démo) | registre HTML/PPTX/XLSX, slides avancement, sprint, projection | relecture sur la démo |
 | 5 | Généralisation (planning, RACI, gates, deck GATE, CR, agenda, weekly, archi) | dossier projet complet de `demo` | revue finale |
 | 6 | Doc + guide web | GUIDE.md, docs/index.html, captures | — |
 

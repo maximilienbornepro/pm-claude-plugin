@@ -12,6 +12,9 @@ Outlook via un lien mailto: (fenêtre de rédaction avec le compte de l'utilisat
 brouillon atterrit dans Brouillons quand la fenêtre est fermée. Le .eml ouvert directement n'a pas
 d'expéditeur et n'est pas enregistré en brouillon (nouvel Outlook, constaté le 12/10).
 Rien n'est envoyé par ce script.
+
+Usage (from the project root, routine `draft-followups`):
+    python3 framework/routines/draft-followups/creer_eml.py --dir <out_dir>/<YYYY-MM-DD> --file M1.txt [M2.txt ...] [--no-open]
 """
 import argparse, subprocess, sys
 from urllib.parse import quote

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generateur de suivi d'activite - point d'entree pilote par la config de mission.
 
-Lit `profiles/<mission>/suivi.yml` (store, transcripts, lien Suivi, DB Notion, themes)
+Lit `profiles/<mission>/activity.yml` (store, transcripts, lien Suivi, DB Notion, themes)
 et enchaine les briques du dossier : collect.py, build_weekly.py, sync_notion.py.
 Aucun chemin de mission en dur ; zero dependance (mini-YAML du framework).
 

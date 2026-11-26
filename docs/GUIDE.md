@@ -194,7 +194,7 @@ Un livrable qui n'a de sens que dans Notion ou par mail le reste.
 | Chantiers transverses | à créer : chantiers.yml (reflet du Project dashboard) | — | slide-style | voice-slides | Project_dashboard_<MISSION>.pptx · chantiers.yml | Notion *(proposé)* · [HTML *(proposé)*](maquette/index.html#chantiers) · [PPT *(proposé)*](maquette/index.html#chantiers) — barre d'avancement, statut en 4 couleurs, porteur, commentaire |
 | Avancement V1 et burn-down du plan | plan, projection (Jira) | `jira-sprints-audit` | slide-style | voice-slides | page Avancement et sprints | [**HTML**](img/plan-avancement.png) · [PPT *(proposé)*](maquette/index.html#avancement) — La page web existe ; slides 16:9 à produire depuis le même JSON. |
 | Tableau des états des tickets | plan (Jira) | `jira-sprints-audit` | slide-style | voice-slides | Jira | [HTML *(proposé)*](maquette/index.html#tableau-des-etats) · [PPT *(proposé)*](maquette/index.html#tableau-des-etats) — Nouveau : par pôle, à faire / en cours / en test / bloqué / fermé. |
-| Sprint en cours et historique des sprints | plan (Jira), routine align-sprint-goals | `jira-sprints-audit` | slide-style | voice-slides | Jira · plan.json | [**HTML**](img/plan-avancement.png) · [PPT *(proposé)*](maquette/index.html#sprint-en-cours) · **Jira** — Objectifs de sprint écrits dans Jira (champ texte). |
+| Sprint en cours et historique des sprints | plan (Jira), routine publish-projection (mode goals-only) | `jira-sprints-audit` | slide-style | voice-slides | Jira · plan.json | [**HTML**](img/plan-avancement.png) · [PPT *(proposé)*](maquette/index.html#sprint-en-cours) · **Jira** — Objectifs de sprint écrits dans Jira (champ texte). |
 | Projection par pôle | projection (Jira), routine track-progress | — | slide-style | voice-slides | page Avancement et sprints | [**Terminal**](img/gate-slide1.png) · **Notion** · [HTML *(proposé)*](maquette/index.html#projection) · [PPT *(proposé)*](maquette/index.html#projection) — Notion : le seul pourcentage d'avancement V1. |
 | Planning technique (Gantt, échéances) | planning (planning.json) | — | technical-planning, slide-style | voice-slides | Planning_<MISSION>.pptx, Gantt Excel | [**PPT**](img/planning-gantt.png) · **Excel** · [HTML *(proposé)*](maquette/index.html#planning) · **Notion** — Notion : vue timeline via notion-planning. |
 | État des sujets (situation technique) | base Notion des sujets, routine review-topics | `notion-topics-audit` | technical-planning, slide-style | voice-maximilien (sujets), voice-slides (slide) | Notion · suivi des sujets (pas d'Excel) | [**Notion**](img/revue-sujets.png) · [**PPT**](img/planning-situation.png) · [HTML *(proposé)*](maquette/index.html#situation-technique) — La source reste Notion ; la slide de situation la reflète mot pour mot. |
@@ -506,18 +506,22 @@ Des tâches planifiées qui rejouent un générateur à heure fixe, définies un
 (`framework/routines/<nom>/SKILL.md`) et paramétrées par mission (`profiles/<mission>/routines.yml`).
 Aucune n'envoie de notification à l'équipe.
 
-| Routine | Ce qu'elle fait |
-|---|---|
-| `publish-projection` | publie la page d'avancement (et l'avancement par exigence), aligne les objectifs des sprints, alerte si un texte de sprint est périmé |
-| `align-sprint-goals` | aligne les objectifs des sprints Jira sur le fichier éditorial (aucun ticket déplacé) |
-| `audit-scope` | audite périmètre, couverture des exigences et plan de sprints (lecture seule) |
-| `track-progress` | reporte l'avancement dans le planning Notion (un champ) |
-| `review-topics` | revue des sujets depuis transcriptions, mails et Slack |
-| `review-risks` | revue du registre des risques |
-| `draft-followups` | brouillons de relances (mails non envoyés, messages à copier) |
-| `collect-activity` | suivi d'activité du jour vers une base Notion privée |
-| `morning-digest` | récap du matin des sujets ouverts dans un canal privé |
-| `omi-sync` | synchro du pendentif Omi vers Notion perso (toutes les 5 min) |
+| Routine | Ce qu'elle fait | Écrit (après garde) |
+|---|---|---|
+| `publish-projection` | publie la page d'avancement (et l'avancement par exigence), aligne les objectifs des sprints, alerte si un texte de sprint est périmé ; mode `goals-only` : objectifs seuls | gh-pages, artefacts, objectifs de sprint Jira |
+| `align-sprint-goals` | dépréciée : renvoie vers `publish-projection`, mode `goals-only` | objectifs de sprint Jira |
+| `audit-scope` | audite périmètre, couverture des exigences et plan de sprints | rien (lecture seule) |
+| `track-progress` | reporte l'avancement dans le planning Notion | un champ Notion |
+| `collect-activity` | suivi d'activité du jour vers une base Notion privée | store local, DB Notion privée |
+| `review-topics` | revue des sujets depuis transcriptions, mails et Slack, puis enchaîne `review-risks` | base de suivi, page de synthèse, deck (après oui) |
+| `review-risks` | revue du registre des risques | registre Office (après oui) |
+| `draft-followups` | brouillons de relances (mails non envoyés, messages à copier) | `.eml` locaux, fenêtre de rédaction |
+| `morning-digest` | récap du matin des sujets ouverts dans un canal privé | un canal Slack privé |
+| `omi-sync` | synchro du pendentif Omi vers Notion perso (toutes les 5 min, hors mission) | bases Notion perso |
+
+Le nom de la routine est celui de son dossier ; l'instance de mission s'appelle `<projet>-<nom>` (ex.
+`atlas-publish-projection`) dans `profiles/<mission>/routines.yml` et dans l'app. Toute routine qui écrit
+commence par le préflight des connecteurs ; aucune n'envoie de notification.
 
 Activer : *« Enregistre les routines de la mission atlas selon leur planning. »* Première exécution :
 approuver une fois les permissions demandées (« Always allow »), sinon la tâche reste bloquée.
