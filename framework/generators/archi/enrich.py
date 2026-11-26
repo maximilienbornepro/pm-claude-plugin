@@ -85,6 +85,7 @@ def _pad(hz):
 
 
 def enrich(model, page=None, cluster=True):
+    ns_name = ((model.get("meta") or {}).get("project") or "applicatif").strip()
     m = json.loads(json.dumps(model))  # copie
     views = m.get("views") or []
     if page:
@@ -179,7 +180,7 @@ def enrich(model, page=None, cluster=True):
     if cluster and roots:
         zones.append({"id": "z-eks", "label": "Kubernetes (EKS)", "parent": host["id"] if host else None,
                       "color": "cluster"})
-        zones.append({"id": "z-ns", "label": "Namespace Sinbad", "parent": "z-eks", "color": "service"})
+        zones.append({"id": "z-ns", "label": f"Namespace {ns_name}", "parent": "z-eks", "color": "service"})
         for z in roots:
             z["parent"] = "z-ns"
         zid = {z["id"]: z for z in zones}
@@ -296,7 +297,7 @@ def enrich(model, page=None, cluster=True):
         if key == "cluster":
             n = len([x for x in members if ent[x].get("zone") in keep])
             q.append({"couche": label, "present": bool(cluster), "question":
-                      f"Encadrer la plateforme ({n} entités) dans « Kubernetes (EKS) > Namespace Sinbad » ? "
+                      f"Encadrer la plateforme ({n} entités) dans « Kubernetes (EKS) > Namespace {ns_name} » ? "
                       "Puis : la replier en un seul bloc dans la vue d'ensemble, ou la laisser dépliée ?",
                       "proposition": "encadrer, laisser déplié (c'est la vue détaillée)"})
             continue

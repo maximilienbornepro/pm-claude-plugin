@@ -76,7 +76,7 @@ class Jira:
 
 
 if __name__ == "__main__":
-    m = sys.argv[1] if len(sys.argv) > 1 else "sinbad"
+    m = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     j = Jira(m)
     print(f"Base   : {j.base}  projet={j.project}  board={j.board}  (config lue du profil)")
     sp = j.sprints()

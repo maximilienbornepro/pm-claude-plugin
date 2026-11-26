@@ -18,6 +18,7 @@ A partir du Jira (requetes de lecture seule via framework/lib/jira.py), il etabl
 
 N'ecrit rien, n'envoie rien, aucune requete d'ecriture.
 """
+import os
 import sys, math, datetime
 from pathlib import Path
 
@@ -258,7 +259,7 @@ def _fdate(d):
 
 
 def main():
-    mission = sys.argv[1] if len(sys.argv) > 1 else "sinbad"
+    mission = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     d = compute(mission)
     print(f"Rapport de projection - {d['mission']}  "
           f"(projet {d['project']}, board {d['board']}, LECTURE SEULE)")

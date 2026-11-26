@@ -11,9 +11,10 @@ Controles :
   - pas de prose de plus de N caracteres (la decouper) ;
   - pas de vraie mention @ (nom en texte simple, sinon notification).
 
-    python3 check_sujet.py --body sujet.md [--mission sinbad]
+    python3 check_sujet.py --body sujet.md [--mission <mission>]
     cat sujet.md | python3 check_sujet.py --body -
 """
+import os
 import argparse, re, sys
 from pathlib import Path
 
@@ -69,7 +70,7 @@ def check(txt, st):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--body", required=True, help="corps du sujet (markdown) ; '-' = stdin")
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     a = ap.parse_args()
     cfg = prof._load_yaml(prof.mission_dir(a.mission) / "notion-topics.yml")
     st = cfg.get("structure", {})

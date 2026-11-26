@@ -20,25 +20,25 @@ en langage naturel** (un gros prompt), un **draw.io** (`--import`), ou un `model
    (avec `zone`), `flows` (`kind` : call/pull/read/write/auth ; pull/read = double flèche), `views`
    (`id`, `label`, `members`, `layout` optionnel). **Ne rien inventer** : capacité/nom/flux inconnu →
    le demander ou marquer « à confirmer », jamais une donnée fabriquée.
-   Depuis un draw.io : `pm run architecture <mission> --import <fichier.drawio>` (sortie scratchpad), puis
+   Depuis un draw.io : `pm run archi <mission> --import <fichier.drawio>` (sortie scratchpad), puis
    relire : logos déduits, zones, flux ; ce qui n'est pas explicite dans le draw.io → « à confirmer ».
    **Style** : `color` de rôle sur entités/zones (rouge `risk` pour la sécurité, vert `service`, rose `auth`…),
    `style: "team"` pour les encarts d'équipe, `main: true` sur les flux du chemin principal, `link` (loupe)
    vers la vue de détail de chaque bloc qui en a une.
 3. **Déclarer les couches** (`layers`) : regrouper les entités de la vue d'ensemble (données, traitement,
    API, identité, partenaires, exploitation, acteurs), avec `main`, `role`, `link`.
-4. **Construire la vue d'ensemble AVEC la personne** : lancer `pm run architecture <mission> --suggest`,
+4. **Construire la vue d'ensemble AVEC la personne** : lancer `pm run archi <mission> --suggest`,
    puis poser ses questions **avec l'outil de questions** (formulaire cliquable), dans l'ordre :
    le **public** d'abord, puis la profondeur des couches (déplier / bloc abstrait / masquer), chaque
    option portant la **proposition motivée** du générateur en premier. Regrouper au plus 4 questions par
    formulaire (ex. public ; couche dense ; couches à déplier ; couches à masquer). Ne jamais masquer une
    couche `main`.
 5. **Proposer le modèle** (résumé des vues, des couches et de leur mode, des flux) et attendre l'accord.
-6. **Rendre** avec les réponses : `pm run architecture <mission> --render --public <p> --set couche=mode,…`
+6. **Rendre** avec les réponses : `pm run archi <mission> --render --public <p> --set couche=mode,…`
    (les choix sont gardés dans `abstraction.json`).
 7. **Valider** : les 7 invariants du harness doivent tous passer ; corriger le modèle si un invariant casse.
    Vérifier visuellement la vue d'ensemble (étiquettes qui se chevauchent, flèches vers le vide).
-8. **Exporter** : `pm run architecture <mission> --export drawio` - une page draw.io par écran.
+8. **Exporter** : `pm run archi <mission> --export drawio` - une page draw.io par écran.
 9. **Publier** : écriture gardée, 3 cibles au même md5, **seulement sur demande explicite**. Par défaut
    tout reste en local ; un artefact, un push gh-pages ou un `publish.sh` ne se lance jamais de soi-même.
 

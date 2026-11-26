@@ -9,7 +9,7 @@ KSAT en anglais, Airbus en francais, systematiquement.
 Le fond vient d'un JSON (produit par Claude depuis la transcription + les sujets) ;
 ce generateur ne fait que la MISE EN FORME. Il n'envoie rien, ne cree aucun brouillon.
 
-    python3 cr_partenaire.py --input call.json [--mission sinbad]
+    python3 cr_partenaire.py --input call.json [--mission <mission>]
     cat call.json | python3 cr_partenaire.py --input -
 
 JSON attendu :
@@ -21,6 +21,7 @@ JSON attendu :
      {"title":"Technical questions", "situation":"...", "closed": true}
    ]}
 """
+import os
 import argparse, json, sys
 from pathlib import Path
 
@@ -89,7 +90,7 @@ def render(data, cfg):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", required=True, help="JSON du call ; '-' = stdin")
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     a = ap.parse_args()
     cfg = prof._load_yaml(prof.mission_dir(a.mission) / "partner-report.yml")
     raw = sys.stdin.read() if a.input == "-" else Path(a.input).read_text(encoding="utf-8")

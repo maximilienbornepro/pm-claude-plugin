@@ -84,7 +84,7 @@ exploitation, acteurs…). Dans la **vue d'ensemble** (première vue), chaque co
 - Sans `link` vers une vue existante, une vue de détail `couche-<id>` est **créée** (membres de la couche).
 - Les choix sont enregistrés dans **`abstraction.json`** à côté du modèle (`{"_public": …, "<couche>": "<mode>"}`).
 
-**Le générateur propose, la personne décide.** `pm run architecture <mission> --suggest` rend les
+**Le générateur propose, la personne décide.** `pm run archi <mission> --suggest` rend les
 questions à poser, dans l'ordre : le **public** (`direction`, `tech`, `exploitation`, `partenaires`),
 puis chaque couche avec une **proposition motivée** :
 1. le public prime s'il est connu (ex. direction : tout en blocs, exploitation masquée) ;
@@ -96,9 +96,9 @@ Appliquer : `--render --public <p>` puis `--set couche=mode,…` (ou `--apply-su
 ## Le process, de 0 à un schéma
 
 1. Copier `model.example.json` → la mission, le remplir (entités, flux, vues+membres).
-2. `pm run architecture <mission> --render`  → HTML interactif généré.
-3. `pm run architecture <mission>`            → harness (7 invariants) : doit tout passer.
-4. `pm run architecture <mission> --export drawio` → une page draw.io par écran.
+2. `pm run archi <mission> --render`  → HTML interactif généré.
+3. `pm run archi <mission>`            → harness (7 invariants) : doit tout passer.
+4. `pm run archi <mission> --export drawio` → une page draw.io par écran.
 5. Publier (écriture gardée) : 3 cibles au même md5.
 
 Le draw.io **par écran** est automatique : il lit `views[].members`.

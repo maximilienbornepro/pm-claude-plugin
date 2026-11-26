@@ -16,11 +16,11 @@ Une entree du miroir marquee `notion: "à confirmer"` (ex. SPV) n'a pas de page 
 elle est listee a part comme "a arbitrer" (le scaffold proposerait une page, apres
 arbitrage et dry-run, jamais d'ecriture ici).
 """
+import os
 import argparse
 import json
 import sys
 import unicodedata
-import urllib.parse
 from pathlib import Path
 
 HERE = Path(__file__).resolve()
@@ -141,7 +141,7 @@ def _db_block(db_key, databases, solution="notion"):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--pages', help="JSON (liste de titres de pages reelles) ; '-' = stdin")
-    ap.add_argument('--mission', default='sinbad', help="profil, pour les liens SharePoint et le parent Notion")
+    ap.add_argument('--mission', default=os.environ.get("PMF_MISSION", "demo"), help="profil, pour les liens SharePoint et le parent Notion")
     ap.add_argument('--emit-plan', action='store_true',
                     help="emet la spec de creation des pages manquantes (JSON) ; N'ECRIT PAS dans Notion")
     args = ap.parse_args()

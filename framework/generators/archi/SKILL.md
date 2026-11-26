@@ -47,13 +47,13 @@ Dans les deux cas, la suite est identique.
 ## Le pipeline
 
 ```
-pm run architecture <mission> --render          # modèle -> HTML interactif (généré)
-pm run architecture <mission>                   # harness : 7 invariants, doit tout passer
-pm run architecture <mission> --export drawio   # une page draw.io PAR ÉCRAN (lit views[].members)
-pm run architecture <mission> --import x.drawio # draw.io -> model.json reconstruit (scratchpad)
-pm run architecture <mission> --import x.drawio --enrich --page "Big Picture"   # + style par défaut
-pm run architecture <mission> --suggest         # questions d'abstraction à poser (public, couches)
-pm run architecture <mission> --render --public direction --set aifa=abstrait,exploitation=masque
+pm run archi <mission> --render          # modèle -> HTML interactif (généré)
+pm run archi <mission>                   # harness : 7 invariants, doit tout passer
+pm run archi <mission> --export drawio   # une page draw.io PAR ÉCRAN (lit views[].members)
+pm run archi <mission> --import x.drawio # draw.io -> model.json reconstruit (scratchpad)
+pm run archi <mission> --import x.drawio --enrich --page "Big Picture"   # + style par défaut
+pm run archi <mission> --suggest         # questions d'abstraction à poser (public, couches)
+pm run archi <mission> --render --public direction --set aifa=abstrait,exploitation=masque
 # puis publication (écriture gardée) : 3 cibles au même md5
 ```
 

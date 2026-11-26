@@ -9,8 +9,9 @@ Contrairement à l'artefact (figé), cette console lit l'état à chaque requêt
 Deux interfaces distinctes : le plugin (générique, portable) d'un côté ; le projet qui l'appelle de l'autre.
 Stdlib uniquement (http.server), identité Adservio. Lecture seule : il n'écrit rien.
 
-    pm run console [--mission sinbad] [--port 8765]
+    pm run console [--mission <mission>] [--port 8765]
 """
+import os
 import argparse
 import collections
 import html
@@ -240,7 +241,7 @@ def make_handler(mission, project_root):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--project-root", default=str(Path.cwd()),
                     help="racine du projet (pour .claude/usage.log) ; defaut : repertoire courant")

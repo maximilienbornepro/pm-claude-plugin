@@ -16,7 +16,7 @@ Source d'items (une ligne = une exigence / un ticket) : liste d'objets avec au m
 Lecture seule côté systèmes : n'écrit que le fichier de sortie (aucune écriture Office en place, aucune
 notification). Le classeur est **nouveau** : on le remet ensuite où il doit aller.
 """
-import sys, os, json, csv, io, zipfile, html, datetime
+import sys, json, csv, zipfile, html
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent

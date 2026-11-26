@@ -10,7 +10,7 @@ profiles/<mission>/coherence.yml (`chains`). Deux regles :
   - `newer`     : la sortie doit exister et etre **plus recente** que toutes ses sources ;
   - `identical` : la sortie doit avoir le **meme md5** qu'une source unique (copie exacte).
 
-    python3 check_coherence.py [--mission sinbad] [--root /chemin/racine]
+    python3 check_coherence.py [--mission <mission>] [--root /chemin/racine]
 
 Code retour 0 si tout est coherent, 1 sinon. A derouler apres toute modif d'un
 fichier de la chaine (deck, Excel, PNG, page publiee).
@@ -67,7 +67,7 @@ def check(chains, root):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     ap.add_argument("--root", help="prefixe de chemin (sinon coherence.yml > root, sinon chemins tels quels)")
     a = ap.parse_args()
     cfg = prof._load_yaml(prof.mission_dir(a.mission) / "docs-coherence.yml")

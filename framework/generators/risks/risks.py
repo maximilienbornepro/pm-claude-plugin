@@ -182,7 +182,7 @@ def propose(cfg, meta, header, rows):
 
 # ---------------------------------------------------------------- CLI
 def main(argv):
-    mission = next((a for a in argv if not a.startswith("--")), "sinbad")
+    mission = next((a for a in argv if not a.startswith("--")), os.environ.get("PMF_MISSION", "demo"))
     cfg = load_config(mission)
     path = resolve_file(cfg)
 

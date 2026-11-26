@@ -15,7 +15,8 @@ reste au niveau du profil : ce n'est pas porte ici.
     PMF_JIRA_ENV=<.../.env> python3 audit_sprints.py <mission>
 N'ecrit rien.
 """
-import os, sys
+import os
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib"))
@@ -44,7 +45,7 @@ def hours(issue_fields):
 
 
 def main():
-    mission = sys.argv[1] if len(sys.argv) > 1 else "sinbad"
+    mission = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     J = jira_mod.Jira(mission)
 
     sp = J.sprints("active,future")

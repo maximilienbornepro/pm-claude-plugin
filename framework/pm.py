@@ -9,8 +9,8 @@ restent derriere leurs propres flags (--apply...) et la validation en session.
     python3 framework/pm.py missions
 
 Exemples :
-    python3 framework/pm.py run sprint-audit sinbad
-    PMF_JIRA_ENV=.../scan-jira/.env python3 framework/pm.py run projection sinbad
+    python3 framework/pm.py run jira-sprints-audit <mission>
+    PMF_JIRA_ENV=.../scan-jira/.env python3 framework/pm.py run projection <mission>
 """
 import sys, subprocess
 from pathlib import Path
@@ -26,7 +26,7 @@ GEN = {
     "plan":                ("framework/generators/plan/from_jira.py",                 "plan de sprints (page « Avancement et sprints ») depuis Jira, config-driven ; design reutilisable (template + contrat + render + validate)", True),
     "risks":               ("framework/generators/risks/risks.py",                   "registre des risques (lecture ; ecriture gardee)", True),
     "raci":                ("framework/generators/raci/raci.py",                     "matrice RACI + extraits par role (depuis raci.yml)", True),
-    "poc":                 ("framework/generators/poc/poc.py",                       "POC React + Material UI depuis les recits (launcher auto)", True),
+    "poc":                 ("framework/generators/poc/poc.py",                       "POC React + Material UI depuis les recits (launcher auto)", False),
     "archi":               ("framework/generators/archi/architecture.py",            "harness du schema d'archi (validate, lecture seule)", True),
     "activity":            ("framework/generators/activity/activity.py",             "suivi d'activite : collect / check / weekly / sync (dry-run)", True),
     "planning":            ("framework/generators/planning/planning.py",             "planning technique : Gantt PPTX + slide echeances derivee (sync) + situation (statut/levier) + tableaux ; Gantt Excel en alternative", True),
@@ -35,16 +35,17 @@ GEN = {
     "omi-sync":            ("framework/generators/omi-sync/omi_sync.py",             "pendentif Omi -> Notion perso : --fetch / --import (classes, fusionnes) ; --unlock complete les pages verrouillees", False),
     "slack":               ("framework/generators/slack/read_slack.py",              "normalise un export Slack (canaux+DM, threads) vers {date,author,channel,thread,text,url} ; lecture via Claude in Chrome, jamais d'ecriture", True),
     "dossier":             ("framework/generators/dossier/dossier.py",                "dossier projet 16:9 (charte slide-style) : --build json -> PPTX editable + HTML ; --sync PPTX retouche -> json -> HTML (garde-fou anti-ecrasement)", True),
+    "traceability":        ("framework/generators/traceability/traceability.py",     "matrice de couverture IADT pre-remplie (xlsx a listes deroulantes, ou schema Notion) depuis un backlog/des exigences", True),
     "partner-report":      ("framework/generators/partner-report/cr_partenaire.py",  "mail de suivi d'un call partenaire (--input ; rendu texte, jamais d'envoi)", True),
     # --- domaine Jira ---
-    "jira-images":         ("framework/generators/jira-images/jira_image.py",        "images des tickets Jira via API (check ; --apply garde)", True),
+    "jira-images":         ("framework/generators/jira-images/jira_image.py",        "images des tickets Jira via API (check ; --apply garde)", False),
     "jira-changes-audit":  ("framework/generators/jira-changes-audit/changes.py",    "qui a modifie quels tickets, quand, quoi (sections perdues)", True),
     "jira-sprints-audit":  ("framework/generators/jira-sprints-audit/audit_sprints.py","audit des sprints Jira (charge, estimations, blocages)", True),
     # --- domaine Notion ---
     "notion-topics-audit": ("framework/generators/notion-topics-audit/check_sujet.py","valide le FORMAT d'un sujet Notion (--body ; lecture seule)", True),
     "notion-scaffold":     ("framework/generators/scaffold/scaffold_notion.py",      "arbo Notion miroir : pages manquantes (--emit-plan)", True),
     # --- domaine Drive ---
-    "drive-scaffold":      ("framework/generators/scaffold/scaffold_drive.py",       "arbo Drive : ce qui manque (--apply cree les dossiers)", True),
+    "drive-scaffold":      ("framework/generators/scaffold/scaffold_drive.py",       "arbo Drive : ce qui manque (--apply cree les dossiers)", False),
     # --- domaine docs / transverse ---
     "docs-coherence-audit":("framework/generators/docs-coherence-audit/check_coherence.py","coherence docs : une sortie est-elle a jour vs ses sources", True),
     "gate":                ("framework/generators/gate/gate.py",                     "score les portes (gates) d'une mission et RECOMMANDE ; franchissement = acte humain", True),
@@ -53,6 +54,7 @@ GEN = {
     "office":              ("framework/generators/office/office.py",                 "cree un xlsx depuis un template excel si absent, l'edite chirurgicalement si present (OneDrive)", False),
     "weekly-report":       ("framework/generators/weekly-report/collect.py",         "CR hebdo du projet (par semaine, archive) depuis les prompts + mails + artefacts ; demande la semaine", True),
     "trace-audit":         ("framework/generators/trace-audit/trace_audit.py",       "ruptures de la chaine de tracabilite (besoin->ticket->POC->test) ; dit ou aller (lecture seule)", True),
+    "console":             ("framework/generators/console/console.py",               "consoles de gestion en direct sur localhost : plugin (/) et projet (/projet) ; lecture seule", True),
     "cockpit":             ("framework/generators/cockpit/cockpit.py",               "porte d'entree : ou en est la mission, que fait-on ? (etat calcule + suite priorisee)", True),
     "tones":               ("framework/lib/set_tone.py",                             "aligne le ton des agents sur pipeline.yml (dry-run)", True),
     "init":                ("framework/generators/init/init.py",                     "amorce une mission : cree le profil depuis les gabarits (create-si-absent ; dry-run, --apply ecrit)", False),
@@ -86,7 +88,7 @@ def do_list():
     print("Generateurs (python3 framework/pm.py run <nom> <mission> [args]) :\n")
     for name, (_, desc, ro) in GEN.items():
         tag = "lecture seule" if ro else "ecriture"
-        print(f"  {name:16s} {desc}   [{tag}]")
+        print(f"  {name:20s} {desc}   [{tag}]")
     print(f"\nMissions : {', '.join(missions()) or '(aucune)'}")
 
 

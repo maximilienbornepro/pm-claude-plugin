@@ -16,6 +16,7 @@ Dry-run par DÉFAUT. Placement dans un dossier synchronisé = dérouler le `_der
     pm run office <mission> <objet> --out <chemin.xlsx> --apply          # crée si absent
     pm run office <mission> <objet> --out <chemin.xlsx> --append "a|b|c|d" --apply   # ajoute une ligne
 """
+import os
 import argparse
 import sys
 from pathlib import Path
@@ -39,7 +40,7 @@ def _projet(mission):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("object", help="objet du registre (risks, raci...)")
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     ap.add_argument("--out", help="chemin du .xlsx (dans le dossier synchronisé pour remonter sur SharePoint)")
     ap.add_argument("--apply", action="store_true", help="écrit réellement (sinon dry-run)")
     ap.add_argument("--append", help="ajoute UNE ligne : valeurs séparées par | (ordre des colonnes)")

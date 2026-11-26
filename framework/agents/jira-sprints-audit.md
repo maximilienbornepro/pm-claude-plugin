@@ -15,7 +15,7 @@ chaque ticket dans son sprint. Aucune constante de mission en dur : board, sprin
 règles de versions viennent du **profil** (`profiles/<mission>/projection.yml`, `sprint_plan` / `routines`).
 
 ## Déroulé
-1. **Audit mécanique d'abord** : `python3 framework/pm.py run sprint-audit <mission>` (charge par sprint,
+1. **Audit mécanique d'abord** : `python3 framework/pm.py run jira-sprints-audit <mission>` (charge par sprint,
    tickets sans estimation, blocages inversés, dates). Reprends ses résultats.
 2. **Texte par sprint** vs tickets : chaque fonction annoncée dans un sprint a au moins un ticket de ce
    sprint (ou antérieur) qui la porte ; chaque ticket qui livre du visible est évoqué dans le texte de son

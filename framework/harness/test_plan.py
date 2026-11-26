@@ -5,7 +5,6 @@ python3 framework/harness/test_plan.py
 Hors-ligne : valide le contrat, le rendu, et les fonctions pures du pipeline
 (allocation, burn-down) sur des fixtures. N'appelle jamais Jira.
 """
-import os
 import sys
 import json
 import datetime

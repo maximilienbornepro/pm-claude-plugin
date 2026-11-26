@@ -15,7 +15,7 @@ version enregistree par-dessus une autre). N'ecrit jamais.
 L'auteur "assistant" a exclure par defaut (ses passes d'outillage noient le signal) est pris, dans
 l'ordre : --self, puis profil `jira.assistant_author`, puis env PMF_JIRA_SELF. Sans lui, tout est inclus.
 """
-import os, re, sys, urllib.parse
+import os, re, sys
 from datetime import datetime, timedelta
 from pathlib import Path
 

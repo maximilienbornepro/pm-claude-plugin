@@ -30,7 +30,7 @@ Weekly report actuel** et stocké dans une **DB Notion privée**. Quatre pièces
 
 ## Point d'entrée
 
-`python3 framework/pm.py run suivi <mission> collect|check|weekly|sync [--apply]` : lit
+`python3 framework/pm.py run activity <mission> collect|check|weekly|sync [--apply]` : lit
 `profiles/<mission>/suivi.yml`, enchaîne les briques ci-dessus. `sync` est en dry-run sans `--apply`.
 
 ## Boucle quotidienne (« à partir de maintenant »)

@@ -9,8 +9,8 @@ Sortie  : une ligne JSON par prompt pertinent (candidat d'activite a verser au s
           {date, heure, prompt, modifs:[...], session, projet}
           sur stdout ; a relire et curer avant d'alimenter activites.jsonl.
 
-  python3 collect.py --project-dir ~/.claude/projects/-Users-...-Sinbad --date 2026-10-12
-  python3 collect.py --project-dir ... --since 2026-10-06 --until 2026-10-12 --projet SINBAD
+  python3 collect.py --project-dir ~/.claude/projects/-Users-...-<Mission> --date 2026-10-12
+  python3 collect.py --project-dir ... --since 2026-10-06 --until 2026-10-12 --projet <MISSION>
 
 Aucune dependance externe. Lecture seule : n'ecrit rien, n'appelle aucun service.
 
@@ -31,7 +31,7 @@ un appel d'outil modifiant :
 Tout le reste (questions, Read/Grep/Glob, *_search, executeRead, audits, --dry-run,
 --check, build_*.py vers le scratchpad) n'est PAS modifiant.
 """
-import argparse, datetime, json, os, re, sys
+import argparse, json, os, re, sys
 from pathlib import Path
 
 WRITE_TOOLS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
