@@ -1,20 +1,54 @@
 ---
-name: objectifs-sprints
-description: Routine mono-tache - aligne le texte des objectifs des sprints dans Jira sur objectifs_sprints.json. Ecrit seulement les objectifs qui different ; ne deplace AUCUN ticket. Aucune notification.
-schedule: config   # voir routines.yml > routines.objectifs-sprints.schedule (manuel par defaut)
+name: align-sprint-goals
+description: "Dépréciée - pointeur vers publish-projection en mode goals-only (aligne les objectifs des sprints Jira sur le JSON éditorial, aucun ticket déplacé). Écrit : objectifs de sprint Jira (champ texte). Aucune notification."
+meta:
+  kind: routine
+  scope: mission
+  schedule: config          # manuel ; garder l'instance existante, ou passer à <projet>-publish-projection mode goals-only
+  chains: []
+  writes: [jira]
+  validation: none
+  default_mode: apply       # comme publish-projection, mode goals-only
+  output: chat-md
+  notifies: none
+  mcp_deps: []
+  status: draft             # dépréciée : conservée pour les tâches déjà enregistrées qui pointent ici
 ---
 
-**Une seule tache : aligner les objectifs des sprints dans Jira.** Source de verite = le JSON de mission
-(`routines.yml > ...objectifs-sprints.reads.objectifs_json`). On n'y touche pas au backlog.
+# align-sprint-goals - dépréciée, voir publish-projection (mode goals-only)
 
-## Deroule
+Cette routine est **fusionnée** dans `framework/routines/publish-projection/SKILL.md`, **mode
+`goals-only`**. Le dossier reste pour que les tâches déjà enregistrées dans l'app qui pointent ici
+continuent de fonctionner.
 
-1. Lance `commands.objectifs` (`jira_sprints.py objectifs --apply`) : pour chaque sprint, met l'objectif Jira
-   a jour **seulement s'il differe** du JSON.
-2. Rapporte quels sprints ont ete realignes (et lesquels etaient deja bons).
+## Déclencheur et modes
+
+Lancée par une tâche enregistrée (ou à la main) : appliquer exactement
+`framework/routines/publish-projection/SKILL.md`, **mode `goals-only`**, pour la mission donnée.
+
+## Entrées
+
+L'instance `routines.<projet>-align-sprint-goals` de `routines.yml` si elle existe (son
+`commands.objectifs` et ses `writes[].guard`), sinon `routines.<projet>-publish-projection`.
+
+## Enchaînements
+
+Aucun : tout est porté par `publish-projection`.
+
+## Déroulé
+
+0. Préflight, puis étape 3 (objectifs des sprints) de `publish-projection`, rien d'autre.
+
+## Sortie
+
+Les sprints réalignés et ceux déjà bons.
 
 ## Garde-fous
 
-- `notifies: none`. On ecrit un champ texte (objectif de sprint), jamais une mention ni un commentaire.
-- **AUCUN ticket deplace** entre sprints par cette routine.
-- N'ecrit rien d'autre (ni gh-pages, ni tracker, ni Office). Respecte les `writes[].guard` du `routines.yml`.
+Ceux de `publish-projection` : `notifies: none`, **aucun ticket déplacé**, n'écrit que le champ objectif
+des sprints qui diffèrent du JSON.
+
+## Décisions datées
+
+- Fusionnée dans `publish-projection` (mode `goals-only`) ; anciennement nommée `objectifs-sprints`.
+  Pour migrer une tâche enregistrée : pointer vers `publish-projection` avec « mode goals-only ».

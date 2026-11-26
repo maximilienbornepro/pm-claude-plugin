@@ -17,7 +17,7 @@ Config (hors depot, droits 600) :
     python3 omi_sync.py --unlock [--apply]   # complete les pages « Verrouille (plan payant) » (abonnement Omi actif)
 """
 import json, os, re, sys, time, urllib.request, urllib.error
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -31,6 +31,8 @@ CATS = {"social", "technology", "work", "business", "personal", "other", "entert
 def env(name, file):
     if os.environ.get(name):
         return os.environ[name]
+    if not (CFG / file).exists():
+        sys.exit(f"{name} introuvable : créer {CFG / file} (droits 600), voir le SKILL omi-sync")
     for line in (CFG / file).read_text().splitlines():
         if line.startswith(name + "="):
             return line.split("=", 1)[1].strip()
@@ -39,14 +41,16 @@ def env(name, file):
 
 # ---------- Omi (MCP Streamable HTTP) ----------
 OMI_URL = "https://api.omi.me/v1/mcp"
-OMI_H = {"Authorization": "Bearer " + env("OMI_MCP_KEY", "omi.env"), "Content-Type": "application/json",
-         "Accept": "application/json, text/event-stream"}
+def omi_headers():
+    """Read the Omi key only when a call is made (so --help works without any secret)."""
+    return {"Authorization": "Bearer " + env("OMI_MCP_KEY", "omi.env"), "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream"}
 _sid, _n = None, [1]
 
 
 def _post(payload, notify=False):
     global _sid
-    h = dict(OMI_H)
+    h = omi_headers()
     if _sid:
         h["Mcp-Session-Id"] = _sid
     for att in range(8):
@@ -87,15 +91,16 @@ def omi(tool, args):
 
 
 # ---------- Notion (API officielle) ----------
-N_H = {"Authorization": "Bearer " + env("NOTION_TOKEN", "notion.env"), "Notion-Version": "2022-06-28",
-       "Content-Type": "application/json"}
+def notion_headers():
+    return {"Authorization": "Bearer " + env("NOTION_TOKEN", "notion.env"), "Notion-Version": "2022-06-28",
+            "Content-Type": "application/json"}
 
 
 def notion(method, path, data=None):
     for att in range(8):
         time.sleep(0.35)
         req = urllib.request.Request("https://api.notion.com/v1" + path,
-                                     json.dumps(data).encode() if data is not None else None, N_H, method=method)
+                                     json.dumps(data).encode() if data is not None else None, notion_headers(), method=method)
         try:
             return json.load(urllib.request.urlopen(req, timeout=60))
         except urllib.error.HTTPError as e:
@@ -410,6 +415,11 @@ def unlock(st, apply=False, limit=None):
 
 
 def main():
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        print(__doc__)
+        return
+    if not STATE.exists():
+        sys.exit(f"état absent : créer {STATE} (bases Notion `db` et `perso_db`), voir le SKILL omi-sync")
     st = json.loads(STATE.read_text())
     st.setdefault("perso", {})
     if "--fetch" in sys.argv:

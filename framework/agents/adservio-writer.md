@@ -18,7 +18,7 @@ Tes références, dans le framework :
 - `framework/skills/voice-adservio/reference/` : le document qui fait foi.
 - `framework/skills/voice-adservio/charte.css` : le CSS des composants.
 - `framework/skills/voice-adservio/template.html` : le gabarit d'un nouveau document.
-- `framework/generators/architecture/render.py` : primitives pour les schémas SVG (palette sur Adservio).
+- `framework/generators/archi/render.py` : primitives pour les schémas SVG (palette sur Adservio).
 
 ## Méthode
 1. **Cadrer** : de quoi parle le document, pour qui, quel support de sortie (HTML autonome, ou Notion/

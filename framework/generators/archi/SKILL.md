@@ -47,13 +47,13 @@ Dans les deux cas, la suite est identique.
 ## Le pipeline
 
 ```
-pm run architecture <mission> --render          # modèle -> HTML interactif (généré)
-pm run architecture <mission>                   # harness : 7 invariants, doit tout passer
-pm run architecture <mission> --export drawio   # une page draw.io PAR ÉCRAN (lit views[].members)
-pm run architecture <mission> --import x.drawio # draw.io -> model.json reconstruit (scratchpad)
-pm run architecture <mission> --import x.drawio --enrich --page "Big Picture"   # + style par défaut
-pm run architecture <mission> --suggest         # questions d'abstraction à poser (public, couches)
-pm run architecture <mission> --render --public direction --set aifa=abstrait,exploitation=masque
+pm run archi <mission> --render          # modèle -> HTML interactif (généré)
+pm run archi <mission>                   # harness : 7 invariants, doit tout passer
+pm run archi <mission> --export drawio   # une page draw.io PAR ÉCRAN (lit views[].members)
+pm run archi <mission> --import x.drawio # draw.io -> model.json reconstruit (scratchpad)
+pm run archi <mission> --import x.drawio --enrich --page "Big Picture"   # + style par défaut
+pm run archi <mission> --suggest         # questions d'abstraction à poser (public, couches)
+pm run archi <mission> --render --public direction --set aifa=abstrait,exploitation=masque
 # puis publication (écriture gardée) : 3 cibles au même md5
 ```
 
@@ -172,3 +172,12 @@ avant d'être écrit.
 - La **source de vérité est le modèle** : on régénère, on ne patche pas le HTML.
 - Rien n'est publié sans validation ; les 7 invariants doivent passer.
 - Le draw.io par écran découle de `views[].members` - aucune invention de contenu de vue.
+
+## Deux gabarits HTML
+
+- **Rendu de référence** (`golden.py`) : inchangé, le schéma interactif tel qu'on le publie.
+- **Gabarit dossier projet** (`dossier_skin.py`) : le même schéma habillé à la charte des slides (logo du
+  client, sur-titre, titre, légende, typo légère, fond ivoire), vue macro en tête, sous-vues toujours
+  accessibles. `python3 framework/generators/archi/dossier_skin.py <mission> -o architecture.html`.
+- **Slide PowerPoint** : le générateur `dossier` (type `archi`) convertit la vue macro en formes natives
+  (`framework/lib/svg2pptx.py`) et met un lien vers ce gabarit.

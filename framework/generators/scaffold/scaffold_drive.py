@@ -9,6 +9,7 @@ d'ecrasement, jamais de suppression, jamais de deplacement. Un dossier ne notifi
     python3 scaffold_drive.py --pm "<chemin vers 02 - Project Management>"            # dry-run
     python3 scaffold_drive.py --pm "<...>" --apply                                     # cree les manquants
 """
+import os
 import argparse
 import sys
 from pathlib import Path
@@ -30,7 +31,7 @@ def _mission_name(mission):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--pm', required=True, help="chemin du dossier '02 - Project Management'")
-    ap.add_argument('--mission', default='sinbad', help="mission (pour le jeton <MISSION> des fichiers standard)")
+    ap.add_argument('--mission', default=os.environ.get("PMF_MISSION", "demo"), help="mission (pour le jeton <MISSION> des fichiers standard)")
     ap.add_argument('--apply', action='store_true', help="cree les dossiers manquants (creer-si-absent)")
     args = ap.parse_args()
 

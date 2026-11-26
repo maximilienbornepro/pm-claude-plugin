@@ -10,7 +10,7 @@ classeurs OneDrive) - donc portable ET compatible avec le garde-fou Office (qui 
 synchronisé en session (déroulé Office : fraîcheur, écriture unique, jamais d'écrasement d'autrui).
 
     import xlsx_write
-    rows = xlsx_write.rows_from_template(tpl, projet="SINBAD")   # tpl = templates.load("excel", "risks")
+    rows = xlsx_write.rows_from_template(tpl, projet="<MISSION>")   # tpl = templates.load("excel", "risks")
     xlsx_write.write(path, sheet_name=tpl.get("sheet", "Feuille"), rows=rows)
 """
 import zipfile

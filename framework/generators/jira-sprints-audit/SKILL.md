@@ -25,7 +25,7 @@ pas porté ici : il vit au niveau du profil et de l'audit de plan (`sinbad-plan-
 
 ## Usage
 ```
-PMF_JIRA_ENV=<.../scan-jira/.env> python3 framework/pm.py run sprint-audit <mission>
+PMF_JIRA_ENV=<.../scan-jira/.env> python3 framework/pm.py run jira-sprints-audit <mission>
 ```
 
 ## Garde-fous

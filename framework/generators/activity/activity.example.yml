@@ -1,4 +1,4 @@
-# Gabarit de config du generateur de suivi - a copier en profiles/<mission>/suivi.yml.
+# Gabarit de config du generateur de suivi - a copier en profiles/<mission>/activity.yml.
 # Le generateur (suivi.py) ne lit QUE ce fichier : changer de mission = remplir ce fichier.
 
 # Store d'activites (JSONL, source de verite), relatif a la racine du framework.

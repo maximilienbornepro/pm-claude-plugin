@@ -8,7 +8,7 @@ n'invente pas le contenu d'une vue et on ne génère que l'overview (+ pages vid
     python3 export_drawio.py <mission> [-o sortie.drawio]
 Lecture seule côté mission : lit model.json, écrit UNIQUEMENT le .drawio de sortie.
 """
-import sys, os, json, math, html, base64
+import sys, os, json, html, base64
 from pathlib import Path
 
 HERE = Path(__file__).resolve()
@@ -267,7 +267,7 @@ def write_per_screen(m, out_dir, mission_logos=None):
 
 
 def main():
-    mission = sys.argv[1] if len(sys.argv) > 1 else "sinbad"
+    mission = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     out = None
     if "-o" in sys.argv:
         out = sys.argv[sys.argv.index("-o") + 1]

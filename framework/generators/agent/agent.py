@@ -59,7 +59,7 @@ def main():
     ap.add_argument("--model")
     ap.add_argument("--agent")
     ap.add_argument("--command", help="nom d'une commande -> compte via la table de routage (mode multi)")
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     ap.add_argument("--dry-run", action="store_true", help="montre la commande, ne lance rien")
     ap.add_argument("--exec", dest="run_exec", action="store_true",
                     help="passe --dangerously-skip-permissions au worker : pour qu'il EXECUTE (scripts, "

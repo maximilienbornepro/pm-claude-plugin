@@ -323,19 +323,10 @@ def board(mission):
     return load(mission)['profile']['jira']['board']
 
 
-def tone_for(mission, deliverable):
-    d = load(mission)['pipeline']['deliverables'].get(deliverable, {})
-    return d.get('tone')
-
-
-def tone_for_agent(mission, agent):
-    return load(mission)['pipeline']['agents'].get(agent)
-
-
 # ---------------------------------------------------------------- demo
 if __name__ == '__main__':
     import sys
-    m = sys.argv[1] if len(sys.argv) > 1 else 'sinbad'
+    m = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     data = load(m)
     p, pipe = data['profile'], data['pipeline']
     print(f"Profil        : {p['name']}  (parseur: {'PyYAML' if _HAVE_YAML else 'integre, 0 dep'})")

@@ -22,7 +22,7 @@ Deux règles par chaîne :
 
 ## Usage
 ```
-python3 framework/pm.py run coherence <mission> [--root /chemin/racine]
+python3 framework/pm.py run docs-coherence-audit <mission> [--root /chemin/racine]
 ```
 `--root` préfixe les chemins (sinon `coherence.yml > root`, sinon chemins tels quels).
 

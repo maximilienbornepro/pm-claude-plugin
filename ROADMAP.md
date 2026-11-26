@@ -108,7 +108,7 @@ construit à côté ; **rien n'écrit dehors sans dry-run + validation + carte d
 - [x] **notion-sujets** `generators/notion-topics-audit/` : config `notion_sujets.yml` (data source, filtre TPM,
       ton, seuils de structure) + `check_sujet.py` (validateur de format : sections Contexte/Action, pas de
       liste à plat ≥3, pas de prose au kilomètre, pas de mention ; testé) + SKILL (écriture connecteur gardée).
-      Condensation de l'existant : routine `revue-sujets`, mode `condensation`.
+      Condensation de l'existant : routine `review-topics` (anciennement `revue-sujets`), mode `condensation`.
 - [~] notion-planning : report planning, écriture gardée « demander avant » (SKILL + `notion_planning.yml` faits ; pas de validateur dédié, écriture par le connecteur)
 - [x] **cr-partenaire** `generators/partner-report/cr_partenaire.py` + `profiles/sinbad/partner-report.yml` : mail KSAT (EN) / Airbus (FR), format par partenaire, rendu texte **sans envoi** (testé)
 - [x] **raci** `generators/raci/raci.py` + `profiles/sinbad/raci.yml` : RACI data-driven (rôles = colonnes,
@@ -120,7 +120,7 @@ construit à côté ; **rien n'écrit dehors sans dry-run + validation + carte d
       écriture gardée via le helper Office (jamais exécutée ici). Reste : annexe structurée des sujets Notion.
 
 - [x] **suivi d'activité** `generators/activity/{collect,build_weekly,sync_notion}.py` + `profiles/sinbad/activity.yml`
-      + routine `suivi` (quotidienne, 19h) : prompts Claude Code **pertinents** (= ayant modifié le projet) →
+      + routine `collect-activity` (anciennement `suivi`, quotidienne, 19h) : prompts Claude Code **pertinents** (= ayant modifié le projet) →
       store JSONL curé → DB Notion **privée** (4 catégories : produit / attendu de moi / j'attends des autres /
       bloquant) + bloc Weekly report (modèle actuel). DB privée créée et peuplée ; routine câblée dans routines.yml.
 
@@ -136,9 +136,11 @@ construit à côté ; **rien n'écrit dehors sans dry-run + validation + carte d
 
 ## Lot 6 - Routines planifiées  `[x]`
 
-- [x] Définitions `routines/` paramétrées par profil : **une routine = une tâche**. 7 routines mono-tâche
-      (`publication-projection`, `objectifs-sprints`, `avancement-tracker`, `audit-perimetre`, `revue-sujets`,
-      `revue-risques`, `suivi`) dans `routines.yml` + un SKILL générique chacune
+- [x] Définitions `routines/` paramétrées par profil : **une routine = une tâche**. 10 routines
+      (`publish-projection`, `align-sprint-goals` (dépréciée -> `publish-projection` mode `goals-only`),
+      `audit-scope`, `track-progress`, `collect-activity`, `review-topics`, `review-risks`, `draft-followups`,
+      `morning-digest`, `omi-sync`) dans `routines.yml` + un SKILL générique chacune, au même gabarit
+      (frontmatter `meta`, préflight avant écriture) ; noms anglais = dossier (anciennement noms français)
 - [x] Doc de ré-activation portable (`framework/routines/README.md` : pointeur mince app -> SKILL, procédure)
 
 ## Lot 7 - Cohérence & audits  `[~]`

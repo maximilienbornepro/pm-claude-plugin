@@ -33,13 +33,3 @@ def folder_link(profile, rel_path):
         return f"https://{ws}/Shared%20Documents/Forms/AllItems.aspx?id=" + urllib.parse.quote(idp)
     root = (profile.get("drive", {}).get("root") or "").rstrip("/")
     return f"{root}/{rel_path}" if root else rel_path
-
-
-def file_link(profile, rel_path):
-    """rel_path : chemin du fichier relatif a la racine documentaire."""
-    store = _store(profile)
-    if store == "sharepoint":
-        ws = _ws(profile)
-        return f"https://{ws}/Shared%20Documents/" + urllib.parse.quote(rel_path) + "?web=1"
-    root = (profile.get("drive", {}).get("root") or "").rstrip("/")
-    return f"{root}/{rel_path}" if root else rel_path

@@ -61,6 +61,16 @@
             "statusMessage": "Journal d'usage (skills/agents)"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_activite.py\"",
+            "timeout": 5
+          }
+        ],
+        "matcher": ".*"
       }
     ],
     "PostToolUse": [
@@ -72,6 +82,27 @@
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/archi_kit.py\"",
             "timeout": 150,
             "statusMessage": "Kit du generateur d'archi (zip) a jour"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_activite.py\"",
+            "timeout": 5
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_activite.py\"",
+            "timeout": 5
           }
         ]
       }

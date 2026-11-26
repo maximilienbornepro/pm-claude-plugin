@@ -26,8 +26,8 @@ il rend des **slides prêtes à relire** (markdown) et une sortie **JSON** pour 
 
 ## Usage
 ```
-python3 framework/pm.py run gate-deck <mission>          # le deck en markdown (relecture)
-python3 framework/pm.py run gate-deck <mission> --json   # le deck en JSON (pour l'assemblage)
+python3 framework/pm.py run deck-gate <mission>          # le deck en markdown (relecture)
+python3 framework/pm.py run deck-gate <mission> --json   # le deck en JSON (pour l'assemblage)
 ```
 
 ## Assemblage pptx (étape gardée, hors de ce générateur)

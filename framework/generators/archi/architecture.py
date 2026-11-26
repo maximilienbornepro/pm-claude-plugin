@@ -241,7 +241,7 @@ def do_export(mission):
 
 
 def main():
-    mission = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else "sinbad"
+    mission = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else os.environ.get("PMF_MISSION", "demo")
     if "--render" in sys.argv:
         do_render(mission)
     elif "--export" in sys.argv:

@@ -53,8 +53,13 @@ def main():
     # SKILL-ONLY (meta `exec: skill`, ex. notion-planning : pur connecteur, aucun script `pm run`) est
     # legitime sans entree GEN ; on valide quand meme sa meta.
     dirs_utilises = {Path(t[0]).parent.name for t in GEN.values()}
-    for sk in (ROOT / "framework" / "generators").glob("*/SKILL.md"):
-        d = sk.parent.name
+    for gd in sorted((ROOT / "framework" / "generators").iterdir()):
+        if not gd.is_dir() or gd.name.startswith(("_", ".")) or gd.name == "__pycache__":
+            continue
+        d = gd.name
+        if not (gd / "SKILL.md").exists():
+            err(f"dossier generateur sans SKILL.md : {d}")
+            continue
         if d in dirs_utilises:
             continue
         meta = (metas.get(d) or {}).get("meta") or {}

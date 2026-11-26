@@ -1,19 +1,56 @@
 ---
-name: avancement-tracker
-description: Routine mono-tache - pousse l'avancement V1 (un seul nombre) dans un seul champ d'une seule page du tracker Notion. Lecture de la projection, ecriture d'un unique champ. Aucune notification.
-schedule: config   # voir routines.yml > routines.avancement-tracker.schedule
+name: track-progress
+description: "Pousse l'avancement V1 (un seul nombre, lu dans la projection) dans un seul champ d'une seule page du tracker Notion. Écrit : notion (un champ). Aucune notification."
+meta:
+  kind: routine
+  scope: mission
+  schedule: config          # routines.yml > routines.<projet>-track-progress.schedule (ex. 8h/11h/18h)
+  chains: [projection]
+  writes: [notion]
+  validation: none          # un seul champ, idempotent : rien n'est écrit s'il est déjà à jour
+  default_mode: apply       # routine planifiée ; --dry-run pour un essai
+  output: chat-md
+  notifies: none
+  mcp_deps: [notion]
+  status: stable
 ---
 
-**Une seule tache : mettre a jour l'avancement V1 dans le tracker Notion.** Un seul champ, une seule page.
+# track-progress - avancement V1 dans le tracker
 
-## Deroule
+**Une seule tâche : mettre à jour l'avancement V1 dans le tracker Notion.** Un seul champ, une seule page.
 
-1. `chains: [projection]` : lit le pourcentage V1 (reste/charge) de la projection, en lecture seule.
-2. Ecrit `tracker.field` sur `tracker.page_id` (`routines.yml > ...avancement-tracker.tracker`) : la valeur
-   est `v1_pct / 100` (nombre 0..1). **Si le champ est deja a jour, ne rien ecrire.**
+## Déclencheur et modes
+
+Planifiée (`schedule` de l'instance). `--dry-run` (ou « à blanc ») : on lit et on dit la valeur qui
+serait écrite, sans écrire.
+
+## Entrées
+
+Clé d'instance `routines.<projet>-track-progress` ; à défaut, l'ancienne clé (voir `framework/routines/README.md`, colonne « Anciennement »).
+
+Instance `routines.<projet>-track-progress` : `tracker.page_id`, `tracker.field`.
+
+## Enchaînements
+
+`chains: [projection]` : pourcentage V1 (reste / charge), en lecture seule.
+
+## Déroulé
+
+0. **Préflight** : `python3 framework/pm.py run preflight <mission>`, puis `notion-get-self` :
+   `workspace.id` + `workspace.name` == profil. BLOQUANT ou identité différente : on n'écrit pas, on
+   rend la valeur dans le rapport.
+1. **Lire** : `python3 framework/pm.py run projection <mission>` ; retenir `v1_pct`.
+2. **Comparer** : lire `tracker.field` sur `tracker.page_id`. La valeur cible est `v1_pct / 100`
+   (nombre 0..1). **Si le champ est déjà à jour, ne rien écrire.**
+3. **Écrire** le seul champ `tracker.field` de la seule page `tracker.page_id`.
+4. **Vérifier** : relire le champ.
+
+## Sortie
+
+Une ligne : valeur avant -> après, ou « déjà à jour ».
 
 ## Garde-fous
 
-- `notifies: none`. Ecriture d'un **seul champ** sur une **seule page** ; jamais une autre page, jamais une
-  mention, jamais un deplacement de page (hook `garde_suppression.py`).
-- N'ecrit rien d'autre. Respecte `routines.yml > ...avancement-tracker.writes[].guard`.
+- `notifies: none`. Écriture d'un **seul champ** sur une **seule page** ; jamais une autre page, jamais
+  une mention, jamais un déplacement de page (hook `garde_suppression.py`).
+- N'écrit rien d'autre. Respecte `writes[].guard` de l'instance.

@@ -109,13 +109,13 @@ def detect(mission):
             "d'ou le report planning tire gel/MEP/jalons",
             "a confirmer",
             ["framework/generators/notion-planning/planning.sample.yml (sample a copier/adapter)",
-             "03 - Roadmap/Roadmap_SINBAD.xlsx", "04 - Planning/Planning_SINBAD.xlsx"],
+             f"03 - Roadmap/Roadmap_{mission.upper()}.xlsx", f"04 - Planning/Planning_{mission.upper()}.xlsx"],
             "notion-planning.yml > source", "value")
 
     # 5. carte de coherence des docs
     dc = _raw(mission, "docs-coherence.yml")
     if any(a in dc.lower() for a in ACONF):
-        base = (droot or "${SINBAD_PM_ROOT}") + "/02 - Project Management"
+        base = (droot or "${PMF_DRIVE_ROOT}") + "/02 - Project Management"
         add("docs_coherence.root", "Racine de la carte de coherence",
             "verifier GATE <-> Excel <-> PPT <-> PNG a jour",
             "a confirmer", base, "docs-coherence.yml > root + chains", "value")

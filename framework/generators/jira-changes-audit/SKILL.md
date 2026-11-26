@@ -18,12 +18,12 @@ via les **sections perdues**. N'écrit jamais.
 
 ## Usage
 ```
-python3 framework/pm.py run ticket-changes <mission>                  # depuis ce matin 00h00
-python3 framework/pm.py run ticket-changes <mission> --since 10:30     # depuis aujourd'hui 10h30
-python3 framework/pm.py run ticket-changes <mission> --since 2026-09-22T17:00
-python3 framework/pm.py run ticket-changes <mission> --last-point      # depuis 10h30 la veille ouvrée
-python3 framework/pm.py run ticket-changes <mission> --me              # inclut l'auteur "assistant"
-python3 framework/pm.py run ticket-changes <mission> --self "Nom"      # auteur assistant à exclure
+python3 framework/pm.py run jira-changes-audit <mission>                  # depuis ce matin 00h00
+python3 framework/pm.py run jira-changes-audit <mission> --since 10:30     # depuis aujourd'hui 10h30
+python3 framework/pm.py run jira-changes-audit <mission> --since 2026-09-22T17:00
+python3 framework/pm.py run jira-changes-audit <mission> --last-point      # depuis 10h30 la veille ouvrée
+python3 framework/pm.py run jira-changes-audit <mission> --me              # inclut l'auteur "assistant"
+python3 framework/pm.py run jira-changes-audit <mission> --self "Nom"      # auteur assistant à exclure
 ```
 
 L'auteur **assistant** exclu par défaut (ses passes d'outillage noient le signal) est pris dans

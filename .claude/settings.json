@@ -50,6 +50,39 @@
             "statusMessage": "Journal d'usage (skills/agents)"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_activite.py\"",
+            "timeout": 5
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_activite.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_activite.py\"",
+            "timeout": 5
+          }
+        ],
+        "matcher": ".*"
       }
     ]
   }

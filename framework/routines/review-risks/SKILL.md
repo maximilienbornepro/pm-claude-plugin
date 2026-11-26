@@ -1,54 +1,97 @@
 ---
-name: revue-risques
-description: Routine config-driven - relit le registre de risques, le confronte aux sujets de suivi et a la projection de livrabilite, montre le registre actualise, puis met a jour le fichier en place apres validation en seance. Aucune notification.
-schedule: config   # voir routines.yml > routines.revue-risques.schedule (manuel par defaut ; planifiable)
+name: review-risks
+description: "Relit chaque registre de risques, le confronte aux sujets de suivi et à la projection de livrabilité, montre le registre actualisé, puis met à jour le fichier en place après validation en séance. Écrit : office (registre, après oui). Aucune notification."
+meta:
+  kind: routine
+  scope: mission
+  schedule: config          # routines.yml > routines.<projet>-review-risks.schedule (manuel par défaut ; planifiable)
+  chains: [risks, projection]
+  writes: [office]
+  validation: chat
+  default_mode: dry-run     # propositions seulement tant que le oui n'est pas donné
+  output: chat-md
+  notifies: none
+  mcp_deps: [m365]
+  status: stable
 ---
 
-Routine de revue des **risques**. Elle relit **chaque registre declare dans `risks.yml > registres` (BUILD et RUN)**, le confronte a l'etat reel du projet, **montre le registre actualise dans la conversation**, puis, apres confirmation en seance, **met a jour chaque fichier en place** avec les garde-fous ci-dessous. Elle ne touche jamais le tracker de suivi et n'envoie aucune notification. Reponds dans la langue du profil (`profile.yml > lang`).
+# review-risks - revue du registre des risques
 
-**Deux registres (BUILD et RUN).** `risks.yml > registres` liste les classeurs a reviser. Les colonnes du BUILD sont connues ; celles du RUN sont `a_confirmer` : pour le RUN, **lire la ligne d'en-tete du classeur avant d'ecrire** et mapper depuis les libelles lus (`label/probability/impact/detail`, plus `mitigation/owner` s'ils existent). Ne jamais inventer une position de colonne. Traiter les deux registres dans la meme passe (montrer, valider, ecrire), chacun avec les memes garde-fous Office.
+Elle relit **chaque registre déclaré dans `risks.yml > registres`**, le confronte à l'état réel du
+projet, **montre le registre actualisé dans la conversation**, puis, après confirmation en séance,
+**met à jour chaque fichier en place** avec les garde-fous ci-dessous. Elle ne touche jamais le tracker
+de suivi. Réponds dans la langue du profil (`profile.yml > lang`).
 
-Tout le propre-a-la-mission (classeur, mapping des colonnes, echelle, sources annexees) vit dans **`profiles/<mission>/risks.yml`** (le generateur `risks` ne lit que lui) et dans **`routines.yml > routines.revue-risques`**. Ce SKILL porte la methode et les garde-fous.
+## Déclencheur et modes
 
-**Racine projet** : resolue de facon portable (voir `routines.yml > project_root_env`). Jamais de chemin propre a un poste.
+- Manuel (ou planifiée), ou **enchaînée par `review-topics`** pour répercuter les sujets qui viennent de
+  changer.
+- Sans le oui en séance, la routine s'arrête à l'étape 4 (propositions).
 
-## Ce qu'elle enchaine
+## Entrées
 
-`chains: [risks, projection]` - deux generateurs du framework en lecture seule :
+Clé d'instance `routines.<projet>-review-risks` ; à défaut, l'ancienne clé (voir `framework/routines/README.md`, colonne « Anciennement »).
 
-- **`risks`** lit chaque registre de `risks.yml > registres` (BUILD et RUN) - chemin, colonnes `label/probability/impact/detail`, echelle. Il ne fait que lire et proposer : son `write.enabled` reste `false`.
-- **`projection`** fournit la livrabilite V1 (reste par pole, chemin critique) qui sert le risque de livraison.
+- `profiles/<mission>/risks.yml` (le générateur `risks` ne lit que lui) : `registres` (chemin, mapping
+  de colonnes `label/probability/impact/detail`, plus `mitigation/owner` s'ils existent), `scale`.
+- Instance `routines.<projet>-review-risks` : `reads.sujets_data_source`, `reads.absences`,
+  `writes[].guard`, `backup_dir_env`.
+- Racine projet : `routines.yml > project_root_env`, puis replis. Jamais de chemin propre à un poste.
 
-## Etape 1 : lire le registre (lecture seule)
+**Plusieurs registres** (ex. BUILD et RUN) : tous ceux de `risks.yml > registres`, traités dans la même
+passe (montrer, valider, écrire), chacun avec les mêmes garde-fous Office. Pour un registre dont les
+colonnes sont `a_confirmer`, **lire la ligne d'en-tête du classeur avant d'écrire** et mapper depuis les
+libellés lus. Ne jamais inventer une position de colonne.
 
-Via le generateur `risks` et `risks.yml`. Lecture en decompressant le XML du classeur (`sharedStrings.xml` + la feuille), jamais via openpyxl (il detruirait dessins et mise en forme).
+## Enchaînements
 
-## Etape 2 : lire les sujets et l'etat projet
+`chains: [risks, projection]` : deux générateurs en lecture seule.
 
-- Base de suivi (`routines.yml > ...revue-risques.reads.sujets_data_source`) : un sujet termine baisse ou clot son risque ; bloque ou non demarre sur un prerequis le maintient ou le releve ; un sujet nouveau peut faire emerger un risque.
-- Projection (generateur `projection`) : livrabilite V1.
-- Absences connues (`reads.absences`) pesant sur la fenetre avant la mise en service.
+- **`risks`** lit chaque registre. Il ne fait que lire et proposer : son `write.enabled` reste `false`.
+- **`projection`** fournit la livrabilité V1 (reste par pôle, chemin critique) qui sert le risque de
+  livraison.
 
-## Etape 3 : reevaluer chaque risque
+## Déroulé
 
-Rapprocher chaque ligne du ou des sujets qui la portent et ajuster : sujet termine -> baisse/clos ; en cours -> maintien, detail au present ; bloque/non demarre sur un prerequis -> releve ; risque caduc -> proposer de le retirer ; sujet critique sans risque -> proposer un nouveau risque.
+0. **Préflight** : `python3 framework/pm.py run preflight <mission>`, puis `get_me` : `mail` / tenant ==
+   profil. BLOQUANT ou identité différente : on s'arrête aux propositions (étape 4). L'écriture reste
+   sous `drive.root` et sur le bon `web_site`.
+1. **Lire le registre** : via `python3 framework/pm.py run risks <mission>`. Lecture en décompressant le
+   XML du classeur (`sharedStrings.xml` + la feuille), jamais via openpyxl (il détruirait dessins et mise
+   en forme).
+2. **Lire les sujets et l'état projet** :
+   - base de suivi (`reads.sujets_data_source`) : un sujet terminé baisse ou clôt son risque ; bloqué ou
+     non démarré sur un prérequis le maintient ou le relève ; un sujet nouveau peut faire émerger un
+     risque ;
+   - projection : `python3 framework/pm.py run projection <mission>` (livrabilité V1) ;
+   - absences connues (`reads.absences`) pesant sur la fenêtre avant la mise en service.
+3. **Réévaluer chaque risque** : rapprocher chaque ligne du ou des sujets qui la portent ; sujet terminé
+   -> baisse / clos ; en cours -> maintien, détail au présent ; bloqué / non démarré sur un prérequis ->
+   relevé ; risque caduc -> proposer de le retirer ; sujet critique sans risque -> proposer un nouveau
+   risque.
+4. **Proposer** : afficher dans la conversation le tableau complet actualisé : par risque, Probabilité et
+   Impact (avant -> après si ça change), un détail court au présent, la justification (sujet lié et
+   statut). Lister à part les risques relevés, baissés / clos, retirés, nouveaux. Détails factuels, au
+   présent, sans nom de personne dans le libellé publié (le registre part dans le deck), échelle de
+   `risks.yml > scale` uniquement.
+5. **Valider** : attendre le **go de l'utilisateur dans la session**.
+6. **Écrire** via le harness Office (`framework/harness/onedrive_xlsx.py`), avec **toutes** les gardes de
+   `writes[].guard` :
+   - **fraîcheur SharePoint d'abord** : date du jour ou postérieure à la copie locale = quelqu'un est
+     dedans, **on n'écrit pas**, on transmet à la personne qui a la main ;
+   - **sauvegarde horodatée** avant d'écrire (`backup_dir_env`) ;
+   - **écriture chirurgicale dans le XML**, uniquement les cellules Probabilité / Impact / Détail et les
+     lignes de risque ajoutées ou retirées ;
+   - **une seule écriture** en place (jamais `rm` puis copie, jamais `mv`), fichier fermé.
+7. **Vérifier** : comparer la taille locale et SharePoint, et prévenir en cas d'écart.
 
-## Etape 4 : rendre le registre actualise (propositions)
+## Sortie
 
-Afficher dans la conversation le tableau complet actualise : par risque, Probabilite et Impact (avant -> apres si ca change), un detail court au present, la justification (sujet lie et statut). Lister a part les risques releves, baisses/clos, retires, nouveaux. Details factuels, au present, sans nom de personne dans le libelle publie (le registre part dans le deck), echelle de `risks.yml > scale` uniquement.
+Le registre actualisé (Markdown) dans la conversation, puis ce qui a été écrit, par registre.
 
-## Etape 5 : mettre a jour le fichier (apres confirmation en seance)
+## Garde-fous
 
-Montrer d'abord le tableau (etape 4) et attendre le **go de l'utilisateur dans la session**. Ensuite, mise a jour via le harness Office du framework (`onedrive_xlsx.py`), avec **toutes** les gardes de `routines.yml > ...revue-risques.writes[].guard` :
-
-- **Fraicheur SharePoint d'abord** : date du jour ou posterieure a la copie locale = quelqu'un est dedans, **on n'ecrit pas**, on transmet a la personne qui a la main.
-- **Sauvegarde horodatee** avant d'ecrire (`backup_dir_env`).
-- **Ecriture chirurgicale dans le XML**, uniquement les cellules Probabilite/Impact/Detail et les lignes de risque ajoutees ou retirees.
-- **Une seule ecriture** en place (jamais `rm` puis copie, jamais `mv`), fichier ferme.
-- **Comparer ensuite la taille locale et SharePoint** et prevenir en cas d'ecart.
-
-## Ce que cette routine ne fait jamais
-
-- **`notifies: none`** : ni mail, ni message, ni mention ; personne n'est notifie.
+- **`notifies: none`** : ni mail, ni message, ni mention ; personne n'est notifié.
 - Elle ne modifie pas le tracker de suivi ni une autre page.
-- Elle n'ecrit pas le fichier Office sans confirmation en seance, et jamais s'il a ete touche le jour meme.
+- Elle n'écrit pas le fichier Office sans confirmation en séance, et jamais s'il a été touché le jour
+  même.

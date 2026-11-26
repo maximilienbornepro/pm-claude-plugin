@@ -153,7 +153,7 @@ def themes_freq(prompts, themes):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mission", default="sinbad")
+    ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     ap.add_argument("--week", help="AAAA-Www (ISO). Sans ça : --list sous-entendu.")
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--json", help="écrit la matière dans ce fichier")

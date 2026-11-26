@@ -9,7 +9,7 @@ lien). Le rendu reprend EXACTEMENT le modele de la page Notion "Weekly report" :
   **Ce qui manque pour avancer**         <- type "attends_autres"
   **Plan d'action semaine prochaine**    <- type "attendu_moi"
 
-  python3 build_weekly.py --store profiles/sinbad/suivi/activites.jsonl
+  python3 build_weekly.py --store profiles/<mission>/activity/activites.jsonl
   python3 build_weekly.py --store ... --week 2026-10-12     # semaine contenant ce jour
   python3 build_weekly.py --store ... --since 2026-10-06 --until 2026-10-12
 

@@ -45,7 +45,7 @@ CONNECTORS = [
 
 
 def main():
-    mission = sys.argv[1] if len(sys.argv) > 1 else "sinbad"
+    mission = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     P = prof.load(mission)["profile"]
     conns = P.get("connections", {}) or {}
 

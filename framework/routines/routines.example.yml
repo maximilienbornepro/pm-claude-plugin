@@ -1,47 +1,99 @@
-# Gabarit des routines planifiees - a copier en profiles/<mission>/routines.yml.
-# Les SKILL.md generiques de framework/routines/<nom>/ lisent ce fichier : aucun identifiant
-# ni chemin propre a une mission n'est en dur dans un SKILL. Changer de mission = remplir
+# Gabarit des routines planifiées - à copier en profiles/<mission>/routines.yml.
+# Les SKILL.md génériques de framework/routines/<name>/ lisent ce fichier : aucun identifiant
+# ni chemin propre à une mission n'est en dur dans un SKILL. Changer de mission = remplir
 # ce fichier, pas toucher aux SKILL ni au code.
 #
-# Regles permanentes (valent pour TOUTE routine, non negociables) :
-#   - notifies: none sur chaque routine ; aucune ne declenche mail/mention/partage/commentaire/Teams.
-#   - toute ecriture est GARDEE : un champ `guard` dit la condition imperative avant d'ecrire.
-#     Sans validation (formulaire, oui en seance) et sans la garde, on ne touche a rien.
-#   - aucune routine n'ecrit hors de son perimetre decrit ici.
-#   - jamais de chemin propre a un poste : la racine projet se resout par env puis repli.
+# Règles permanentes (valent pour TOUTE routine, non négociables) :
+#   - notifies: none sur chaque routine ; aucune ne déclenche mail/mention/partage/commentaire/Teams.
+#   - toute écriture est GARDÉE : un champ `guard` dit la condition impérative avant d'écrire.
+#     Sans validation (formulaire, oui en séance) et sans la garde, on ne touche à rien.
+#   - avant toute écriture externe : `python3 framework/pm.py run preflight <mission>` (voir CLAUDE.md).
+#   - aucune routine n'écrit hors de son périmètre décrit ici.
+#   - jamais de chemin propre à un poste : la racine projet se résout par env puis repli.
 #
-# `chains` ne liste que des generateurs du framework (voir `python3 framework/pm.py list`) :
-#   projection, sprint-audit, risks, jira-image, architecture, scaffold-drive, tone.
-# Une routine peut aussi enchainer une autre routine (son nom), qui enchaine ses propres generateurs.
+# Clé d'instance : `<projet>-<name>` (ex. `sinbad-publish-projection`), `skill: <name>` = nom du dossier
+# framework/routines/<name>/ (noms anglais) :
+#   publish-projection, align-sprint-goals (dépréciée -> publish-projection mode goals-only),
+#   audit-scope, track-progress, collect-activity, review-topics, review-risks, draft-followups,
+#   morning-digest. (omi-sync est transverse : pas d'instance de mission.)
+#
+# `chains` ne liste que des générateurs du framework, par leur nom canonique
+# (`python3 framework/pm.py list`), ou une autre routine (son nom) :
+#   projection, jira-sprints-audit, risks, activity, jira-images, archi, drive-scaffold, tones,
+#   transcripts, slack, omi-sync...
+# Les anciens alias (sprint-audit, suivi, jira-image, architecture, scaffold-drive, tone) sont encore
+# acceptés par `pm run`, mais ne s'écrivent plus ici.
 
-# Resolution portable de la racine projet, commune a toutes les routines :
-#   1) variable d'env ci-dessous (chemin absolu force) ;
+# Résolution portable de la racine projet, commune à toutes les routines :
+#   1) variable d'env ci-dessous (chemin absolu forcé) ;
 #   2) $HOME/Documents/<profile.name> ;
 #   3) repli : dossier contenant un marqueur connu du projet.
 project_root_env: PMF_PROJECT_ROOT
 
 routines:
 
-  <nom-de-routine>:                       # nom = nom du dossier framework/routines/<nom>/
-    title: "<resume court de ce que fait la routine>"
-    schedule: "<cron>"                    # ex. "0 8,11,18 * * *" ; ou `manual` pour un lancement a la main
-    chains: [<generateur>, ...]           # generateurs du framework enchaines, dans l'ordre (liste vide si aucun)
-    reads:                                # d'ou la routine tire ses entrees (cles de profil/pipeline ou ids)
-      profile: [<cle.du.profil>, ...]
-      pipeline: [<cle.du.pipeline>, ...]
+  <projet>-<name>:                        # clé d'instance = taskId de la tâche dans l'app
+    skill: <name>                         # = nom du dossier framework/routines/<name>/
+    title: "<PROJET> · <résumé court>"    # title de la tâche dans l'app, préfixé du projet en majuscules
+    schedule: "<cron>"                    # ex. "0 8,11,18 * * *" ; ou `manual` pour un lancement à la main
+    # mode: <mode>                        # optionnel, si le SKILL a des modes (ex. goals-only, condensation)
+    chains: [<générateur canonique>, ...] # dans l'ordre (liste vide si aucun) ; reprend meta.chains du SKILL
+    validation: none                      # none | chat (oui en séance) | form (formulaire)
+    default_mode: dry-run                 # dry-run | apply | read-only (read-only si writes == [])
+    output: chat-md                       # chat-md | html-widget | file:<chemin> | slack | notion
+    reads:                                # d'où la routine tire ses entrées (clés de profil/pipeline ou ids)
+      profile: [<clé.du.profil>, ...]
+      pipeline: [<clé.du.pipeline>, ...]
       # <source>_data_source: "collection://<id>"   # base de suivi, planning... selon la routine
       # <generateur>_yml: profiles/<mission>/<generateur>.yml
-    # commands:                           # optionnel : commandes de mission equivalentes aux generateurs,
-    #   <etape>: "<commande, depuis la racine projet>"   # tant que le generateur ne porte pas l'etape
-    writes:                               # ce que la routine ecrit - CHAQUE ligne porte sa garde
-      - { target: <gh-pages|jira|notion|office>, scope: "<perimetre precis>", guard: "<condition imperative avant d'ecrire>" }
+    # commands:                           # optionnel : commandes de mission équivalentes aux générateurs,
+    #   <étape>: "<commande, depuis la racine projet>"   # tant que le générateur ne porte pas l'étape
+    writes:                               # ce que la routine écrit - CHAQUE ligne porte sa garde
+      - { target: <gh-pages|artifact|jira|notion|office|slack|local|mail-draft>, scope: "<périmètre précis>", guard: "<condition impérative avant d'écrire>" }
     notifies: none                        # invariant : jamais autre chose que none
 
-# Exemple minimal d'une routine en lecture seule stricte (aucune ecriture) :
-#   audit-sprints:
-#     title: "Audit du plan de sprints vs Jira"
-#     schedule: "0 7 * * 1-5"
-#     chains: [sprint-audit]
+# --- Clés de mission propres à certaines routines (sorties des SKILL génériques) -------------------
+#
+# collect-activity :
+#   <projet>-collect-activity:
+#     reads:
+#       activity_yml: profiles/<mission>/activity.yml     # config du générateur activity
+#     # weekly_report_owner: "<prénom>"   # à qui appartient la page Weekly report partagée : jamais écrite
+#     writes:
+#       - { target: local,  scope: "activity.yml > store", guard: "ajout seul, check OK" }
+#       - { target: notion, scope: "activity.yml > notion_db (DB privée)", guard: "préflight OK ; upsert date|texte ; jamais weekly_report_page" }
+#
+# review-topics :
+#   <projet>-review-topics:
+#     reads:
+#       # third_party: ["<rôle ou responsable dont les sujets font foi, ex. CDP>"]   # jamais modifiés
+#       # suivi_page: "<id de la page de synthèse>"
+#       # methode_skill: "<skill de méthode>"      redaction_skill: "<skill de rédaction>"
+#       # lecture_agent: notion-topics-audit
+#     # modes: { condensation: { state_key: condensation } }
+#
+# morning-digest :
+#   <projet>-morning-digest:
+#     # post: { channel_url: "<url>", channel_id: "<id>", channel_name: "<nom>", max_members: 1 }
+#     reads:
+#       # scope: "<filtre du périmètre, ex. Suivi projet = <rôle>>"
+#       # third_party: ["<rôle tiers>"]      dormant_days: 10      since: "<depuis le récap précédent>"
+#
+# publish-projection (mode goals-only = ancienne routine align-sprint-goals) :
+#   <projet>-publish-projection:
+#     # mode: full                          # full | goals-only
+#     # commands: { publish: "<...>", objectifs: "<...>", drift_check: "<...>" }
+#     # artifacts: [{ url: "<artefact>", ghpages_path: "<chemin>" }]
+
+# Exemple minimal d'une routine en lecture seule stricte (aucune écriture) :
+#   demo-audit-scope:
+#     skill: audit-scope
+#     title: "DEMO · Audit du périmètre et du plan de sprints"
+#     schedule: manual
+#     chains: [jira-sprints-audit]
+#     validation: none
+#     default_mode: read-only
+#     output: chat-md
 #     reads: { profile: [jira.board] }
-#     writes: []                          # rien n'est ecrit : la routine ne fait que proposer
+#     writes: []                          # rien n'est écrit : la routine ne fait que proposer
 #     notifies: none
