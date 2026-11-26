@@ -583,6 +583,7 @@ def _jump(run, src_slide, dst_slide):
     rPr = run._r.get_or_add_rPr()
     h = etree.SubElement(rPr, qn("a:hlinkClick"))
     h.set(qn("r:id"), rid); h.set("action", "ppaction://hlinksldjump")
+    S.plain_link(run)
 
 
 def agenda_slide(D, deck, by_id, project):

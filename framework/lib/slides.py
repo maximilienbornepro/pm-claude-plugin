@@ -92,6 +92,24 @@ def _bullet(para, char="–", indent_cq=1.4, left_cq=0.0):
     etree.SubElement(pPr, qn("a:buChar")).set("char", char)
 
 
+HLINK_EXT = "{A12FA001-AC4F-418D-AE19-62706E023703}"
+HLINK_NS = "http://schemas.microsoft.com/office/drawing/2018/hyperlinkcolor"
+
+
+def plain_link(run):
+    """Hyperlink drawn in the run's own colour, not underlined (instead of the theme's blue)."""
+    rPr = run._r.get_or_add_rPr()
+    rPr.set("u", "none")
+    h = rPr.find(qn("a:hlinkClick"))
+    if h is None:
+        return
+    lst = h.find(qn("a:extLst"))
+    if lst is None:
+        lst = etree.SubElement(h, qn("a:extLst"))
+    ext = etree.SubElement(lst, qn("a:ext")); ext.set("uri", HLINK_EXT)
+    etree.SubElement(ext, "{%s}hlinkClr" % HLINK_NS, nsmap={"ahyp": HLINK_NS}).set("val", "tx")
+
+
 def no_bullet(para):
     pPr = para._p.get_or_add_pPr()
     pPr.set("marL", "0"); pPr.set("indent", "0")
@@ -163,6 +181,8 @@ class Deck:
         xml = theme.blob.decode("utf-8")
         xml = re.sub(r'(<a:majorFont>\s*<a:latin typeface=")[^"]*', r"\g<1>" + major, xml, count=1)
         xml = re.sub(r'(<a:minorFont>\s*<a:latin typeface=")[^"]*', r"\g<1>" + minor, xml, count=1)
+        for tag in ("hlink", "folHlink"):  # links in the charter ink, never the default blue
+            xml = re.sub(rf"(<a:{tag}>)\s*<a:[a-zA-Z]+Clr [^>]*/>", rf'\g<1><a:srgbClr val="{C["encre"]}"/>', xml, count=1)
         theme._blob = xml.encode("utf-8")
 
     def save(self, out):
@@ -211,6 +231,7 @@ class Deck:
                     r._r.get_or_add_rPr().set("spc", str(int(sp * 100)))
                 if o.get("link", link):
                     r.hyperlink.address = o.get("link", link)
+                    plain_link(r)
         return tb
 
     def rect(self, s, x, y, w, h, fill=None, line=None, lw=1.0, dash=False, shape=MSO_SHAPE.RECTANGLE, name=None):
