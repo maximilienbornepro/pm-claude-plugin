@@ -45,6 +45,8 @@ def hours(issue_fields):
 
 
 def main():
+    if "-h" in sys.argv or "--help" in sys.argv:
+        print(__doc__); return 0
     mission = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("PMF_MISSION", "demo")
     J = jira_mod.Jira(mission)
 

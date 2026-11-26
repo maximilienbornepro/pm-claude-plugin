@@ -35,7 +35,10 @@ class Jira:
         self.base = (os.environ.get("JIRA_BASE") or f"https://{j['instance']}").rstrip("/")
         self.project = j["project_key"]
         self.board = j["board"]
-        email, token = os.environ["JIRA_EMAIL"], os.environ["JIRA_TOKEN"]
+        email, token = os.environ.get("JIRA_EMAIL"), os.environ.get("JIRA_TOKEN")
+        if not (email and token):
+            raise SystemExit("identifiants Jira absents : JIRA_EMAIL et JIRA_TOKEN dans l'environnement, "
+                             "ou PMF_JIRA_ENV vers un fichier .env (voir framework/lib/jira.py)")
         self.auth = "Basic " + base64.b64encode(f"{email}:{token}".encode()).decode()
 
     def _api(self, method, path, data=None):

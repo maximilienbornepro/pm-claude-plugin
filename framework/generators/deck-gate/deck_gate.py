@@ -30,7 +30,10 @@ def _ddmm(v):
 
 
 def load(mission):
-    return prof._load_yaml(prof.mission_dir(mission) / "deck-gate.yml")
+    p = prof.mission_dir(mission) / "deck-gate.yml"
+    if not p.exists():
+        raise SystemExit(f"config absente : {p} (voir le SKILL.md du générateur pour le gabarit)")
+    return prof._load_yaml(p)
 
 
 def jalons(profile):

@@ -70,7 +70,10 @@ def main():
     ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     ap.add_argument("--root", help="prefixe de chemin (sinon coherence.yml > root, sinon chemins tels quels)")
     a = ap.parse_args()
-    cfg = prof._load_yaml(prof.mission_dir(a.mission) / "docs-coherence.yml")
+    cpath = prof.mission_dir(a.mission) / "docs-coherence.yml"
+    if not cpath.exists():
+        raise SystemExit(f"config absente : {cpath} (voir le SKILL.md du générateur pour le gabarit)")
+    cfg = prof._load_yaml(cpath)
     root = a.root or cfg.get("root") or ""
     root = os.path.expanduser(root)
     chains = cfg.get("chains") or []

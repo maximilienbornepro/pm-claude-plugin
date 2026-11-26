@@ -94,6 +94,6 @@ def rapport(mission, depuis, avec_self):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help") or "--help" in sys.argv:
         print("usage: changes.py <mission> [--since ... | --last-point] [--me] [--self \"Nom\"]"); sys.exit(2)
     rapport(sys.argv[1], depuis_argument(sys.argv), "--me" in sys.argv)

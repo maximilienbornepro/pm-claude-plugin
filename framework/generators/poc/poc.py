@@ -87,7 +87,10 @@ def _comp(name):
 
 
 def load(mission):
-    return prof._load_yaml(prof.mission_dir(mission) / "poc.yml")
+    p = prof.mission_dir(mission) / "poc.yml"
+    if not p.exists():
+        raise SystemExit(f"config absente : {p} (voir le SKILL.md du générateur pour le gabarit)")
+    return prof._load_yaml(p)
 
 
 def mission_root(mission, cfg):
