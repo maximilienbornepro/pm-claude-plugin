@@ -172,3 +172,12 @@ avant d'être écrit.
 - La **source de vérité est le modèle** : on régénère, on ne patche pas le HTML.
 - Rien n'est publié sans validation ; les 7 invariants doivent passer.
 - Le draw.io par écran découle de `views[].members` - aucune invention de contenu de vue.
+
+## Deux gabarits HTML
+
+- **Rendu de référence** (`golden.py`) : inchangé, le schéma interactif tel qu'on le publie.
+- **Gabarit dossier projet** (`dossier_skin.py`) : le même schéma habillé à la charte des slides (logo du
+  client, sur-titre, titre, légende, typo légère, fond ivoire), vue macro en tête, sous-vues toujours
+  accessibles. `python3 framework/generators/archi/dossier_skin.py <mission> -o architecture.html`.
+- **Slide PowerPoint** : le générateur `dossier` (type `archi`) convertit la vue macro en formes natives
+  (`framework/lib/svg2pptx.py`) et met un lien vers ce gabarit.

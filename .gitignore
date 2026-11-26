@@ -35,3 +35,7 @@ dist/
 
 # Profil(s) reel(s) : hors depot partage
 profiles/sinbad/
+
+# dossier projet: local build state and backups
+profiles/*/dossier/.backup/
+profiles/*/dossier/.state.json

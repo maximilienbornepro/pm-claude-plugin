@@ -32,7 +32,7 @@ slide change.
 | RACI | `raci` (`raci.yml`) | activités × rôles |
 | Gate | `gate` / `deck-gate` (`gate.yml`) | critères, statut, preuve ou action |
 | Ordre du jour | `meeting-agenda` | points, porteur, durée |
-| Architecture | `archi` (`model.json`) | vues et blocs du modèle |
+| Architecture | `archi` (`model.json`), rendu de référence `golden` | **la vue macro seulement** (la page d'accueil du schéma), convertie en formes natives avec ses logos, zones et flux ; les sous-vues ne sont jamais sur la slide : un lien « Vue interactive et sous-vues » ouvre le HTML (gabarit dossier, `dossier_skin.py`) |
 | Responsabilités inter-équipes | schéma de dépendances de la GATE 1 (**source à créer** : `teams.yml` ou `.drawio`) | **schéma** de blocs (une équipe par bloc, rôle en sous-titre) reliés par des flèches : pleine = doit un livrable ou une décision, avec l'activité ; pointillée = collaboration avec un partenaire extérieur ; **deux slides, toujours les deux** : (1) vue en réseau, pilotage au centre, client en haut, extérieurs en bas ; (2) **variante hiérarchique**, profils rangés par niveau selon leur nombre d'activités R ou A au RACI (pastille), flèches descendantes à angle droit par barres horizontales, échanges de même niveau à l'horizontale, aucun croisement. Jamais un tableau |
 | Staffing | plan de staffing (**source à créer** : `Staffing_plan_<MISSION>.xlsx`) | **une ligne par ressource** (nom, rôle), une colonne par trimestre (T1, T2, T3… avec l'année), **trimestre en cours toujours présent et marqué**, valeurs en ETP, besoin sans nom = « À staffer », total ETP et capacité en jours. Pas de phases en en-tête |
 

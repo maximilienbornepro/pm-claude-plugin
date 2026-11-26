@@ -184,7 +184,8 @@ auquel chaque slide renvoie, et ses formats. **Gras** = existe aujourd'hui ; *(p
 l'harmonisation (dossier projet HTML 16:9 et export PowerPoint, skill `slide-style`, ton `voice-slides`).
 Chaque format renvoie à sa capture ou à la slide de la [maquette du dossier projet](maquette/index.html) ;
 la version PowerPoint ([Atlas_dossier_projet.pptx](maquette/Atlas_dossier_projet.pptx)) sort de
-`pm run dossier demo --pptx <fichier>`.
+`pm run dossier demo --build` ; retouchée à la main, `pm run dossier demo --sync` reporte les retouches dans
+`dossier.json` et régénère le HTML.
 Un livrable qui n'a de sens que dans Notion ou par mail le reste.
 
 | Livrable | Source / générateur | Agent | Skill | Ton | Fichier rattaché | Exports |
@@ -209,7 +210,7 @@ Un livrable qui n'a de sens que dans Notion ou par mail le reste.
 | Ordre du jour | meeting-agenda | — | slide-style | voice-maximilien | Notion · page de la réunion | [**Conversation**](img/agenda.png) · [HTML *(proposé)*](maquette/index.html#ordre-du-jour) · [PPT *(proposé)*](maquette/index.html#ordre-du-jour) |
 | Relances | routine draft-followups | — | — | voice-maximilien | fichiers .eml locaux | **Mail (.eml)** · **Slack** — Pas de slide : sans objet. |
 | Morning digest | routine morning-digest | — | — | voice-casual | canal Slack dédié | **Slack** — Pas de slide : sans objet. |
-| Schéma d'architecture | archi (model.json) | `archi-audit` | voice-adservio (schéma) | voice-adservio | architecture_<MISSION>.html, vues .drawio | [**HTML**](img/archi-showcase.png) · **draw.io** · [PPT *(proposé)*](maquette/index.html#architecture) — PPT : une slide par vue, depuis le SVG. |
+| Schéma d'architecture | archi (model.json) | `archi-audit` | voice-adservio (schéma), slide-style | voice-adservio | architecture_<MISSION>.html, vues .drawio | [**HTML**](img/archi-showcase.png) · [HTML dossier *(proposé)*](maquette/architecture.html) · **draw.io** · [PPT *(proposé)*](maquette/index.html#architecture) — PPT : la vue macro seulement, avec un lien vers le HTML et ses sous-vues |
 | Note de fond, dossier | — | `adservio-writer` | voice-adservio | voice-adservio | fichier HTML autonome | **HTML** · Notion *(proposé)* |
 | Chapitres d'un livrable contractuel | sources du projet | `doc-writer` | — | voice-deliverable | document du livrable | **Document Office** — Plan qualité, dossier contractuel. |
 

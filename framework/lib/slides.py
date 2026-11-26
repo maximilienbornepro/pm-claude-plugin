@@ -81,6 +81,23 @@ def _arrow(line_el, start=False, end=False):
             e.set("type", "triangle"); e.set("w", "med"); e.set("len", "med")
 
 
+def _bullet(para, char="–", indent_cq=1.4, left_cq=0.0):
+    """Real bullet with hanging indent on a paragraph (editable as a list in PowerPoint)."""
+    pPr = para._p.get_or_add_pPr()
+    pPr.set("marL", str(cq(left_cq + indent_cq))); pPr.set("indent", str(-cq(indent_cq)))
+    for tag in ("a:buNone", "a:buChar", "a:buAutoNum"):
+        for e in pPr.findall(qn(tag)):
+            pPr.remove(e)
+    clr = etree.SubElement(pPr, qn("a:buClr")); etree.SubElement(clr, qn("a:srgbClr")).set("val", C["gris"])
+    etree.SubElement(pPr, qn("a:buChar")).set("char", char)
+
+
+def no_bullet(para):
+    pPr = para._p.get_or_add_pPr()
+    pPr.set("marL", "0"); pPr.set("indent", "0")
+    etree.SubElement(pPr, qn("a:buNone"))
+
+
 def runs_of(text: str):
     """'a **b** c' -> [(a, False), (b, True), (c, False)]."""
     out = []
@@ -107,23 +124,62 @@ class Deck:
         self.prs.slide_width, self.prs.slide_height = Emu(12192000), Emu(6858000)
         self.blank = self.prs.slide_layouts[6]
         self.logos_dir, self.logos = logos_dir, logos or {}
+        self.set_theme_fonts()
 
     # ── slides ──
-    def new(self, dark=False):
-        s = self.prs.slides.add_slide(self.blank)
+    def new(self, dark=False, layout=6):
+        """layout: 0 Title Slide (cover), 1 Title and Content (content: title = H1, body = caption),
+        2 Section Header (section), 6 Blank. Placeholders keep PowerPoint's structure (outline, summary)."""
+        s = self.prs.slides.add_slide(self.prs.slide_layouts[layout])
         bg = s.background.fill
         bg.solid(); bg.fore_color.rgb = rgb("noir" if dark else "ivoire")
         return s
+
+    def placeholder(self, s, idx, x, y, w, h, content, name=None, **kw):
+        """Fill and place a layout placeholder (title idx 0, body/subtitle idx 1) with the charter style."""
+        ph = s.placeholders[idx]
+        ph.left, ph.top, ph.width, ph.height = cq(x), cq(y), cq(w), cq(h)
+        if name:
+            ph.name = name
+        tf = ph.text_frame
+        for m in ("margin_left", "margin_right", "margin_top", "margin_bottom"):
+            setattr(tf, m, 0)
+        self.text(s, x, y, w, h, content, tf=tf, **kw)
+        for para in tf.paragraphs:
+            pPr = para._p.pPr
+            if pPr is None or pPr.find(qn("a:buChar")) is None:
+                no_bullet(para)
+        return ph
+
+    def drop_empty_placeholders(self, s):
+        for ph in list(s.placeholders):
+            if not ph.has_text_frame or not ph.text_frame.text.strip():
+                ph._element.getparent().remove(ph._element)
+
+    def set_theme_fonts(self, major=F_LIGHT, minor=F_LIGHT):
+        """Theme fonts = charter fonts, so text added by hand in PowerPoint matches the deck."""
+        from pptx.opc.constants import RELATIONSHIP_TYPE as RT
+        theme = self.prs.slide_master.part.part_related_by(RT.THEME)
+        xml = theme.blob.decode("utf-8")
+        xml = re.sub(r'(<a:majorFont>\s*<a:latin typeface=")[^"]*', r"\g<1>" + major, xml, count=1)
+        xml = re.sub(r'(<a:minorFont>\s*<a:latin typeface=")[^"]*', r"\g<1>" + minor, xml, count=1)
+        theme._blob = xml.encode("utf-8")
 
     def save(self, out):
         self.prs.save(str(out))
 
     # ── primitives (all coordinates in cq) ──
     def text(self, s, x, y, w, h, content, size=1.0, color="encre", font=F_LIGHT, align="l", spacing=0.0,
-             caps=False, anchor="t", line=1.15, link=None, bold_font=F_REG, para_space=0.0):
+             caps=False, anchor="t", line=1.15, link=None, bold_font=F_REG, para_space=0.0, name=None, tf=None):
         """content: str (with **bold**), or list of paragraphs, each a str or a list of (text, opts) runs."""
-        tb = s.shapes.add_textbox(cq(x), cq(y), cq(w), cq(h))
-        tf = tb.text_frame
+        if tf is None:
+            tb = s.shapes.add_textbox(cq(x), cq(y), cq(w), cq(h))
+            tf = tb.text_frame
+        else:  # fill an existing text frame (placeholder)
+            tb = None
+            tf.clear()
+        if name and tb is not None:
+            tb.name = name
         tf.word_wrap = True
         for m in ("margin_left", "margin_right", "margin_top", "margin_bottom"):
             setattr(tf, m, 0)
@@ -135,10 +191,17 @@ class Deck:
             para.line_spacing = line
             if para_space and i:
                 para.space_before = Pt(para_space)
+            if isinstance(p, dict):  # {"runs": [...], "level": n, "bullet": "–"}
+                para.level = p.get("level", 0)
+                if p.get("bullet"):
+                    _bullet(para, p["bullet"], p.get("indent", 1.4), p.get("left", 0.0))
+                p = p["runs"]
             runs = p if isinstance(p, list) else [(t, {"bold": b}) for t, b in runs_of(p)]
             for t, o in runs:
                 r = para.add_run()
-                r.text = t.upper() if (o.get("caps", caps)) else t
+                r.text = t
+                if o.get("caps", caps):
+                    r._r.get_or_add_rPr().set("cap", "all")  # small caps by style, text keeps its case
                 f = r.font
                 f.name = bold_font if o.get("bold") else o.get("font", font)
                 f.size = Pt(pt_of(o.get("size", size)))
@@ -150,8 +213,10 @@ class Deck:
                     r.hyperlink.address = o.get("link", link)
         return tb
 
-    def rect(self, s, x, y, w, h, fill=None, line=None, lw=1.0, dash=False, shape=MSO_SHAPE.RECTANGLE):
+    def rect(self, s, x, y, w, h, fill=None, line=None, lw=1.0, dash=False, shape=MSO_SHAPE.RECTANGLE, name=None):
         sh = s.shapes.add_shape(shape, cq(x), cq(y), cq(w), cq(h))
+        if name:
+            sh.name = name
         _strip_style(sh)
         if fill:
             sh.fill.solid(); sh.fill.fore_color.rgb = rgb(fill)
@@ -166,14 +231,16 @@ class Deck:
         sh.shadow.inherit = False
         return sh
 
-    def oval(self, s, cx, cy, r, fill, line=None):
-        return self.rect(s, cx - r, cy - r, 2 * r, 2 * r, fill, line, shape=MSO_SHAPE.OVAL)
+    def oval(self, s, cx, cy, r, fill, line=None, name=None):
+        return self.rect(s, cx - r, cy - r, 2 * r, 2 * r, fill, line, shape=MSO_SHAPE.OVAL, name=name)
 
-    def diamond(self, s, cx, cy, r, fill):
-        return self.rect(s, cx - r, cy - r, 2 * r, 2 * r, fill, shape=MSO_SHAPE.DIAMOND)
+    def diamond(self, s, cx, cy, r, fill, name=None):
+        return self.rect(s, cx - r, cy - r, 2 * r, 2 * r, fill, shape=MSO_SHAPE.DIAMOND, name=name)
 
-    def line(self, s, x1, y1, x2, y2, color="encre", w=0.75, dash=False, start=False, end=False):
+    def line(self, s, x1, y1, x2, y2, color="encre", w=0.75, dash=False, start=False, end=False, name=None):
         c = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, cq(x1), cq(y1), cq(x2), cq(y2))
+        if name:
+            c.name = name
         _strip_style(c)
         c.line.color.rgb = rgb(color); c.line.width = Pt(w)
         if dash:
@@ -207,12 +274,14 @@ class Deck:
         return (self.logos_dir / name) if (self.logos_dir and name) else None
 
     # ── native table ──
-    def table(self, s, x, y, w, cols, rows, size=0.95, head=True, row_pad=0.85, min_row=0):
+    def table(self, s, x, y, w, cols, rows, size=0.95, head=True, row_pad=0.85, min_row=0, name=None):
         """cols: [{h, w (fraction), align}] ; rows: list of list of cell dicts {runs, fill, align}.
         Returns (graphic_frame, [row tops], [row heights], [col lefts], [col widths]) in cq."""
         nrows = len(rows) + (1 if head else 0)
         widths = [w * c.get("w", 1 / len(cols)) for c in cols]
         gf = s.shapes.add_table(nrows, len(cols), cq(x), cq(y), cq(w), cq(1))
+        if name:
+            gf.name = name
         tbl = gf.table
         tblPr = tbl._tbl.tblPr
         for a in ("firstRow", "bandRow"):
@@ -249,7 +318,9 @@ class Deck:
                 para.alignment = {"l": PP_ALIGN.LEFT, "c": PP_ALIGN.CENTER, "r": PP_ALIGN.RIGHT}[cell.get("align", "l")]
                 for t, o in cell.get("runs", []):
                     r = para.add_run()
-                    r.text = t.upper() if o.get("caps") else t
+                    r.text = t
+                    if o.get("caps"):
+                        r._r.get_or_add_rPr().set("cap", "all")
                     f = r.font
                     f.name = F_REG if o.get("bold") else o.get("font", F_LIGHT)
                     f.size = Pt(pt_of(o.get("size", size)))

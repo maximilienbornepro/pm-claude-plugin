@@ -10,7 +10,8 @@
    "kind": "cover",
    "title": "Atlas",
    "sub": "Dossier projet · Comité de pilotage du 26 novembre 2026",
-   "section": "Dossier projet"
+   "section": "Dossier projet",
+   "id": "cover"
   },
   {
    "id": "etat-des-lieux",
@@ -441,7 +442,8 @@
    "sub": "Version 1 · Sprint 3 sur 4 · J+38",
    "num": "01",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Avancement"
+   "section": "Avancement",
+   "id": "section-1"
   },
   {
    "id": "avancement",
@@ -1249,7 +1251,8 @@
    "sub": "Du 19 octobre au 23 décembre",
    "num": "02",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Planning"
+   "section": "Planning",
+   "id": "section-2"
   },
   {
    "id": "planning",
@@ -1432,7 +1435,8 @@
    "sub": "23 sujets suivis · 5 domaines",
    "num": "03",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Suivi technique"
+   "section": "Suivi technique",
+   "id": "section-3"
   },
   {
    "id": "suivi-technique",
@@ -1627,7 +1631,8 @@
    "sub": "7 risques ouverts · 2 critiques",
    "num": "04",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Risques"
+   "section": "Risques",
+   "id": "section-4"
   },
   {
    "id": "risques",
@@ -1893,7 +1898,8 @@
    "sub": "RACI · interfaces · staffing · gates",
    "num": "05",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Gouvernance"
+   "section": "Gouvernance",
+   "id": "section-5"
   },
   {
    "id": "raci",
@@ -3376,7 +3382,8 @@
    "sub": "Weekly · CR partenaire · Ordre du jour",
    "num": "06",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Comptes rendus"
+   "section": "Comptes rendus",
+   "id": "section-6"
   },
   {
    "id": "weekly-report",
@@ -3612,7 +3619,8 @@
    "num": "S48",
    "kicker": "Weekly report · Maximilien",
    "section": "Weekly report",
-   "project": "pm-framework"
+   "project": "pm-framework",
+   "id": "section-7"
   },
   {
    "id": "weekly-report-2",
@@ -3711,240 +3719,19 @@
    "sub": "Vue d'ensemble",
    "num": "07",
    "kicker": "Atlas · Comité de pilotage",
-   "section": "Architecture"
+   "section": "Architecture",
+   "id": "section-8"
   },
   {
    "id": "architecture",
-   "kind": "diagram",
+   "kind": "archi",
    "section": "Architecture",
    "eyebrow": "Architecture · Vue d'ensemble",
    "title": "Architecture",
-   "cap": "Le schéma présente les quatre couches de la solution, des canaux utilisés par les clients jusqu'aux données. Les blocs en aplat sont construits dans le projet ; le bloc cerclé de bordeaux est un service externe dont le projet dépend, relié en pointillé.",
-   "src": "architecture_ATLAS.html · vues draw.io",
-   "diagram": {
-    "w": 1000,
-    "h": 340,
-    "boxes": [
-     {
-      "x": 170,
-      "y": 20,
-      "w": 250,
-      "h": 48,
-      "n": "Site web",
-      "s": "",
-      "fill": "sable",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 440,
-      "y": 20,
-      "w": 250,
-      "h": 48,
-      "n": "Application mobile",
-      "s": "",
-      "fill": "sable",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 170,
-      "y": 100,
-      "w": 520,
-      "h": 48,
-      "n": "BFF · passerelle d'API",
-      "s": "",
-      "fill": "noir",
-      "color": "blanc",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 170,
-      "y": 180,
-      "w": 160,
-      "h": 48,
-      "n": "Souscription",
-      "s": "",
-      "fill": "taupe",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 350,
-      "y": 180,
-      "w": 160,
-      "h": 48,
-      "n": "Paiement",
-      "s": "",
-      "fill": "taupe",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 530,
-      "y": 180,
-      "w": 160,
-      "h": 48,
-      "n": "Notifications",
-      "s": "",
-      "fill": "taupe",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 170,
-      "y": 260,
-      "w": 250,
-      "h": 48,
-      "n": "Base contrats",
-      "s": "",
-      "fill": "sauge",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 440,
-      "y": 260,
-      "w": 250,
-      "h": 48,
-      "n": "Entrepôt analytique",
-      "s": "",
-      "fill": "sauge",
-      "color": "encre",
-      "outline": false,
-      "badge": null
-     },
-     {
-      "x": 770,
-      "y": 180,
-      "w": 200,
-      "h": 48,
-      "n": "API partenaire",
-      "s": "",
-      "fill": null,
-      "color": "bordeaux",
-      "outline": true,
-      "badge": null
-     }
-    ],
-    "links": [
-     {
-      "p": [
-       [
-        430,
-        68
-       ],
-       [
-        430,
-        100
-       ]
-      ]
-     },
-     {
-      "p": [
-       [
-        430,
-        148
-       ],
-       [
-        430,
-        180
-       ]
-      ]
-     },
-     {
-      "p": [
-       [
-        250,
-        148
-       ],
-       [
-        250,
-        180
-       ]
-      ]
-     },
-     {
-      "p": [
-       [
-        610,
-        148
-       ],
-       [
-        610,
-        180
-       ]
-      ]
-     },
-     {
-      "p": [
-       [
-        250,
-        228
-       ],
-       [
-        250,
-        260
-       ]
-      ]
-     },
-     {
-      "p": [
-       [
-        610,
-        228
-       ],
-       [
-        610,
-        260
-       ]
-      ]
-     },
-     {
-      "p": [
-       [
-        690,
-        204
-       ],
-       [
-        770,
-        204
-       ]
-      ],
-      "dash": true,
-      "c": "bordeaux"
-     }
-    ],
-    "labels": [
-     [
-      0,
-      36,
-      "CANAUX"
-     ],
-     [
-      0,
-      116,
-      "EXPOSITION"
-     ],
-     [
-      0,
-      196,
-      "SERVICES"
-     ],
-     [
-      0,
-      276,
-      "DONNÉES"
-     ]
-    ]
-   }
+   "cap": "Le schéma présente l'architecture de la solution dans sa vue d'ensemble : les blocs regroupent les services par zone (compte cloud, cluster, partenaires, exploitation) et les flèches suivent les flux, en trait plein pour le chemin principal. Le détail de chaque zone se consulte dans la version interactive.",
+   "src": "architecture/model.json · architecture.html",
+   "model": "architecture/model.json",
+   "link": "architecture.html"
   }
  ]
 }
