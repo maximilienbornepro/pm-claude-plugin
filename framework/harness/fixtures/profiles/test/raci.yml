@@ -1,0 +1,10 @@
+matrix_sheet: RACI
+header_row: 9
+roles:
+  - { key: cdp, col: Chef de projet, tab: CDP, letter: B }
+  - { key: archi, col: Architecte, tab: Archi, letter: C }
+  - { key: dev, col: Equipe dev, tab: Dev, letter: D }
+activities:
+  - { name: Cadrage, cdp: A/R, archi: C, dev: I }
+  - { name: Architecture, cdp: A, archi: R, dev: C }
+  - { name: Developpement, cdp: I, archi: C, dev: A/R, comment: sprints de 2 semaines }

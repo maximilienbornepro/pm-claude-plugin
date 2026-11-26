@@ -154,6 +154,15 @@ def main():
     except Exception as e:
         err(f"organisation.yml illisible : {e}")
 
+    # tests systematiques : chaque commande `pm run` a au moins un cas dans test_livrables.py
+    spec_t = importlib.util.spec_from_file_location("pmf_livrables", ROOT / "framework" / "harness" / "test_livrables.py")
+    tl = importlib.util.module_from_spec(spec_t)
+    spec_t.loader.exec_module(tl)
+    couverts = {c[1][0] for c in tl.CASES}
+    for cmd in sorted(set(GEN) - couverts):
+        err(f"{cmd} : aucun test dans framework/harness/test_livrables.py (CASES) - tout generateur a son test")
+    print(f"tests : {len(set(GEN) & couverts)}/{len(GEN)} commandes couvertes par test_livrables.")
+
     # rapport
     for w in warns: print(f"  AVERT  {w}")
     for e in errors: print(f"  ERREUR {e}")

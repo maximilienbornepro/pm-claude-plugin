@@ -58,8 +58,10 @@ Le détail composant par composant est dans `framework/SKILLS.md`.
 1. Le créer dans le dossier de son département (`framework/departements/<dep>/<type>/`), dans
    `framework/charte/` ou dans `framework/garde-fous/`.
 2. Le rattacher à ce **même** département dans `framework/organisation.yml`.
-3. `python3 framework/lib/organisation.py --catalogue` régénère `framework/SKILLS.md`.
-4. `python3 framework/harness/verifier.py` doit passer : il échoue si un composant n'est rattaché nulle part,
+3. Si c'est un générateur : lui ajouter au moins un cas dans `framework/harness/test_livrables.py` (`CASES`),
+   avec les données nécessaires dans la mission de test `framework/harness/fixtures/profiles/test/`.
+4. `python3 framework/lib/organisation.py --catalogue` régénère `framework/SKILLS.md`.
+5. `python3 framework/pm.py test` doit passer : il échoue si un composant n'est rattaché nulle part,
    s'il l'est deux fois, s'il est rangé dans un autre département que son rattachement, ou si un
    rattachement vise un composant qui n'existe pas.
 

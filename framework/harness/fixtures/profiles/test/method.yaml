@@ -1,0 +1,46 @@
+# La MÉTHODE de la mission, en DONNÉE (A4). Ce qui se calcule ne se raconte pas : barèmes, seuils,
+# trames et chaîne de traçabilité vivent ici, pas dans la prose d'un skill ni en dur dans un script.
+# Les outils lisent ici et calculent ; le modèle ne produit que la preuve. Migration incrémentale :
+# on remplit au fil de l'eau, une section absente rend un défaut sans rien casser.
+
+baremes:
+  # Échelle de cotation des risques (lue par le générateur risks).
+  risque:
+    niveaux: [faible, moyen, élevé, critique]
+    labels:
+      faible: "peu probable / impact mineur"
+      moyen: "possible / impact gérable"
+      élevé: "probable / impact fort"
+      critique: "quasi certain / impact majeur"
+
+seuils:
+  # Valeurs-pivots comparées par les outils. Le générateur gate lit gate_defaut comme seuil par défaut
+  # d'une porte qui ne fixe pas le sien.
+  gate_defaut: 90
+  sprint_capacite_defaut: 20
+  risque_a_remonter: élevé        # au-delà, le risque remonte au COPIL
+
+trames:
+  # Plans de livrables : l'ORDRE des sections, en donnée. Un générateur de livrable suit cette trame.
+  deck_gate: [Contexte, Avancement, Couverture, Risques, Décisions, Suite]
+  cr_partenaire: [Intro, Sujets, Conclusion]
+
+tracabilite:
+  # La CHAÎNE de traçabilité en donnée : besoin/TR -> ticket -> POC -> test. L'audit `trace-audit`
+  # calcule les ruptures (maillon exigible manquant) et dit OÙ ALLER (le propriétaire du maillon).
+  phases: [cadrage, build, recette, prod]      # ordre des phases ; un maillon est exigible À PARTIR de la sienne
+  ordre:
+    - maillon: besoin
+      proprietaire: "Client / PMO"
+      exigible_des: cadrage
+    - maillon: ticket
+      proprietaire: "PM / TPM"
+      exigible_des: cadrage
+    - maillon: poc
+      proprietaire: "Design / Front"
+      exigible_des: build
+    - maillon: test
+      proprietaire: "QA / SPV"
+      exigible_des: recette
+      facultatif: false
+

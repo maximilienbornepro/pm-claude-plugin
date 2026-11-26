@@ -1,0 +1,22 @@
+# Pipeline DEMO - memes livrables que SINBAD, valeurs neutres. Bidon : `pm demo` simule tout.
+deliverables:
+  notion_sujets:      { generator: notion-topics-audit,     target: notion, tone: voice-maximilien, format: contexte-action }
+  notion_planning:    { generator: notion-planning,   target: notion, tone: voice-deliverable, guard: demander-avant }
+  cr_partenaire:      { generator: partner-report,      tone: voice-deliverable, lang: { partenaire_a: en, partenaire_b: fr } }
+  gate_deck:          { generator: deck-gate,          output: pptx, tone: voice-adservio, schema_style: adservio }
+  rapport_projection: { generator: projection,  source: jira, tone: voice-deliverable, schema_style: adservio, targets: [gh-pages, artifact] }
+  plan_sprints:       { generator: jira-sprints-audit,        source: jira, targets: [gh-pages, artifact] }
+  architecture:       { generator: archi,      schema_style: adservio, targets: [artifact, artifact-light, gh-pages] }
+  ticket_jira:        { generator: jira-images,        tone: voice-deliverable, images: [figma, poc] }
+  suivi_activite:     { generator: activity,              source: claude-transcripts, target: notion-private }
+
+# Ton par agent (les agents d'audit n'ecrivent pas de prose -> null)
+agents:
+  adservio-writer:     voice-adservio
+  doc-writer:          voice-deliverable
+  archi-audit:         null
+  front-audit:         null
+  jira-tickets-audit:  null
+  notion-topics-audit: null
+  jira-changes-audit:  null
+  jira-sprints-audit:  null

@@ -1,0 +1,5 @@
+tone: voice-slides
+slides:
+  - { type: title, title: GATE 1, subtitle: Revue de cadrage }
+  - { type: jalons, title: Jalons }
+  - { type: bullets, title: Risques, bullets: [Capacite equipe a confirmer, Acces production en attente] }

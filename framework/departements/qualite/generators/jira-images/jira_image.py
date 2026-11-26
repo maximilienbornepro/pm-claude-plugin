@@ -65,7 +65,7 @@ def load_image_cfg(mission):
     path = prof.mission_dir(mission) / "jira-images.yml"
     if not path.exists():
         sys.exit(f"Config mission introuvable : {path}\n"
-                 f"Copier framework/generators/jira_ticket/jira_ticket.example.yml et l'adapter.")
+                 f"Copier framework/departements/qualite/generators/jira-images/jira-images.example.yml et l'adapter.")
     cfg = (prof._load_yaml(path) or {}).get("image", {}) or {}
     cfg.setdefault("section_title", "Figma / Prototype")
     cfg.setdefault("section_match", "figma")             # sous-chaine (minuscule) du titre existant

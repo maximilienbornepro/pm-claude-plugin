@@ -52,6 +52,9 @@ def do_collect(cfg, a):
 def do_check(cfg, a):
     themes = set(cfg.get("themes") or [])
     errs, n = [], 0
+    if not _store(cfg).exists():
+        print(f"store vide : {_store(cfg)} n'existe pas encore (lancer `collect` d'abord).")
+        return 0
     for i, ln in enumerate(_store(cfg).read_text(encoding="utf-8").splitlines(), 1):
         ln = ln.strip()
         if not ln or ln.startswith("#"):

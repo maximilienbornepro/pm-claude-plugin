@@ -55,5 +55,5 @@ workflow:
 # Dates clefs ---------------------------------------------------------------
 # A reprendre de profiles/<mission>/profile.yml > key_dates.
 dates:
-  code_freeze: 0000-00-00   # gel du code - a confirmer
-  mep: 0000-00-00           # mise en production - a confirmer
+  code_freeze: "AAAA-MM-JJ"   # gel du code - a confirmer
+  mep: "AAAA-MM-JJ"           # mise en production - a confirmer

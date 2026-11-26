@@ -7,6 +7,7 @@ restent derriere leurs propres flags (--apply...) et la validation en session.
     python3 framework/pm.py list
     python3 framework/pm.py run <generateur> <mission> [args...]
     python3 framework/pm.py missions
+    python3 framework/pm.py test [--quick]     # verificateur + tous les tests (voir harness/run_tests.py)
 
 Exemples :
     python3 framework/pm.py run jira-sprints-audit <mission>
@@ -113,6 +114,8 @@ def main():
         print(" ".join(missions())); return 0
     if cmd == "run":
         return do_run(sys.argv[2:])
+    if cmd == "test":
+        return subprocess.call([sys.executable, str(ROOT / "framework" / "harness" / "run_tests.py"), *sys.argv[2:]])
     if cmd == "demo":
         return subprocess.call([sys.executable, str(ROOT / "framework" / "demo.py"), *sys.argv[2:]])
     print(f"commande inconnue: {cmd}  (list | run | missions | demo)"); return 2

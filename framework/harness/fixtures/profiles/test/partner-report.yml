@@ -1,0 +1,14 @@
+# Profil fictif : CR de call partenaire (rendu texte, jamais d'envoi).
+us: "ACME"                  # prefixe d'objet : « ACME x <Partenaire> »
+signature: "Camille"
+
+partners:
+  partenaire_a: { lang: en, label: Partner A }
+  partenaire_b: { lang: fr, label: Partenaire B }
+
+intro:
+  en: "Thank you for today's call. Here is where each topic stands and what comes next."
+  fr: "Merci pour le point d'aujourd'hui. Voici où en est chaque sujet et la suite."
+closing:
+  en: "Thank you for confirming these points and timings, and let us know if anything needs adjusting on your side."
+  fr: "Merci de nous confirmer ces points et ces délais, et n'hésitez pas à les ajuster si besoin."

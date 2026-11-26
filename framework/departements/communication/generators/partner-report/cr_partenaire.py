@@ -93,6 +93,8 @@ def main():
     ap.add_argument("--mission", default=os.environ.get("PMF_MISSION", "demo"))
     a = ap.parse_args()
     cfg = prof._load_yaml(prof.mission_dir(a.mission) / "partner-report.yml")
+    if a.input != "-" and not Path(a.input).is_file():
+        raise SystemExit(f"fichier d'entree introuvable : {a.input}")
     raw = sys.stdin.read() if a.input == "-" else Path(a.input).read_text(encoding="utf-8")
     data = json.loads(raw)
     sys.stdout.write(render(data, cfg))

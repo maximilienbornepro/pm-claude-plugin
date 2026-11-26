@@ -1,0 +1,42 @@
+# Profil DEMO - mission bidon pour tester le framework a vide.
+# Aucune de ces valeurs ne pointe un vrai systeme : le harnais `pm demo`
+# SIMULE tout et n'ecrit nulle part. Sert aussi d'exemple minimal de profil.
+name: test
+lang: fr
+pm_tracker: notion        # solution de suivi -> templates lus dans templates/trackers/<pm_tracker>/
+
+jira:
+  instance:    "demo.atlassian.net"     # bidon
+  cloud_id:    "00000000-0000-0000-0000-000000000000"
+  project_key: "DEMO"
+  board:       9999
+
+notion:
+  project_management_root: "Demo / Project Management"   # bidon
+  workspace_root:          "Demo"
+
+drive:
+  web_site: "https://example.sharepoint.com/sites/Demo"
+  root:     "~/Documents/workspace/demo-projet/Drive"   # local, non synchronise
+  sync:     false
+
+identity:
+  palette: profiles/demo/palette.json
+  logos:   profiles/demo/logos           # marques de la mission (vide ici)
+  # logos techno communs : bibliotheque partagee framework/assets/logos
+
+key_dates:
+  t0:          2026-01-05
+  code_freeze: 2026-03-13
+  mep:         2026-03-27
+
+team:
+  - { name: "A. Demo",  role: "TPM" }
+  - { name: "B. Demo",  role: "Lead back" }
+  - { name: "C. Demo",  role: "Lead front" }
+  - { name: "D. Demo",  role: "SRE" }
+
+orchestration:
+  routing_policy:  by-connector   # demo : comptes differencies par connecteur (SINBAD utiliserait by-cost)
+  default_account: pro      # connecteurs / coordination
+  heavy_account:   perso    # generation de gros fichiers locaux (gourmand en tokens)

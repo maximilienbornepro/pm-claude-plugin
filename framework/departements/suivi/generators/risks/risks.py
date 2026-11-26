@@ -64,6 +64,9 @@ def resolve_file(cfg):
             return cand
 
     pattern = f.get("glob")
+    if pattern and "<" in pattern:                      # gabarit non rempli : ne pas fouiller tout $HOME
+        raise SystemExit(f"risks.yml : file.glob est encore le gabarit ({pattern}) ; "
+                         f"renseigner le vrai nom du classeur, ou ${env_name}")
     if pattern:
         home = str(Path.home())
         for base in (

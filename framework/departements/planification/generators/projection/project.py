@@ -43,7 +43,10 @@ def _f(v, default=0.0):
 def _date(v):
     if isinstance(v, datetime.date):
         return v
-    return datetime.date.fromisoformat(str(v)[:10])
+    try:
+        return datetime.date.fromisoformat(str(v)[:10])
+    except ValueError:
+        raise SystemExit(f"date a renseigner dans projection.yml (format AAAA-MM-JJ) : « {v} »")
 
 
 def _set(v):
