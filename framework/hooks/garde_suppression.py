@@ -29,6 +29,10 @@ PATH = MARKER + r'[^"\'|>&;\n]*'
 
 
 def deny(msg):
+    try:  # journal for the « agence » screen; never changes the decision
+        import os as _o, sys as _s; _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__))); import _journal; _journal.guard("garde_suppression", msg)
+    except Exception:
+        pass
     print(json.dumps({"hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",

@@ -1,8 +1,10 @@
 """agence - l'écran « agence » de la console : qui (agent) utilise quoi (skill, générateur, connecteur), en direct.
 
-Le plan de l'agence est CALCULÉ depuis le plugin : agents (framework/agents + agents génériques de Claude
-Code), skills (framework/skills), générateurs (pm.py) et routines (framework/routines). Chaque composant est
-rangé dans un bureau par la table BUREAUX ci-dessous ; ce qui n'est rangé nulle part tombe à l'accueil.
+Le plan vient du référentiel `framework/organisation.yml` (départements, rôles, rattachement de chaque
+composant), aligné sur le fonctionnement de Claude Code : le chef de projet (Claude principal) et les rôles
+métier des départements sont incarnés par Claude principal ; les sous-agents sont les seuls vrais collègues ;
+les skills sont des classeurs, les générateurs des machines ; les connecteurs sont des services partagés ;
+les hooks des garde-fous.
 
 Les événements viennent de `.claude/activity.log`, écrit par le hook journal_activite (demande, début et fin
 de chaque action). Lecture seule.
@@ -10,126 +12,74 @@ de chaque action). Lecture seule.
 from __future__ import annotations
 
 import fnmatch
-import importlib.util
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "framework" / "lib"))
+import organisation as ORG  # noqa: E402
 
-# bureau -> agents (personnages) et motifs des postes (skills, générateurs, routines, connecteurs, outils)
-BUREAUX = [
-    {"id": "accueil", "label": "Accueil", "sub": "Claude principal : reçoit la demande, lit, écrit, lance",
-     "agents": ["claude"],
-     "postes": ["tool:Read", "tool:Edit", "tool:Write", "tool:MultiEdit", "tool:Bash", "tool:Grep", "tool:Glob",
-                "tool:WebSearch", "tool:WebFetch", "tool:ToolSearch", "tool:TodoWrite", "tool:AskUserQuestion",
-                "skill:list", "skill:run", "skill:demo", "skill:setup", "connector:*update_plan*", "connector:*wrap_up*"]},
-    {"id": "pilotage", "label": "Pilotage", "sub": "planning, projection, gates",
-     "agents": [],
-     "postes": ["generator:planning", "generator:projection", "generator:gate", "generator:cockpit", "generator:method",
-                "generator:preflight", "generator:init", "generator:setup", "generator:templates", "generator:agent", "generator:trace-audit",
-                "skill:technical-planning", "routine:publish-projection", "routine:track-progress",
-                "routine:align-sprint-goals", "routine:audit-scope", "connector:*scheduled-tasks*"]},
-    {"id": "jira", "label": "Bureau Jira", "sub": "sprints, tickets, audits",
-     "agents": ["jira-sprints-audit", "jira-changes-audit", "jira-tickets-audit", "front-audit"],
-     "postes": ["generator:jira-*", "generator:plan", "connector:*Jira*", "connector:*Confluence*", "connector:*Atlassian*",
-                "connector:*Compass*", "connector:*atlassian*"]},
-    {"id": "notion", "label": "Notion et suivi", "sub": "sujets, weekly, Omi, Slack",
-     "agents": ["notion-topics-audit"],
-     "postes": ["generator:notion-*", "generator:omi-sync", "generator:transcripts", "generator:weekly-report",
-                "generator:activity", "generator:slack", "routine:review-topics", "routine:collect-activity",
-                "routine:morning-digest", "routine:omi-sync", "connector:*notion-*", "connector:*omi-memory*",
-                "connector:*slack*", "skill:omi"]},
-    {"id": "office", "label": "Office", "sub": "risques, RACI, Excel, SharePoint",
-     "agents": [],
-     "postes": ["generator:risks", "generator:raci", "generator:office", "generator:traceability", "generator:drive-scaffold",
-                "generator:docs-coherence-audit", "routine:review-risks", "skill:*xlsx", "skill:*docx", "skill:*pptx",
-                "skill:*pdf", "connector:*sharepoint*", "connector:*outlook*", "connector:*teams*", "connector:*get_me*",
-                "connector:*read_resource*", "connector:*_file*"]},
-    {"id": "studio", "label": "Studio", "sub": "architecture, dossier, slides",
-     "agents": ["archi-audit"],
-     "postes": ["generator:archi", "generator:dossier", "generator:poc", "generator:deck-gate", "generator:console",
-                "skill:slide-style", "skill:*frontend-design", "skill:artifact-*", "skill:figma:*", "tool:Artifact",
-                "connector:*visualize*", "connector:*Claude_Browser*", "connector:*figma*"]},
-    {"id": "redaction", "label": "Rédaction", "sub": "tons, comptes rendus, relances",
-     "agents": ["doc-writer", "adservio-writer"],
-     "postes": ["skill:voice-*", "skill:*voice-*", "generator:partner-report", "generator:tones", "routine:draft-followups",
-                "skill:*docs"]},
-    {"id": "renforts", "label": "Renforts", "sub": "agents génériques appelés en appui",
-     "agents": ["Explore", "general-purpose", "Plan", "claude-code-guide", "web-fetch"],
-     "postes": ["tool:Agent", "tool:Task"]},
-]
-
-
-# Connecteurs par service : (bureau, libellé, motifs du nom d'outil MCP). Le libellé est ce qui s'affiche
-# et s'allume ; le nom exact de l'outil passe dans la bulle.
-CONNECTEURS = [
-    ("jira", "Atlassian (Jira, Confluence)", ["*Jira*", "*Confluence*", "*Atlassian*", "*atlassian*", "*Compass*", "*Teamwork*"]),
-    ("notion", "Notion", ["*notion-*"]),
-    ("notion", "Omi", ["*omi-memory*"]),
-    ("notion", "Slack", ["*slack*"]),
-    ("office", "Microsoft 365", ["*sharepoint*", "*outlook*", "*teams_*", "*get_me*", "*read_resource*", "*search_people*",
-                                 "*find_meeting*", "*get_granted_scopes*"]),
-    ("office", "Google Drive", ["*_file*", "*shared_drive*", "*list_recent_files*", "*request_access*"]),
-    ("studio", "Navigateur", ["*Claude_Browser*", "*claude-in-chrome*"]),
-    ("studio", "Figma", ["*figma*", "*83325d23*"]),
-    ("studio", "Visualisation", ["*visualize*", "*easel*"]),
-    ("pilotage", "Tâches planifiées", ["*scheduled-tasks*"]),
-    ("accueil", "App Claude", ["*ccd_*"]),
-]
-
-
-def connector_of(name):
-    for bureau, label, pats in CONNECTEURS:
-        if any(fnmatch.fnmatch(name, p) for p in pats):
-            return bureau, label
-    return None, None
-
-
-def _gen_names():
-    spec = importlib.util.spec_from_file_location("pmf_pm", ROOT / "framework" / "pm.py")
-    pm = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(pm)
-    return list(pm.GEN)
+KIND = {"generators": "generator", "skills": "skill", "routines": "routine"}
+TOOLS = ["Read", "Edit", "Write", "Bash", "Grep", "Glob", "WebSearch", "WebFetch", "ToolSearch", "AskUserQuestion"]
 
 
 def catalogue():
-    """Bureaux avec leurs agents et leurs postes, tels qu'ils existent dans le plugin."""
-    agents = [p.stem for p in (ROOT / "framework" / "agents").glob("*.md")]
-    items = ([("generator", g) for g in _gen_names()]
-             + [("skill", p.parent.name) for p in (ROOT / "framework" / "skills").glob("*/SKILL.md")]
-             + [("routine", p.parent.name) for p in (ROOT / "framework" / "routines").glob("*/SKILL.md")])
+    """Bureaux de l'agence depuis organisation.yml : agents (rôle métier + sous-agents) et postes par type."""
+    org = ORG.load()
     out = []
-    placed = set()
-    for b in BUREAUX:
-        postes = []
-        for kind, name in items:
-            if any(fnmatch.fnmatch(f"{kind}:{name}", pat) for pat in b["postes"]) and (kind, name) not in placed:
-                postes.append({"kind": kind, "name": name}); placed.add((kind, name))
-        postes += [{"kind": "connector", "name": lab} for bid, lab, _ in CONNECTEURS if bid == b["id"]]
-        team = [a for a in b["agents"] if a in agents or b["id"] in ("accueil", "renforts")]
-        out.append({**{k: b[k] for k in ("id", "label", "sub")}, "agents": team, "postes": postes})
-    rest = [{"kind": k, "name": n} for k, n in items if (k, n) not in placed]
-    out[0]["postes"].extend(rest)
+    for d in org["departements"]:
+        agents = [{"id": f"role:{d['id']}", "label": d["role"] + (" (Claude)" if d["id"] == "direction" else ""), "role": True}]
+        agents += [{"id": a, "label": a} for a in d.get("agents") or []]
+        postes = [{"kind": KIND[t], "name": n} for t in ("skills", "generators", "routines") for n in d.get(t) or []]
+        if d["id"] == "direction":
+            postes += [{"kind": "tool", "name": t} for t in TOOLS]
+        out.append({"id": d["id"], "label": d["label"], "sub": d["mission"], "agents": agents, "postes": postes})
+    ch = org["charte"]
+    out.append({"id": "charte", "label": ch["label"], "sub": ch["mission"] + " (transverse)", "agents": [],
+                "postes": [{"kind": KIND[t], "name": n} for t in ("skills", "generators") for n in ch.get(t) or []]})
+    rf = org["renforts"]
+    out.append({"id": "renforts", "label": rf["label"], "sub": rf["mission"],
+                "agents": [{"id": a, "label": a} for a in rf["agents"]], "postes": []})
+    out.append({"id": "services", "label": "Services partagés", "sub": "connecteurs externes, appelés par celui qui travaille",
+                "agents": [], "postes": [{"kind": "connector", "name": s["label"]} for s in org["services"]]})
+    out.append({"id": "garde_fous", "label": "Garde-fous", "sub": "hooks : contrôlent chaque action, peuvent la bloquer",
+                "agents": [], "postes": [{"kind": "hook", "name": h["name"]} for h in org["garde_fous"]]})
     return out
 
 
-AGENT_BUREAU = {a: b["id"] for b in BUREAUX for a in b["agents"]}
+def _index():
+    org = ORG.load()
+    asg = ORG.assignments(org)
+    return org, asg
 
 
-def bureau_of(ev):
-    """Bureau d'un événement : celui de l'agent appelé, sinon celui du poste utilisé."""
-    if ev.get("kind") == "agent":
-        return AGENT_BUREAU.get(ev.get("name"), "renforts")
-    if ev.get("kind") == "connector":
-        bid, lab = connector_of(ev.get("name", ""))
-        if bid:
+def connector_of(name, org=None):
+    org = org or ORG.load()
+    for s in org["services"]:
+        if any(fnmatch.fnmatch(name, p) for p in s["motifs"]):
+            return s["label"]
+    return None
+
+
+def bureau_of(ev, org=None, asg=None):
+    """Département d'un événement : celui de l'agent appelé, du skill, de la machine ; services ; direction."""
+    if org is None:
+        org, asg = _index()
+    k, n = ev.get("kind"), ev.get("name", "")
+    if k == "agent":
+        return asg.get(("agents", n), "renforts")
+    if k == "hook":
+        return "garde_fous"
+    if k == "connector":
+        lab = connector_of(n, org)
+        if lab:
             ev["conn"] = lab
-            return bid
-    key = f"{ev.get('kind')}:{ev.get('name')}"
-    for b in BUREAUX:
-        if any(fnmatch.fnmatch(key, pat) for pat in b["postes"]):
-            return b["id"]
-    return "accueil"
+        return "services"
+    if k in ("skill", "generator"):
+        name = n.split(":")[-1]  # plugin-prefixed skills: pm-framework:slide-style
+        return asg.get(("skills" if k == "skill" else "generators", name), "direction")
+    return "direction"
 
 
 def read_events(log: Path, limit=400):
@@ -137,6 +87,7 @@ def read_events(log: Path, limit=400):
         return []
     lines = log.read_text(encoding="utf-8", errors="replace").splitlines()[-limit * 3:]
     seen, out = set(), []
+    org, asg = _index()
     for ln in lines:
         try:
             ev = json.loads(ln)
@@ -146,7 +97,9 @@ def read_events(log: Path, limit=400):
         if key in seen:  # plugin + project hooks both log: keep one
             continue
         seen.add(key)
-        ev["bureau"] = bureau_of(ev)
+        ev["bureau"] = bureau_of(ev, org, asg)
+        if ev.get("kind") == "skill":
+            ev["name"] = ev["name"].split(":")[-1]
         out.append(ev)
     return out[-limit:]
 
@@ -205,6 +158,8 @@ h1{font:200 30px var(--sans)}.eyebrow{color:var(--gris);font-size:13px}
 .agent .nm{font-size:10px;color:var(--gris);text-align:center;line-height:1.2;margin-top:3px;word-break:break-word}
 .agent.on .av{background:var(--rouge);color:#fff;transform:scale(1.25);box-shadow:0 0 0 4px rgba(214,40,40,.25);animation:pulse 1s ease-in-out infinite}
 .agent.on .nm{color:var(--rouge);font-weight:400}
+.agent.role .av{background:#fff;border:1px dashed var(--taupe)}
+.p.k-hook{background:#fff;border-color:var(--bordeaux);color:var(--bordeaux)}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(214,40,40,.35)}50%{box-shadow:0 0 0 10px rgba(214,40,40,0)}}
 .bubble{position:absolute;bottom:58px;left:0;background:var(--rouge);color:#fff;font:400 12px var(--sans);padding:5px 9px;max-width:260px;white-space:normal;width:max-content;z-index:3}
 .bubble:after{content:"";position:absolute;top:100%;left:14px;border:6px solid transparent;border-top-color:var(--rouge)}
@@ -240,19 +195,23 @@ aside h3{font:400 13px var(--sans);border-bottom:1px solid var(--encre);padding-
 <script>
 const CAT = __CATALOGUE__;
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const ini = n => n === "claude" ? "C" : n.split(/[-_ ]/).filter(Boolean).map(w => w[0]).join("").slice(0,3).toUpperCase();
+const ini = n => n.replace(/\(.*\)/,"").split(/[-_ ]/).filter(w => w && w.length > 1 && !["du","de","la","le"].includes(w)).map(w => w[0]).join("").slice(0,3).toUpperCase();
+const DEPTS = new Set(CAT.filter(b => b.agents.some(a => a.role)).map(b => b.id));
+const LABEL = Object.fromEntries(CAT.flatMap(b => b.agents.map(a => [a.id, a.label])));
+const actor = e => e.kind==="agent" ? e.name : ((e.agent && e.agent!=="claude") ? e.agent : "role:"+(DEPTS.has(e.bureau) ? e.bureau : "direction"));
+const labelOf = id => LABEL[id] || id;
 function short(kind, name){ if(kind==="connector"){ const p=name.split("__"); return p[p.length-1]; } return name; }
 function build(){
   document.getElementById("plan").innerHTML = CAT.map(b => `
-   <section class="room ${b.id==="accueil"?"wide":""}" id="r-${b.id}">
+   <section class="room ${["direction","services","garde_fous"].includes(b.id)?"wide":""}" id="r-${b.id}">
     <h2>${esc(b.label)} <span class="n" id="n-${b.id}"></span></h2><div class="sub">${esc(b.sub)}</div>
-    <div class="lbl">Agents</div><div class="team" id="t-${b.id}">${b.agents.length?"":'<span class="none">pas d\'agent dédié : Claude principal y travaille</span>'}${b.agents.map(a=>`
-      <div class="agent" data-a="${esc(a)}"><div class="av" title="${esc(a)}">${esc(ini(a))}</div><div class="nm">${esc(a)}</div></div>`).join("")}</div>
+    ${b.agents.length ? `<div class="lbl">Agents</div><div class="team" id="t-${b.id}">${b.agents.map(a=>`
+      <div class="agent ${a.role?"role":""}" data-a="${esc(a.id)}"><div class="av" title="${esc(a.role?"rôle tenu par Claude principal":"sous-agent")}">${esc(ini(a.label))}</div><div class="nm">${esc(a.label)}</div></div>`).join("")}</div>` : `<div class="team" id="t-${b.id}"></div>`}
     ${GROUPS.map(([k, lab]) => `<div class="grp"><div class="lbl">${lab}</div><div class="postes" id="p-${b.id}-${k}">${b.postes.filter(p=>p.kind===k).map(p=>`
       <span class="p k-${p.kind}" data-k="${p.kind}:${esc(p.name)}" title="${p.kind}">${esc(p.name)}</span>`).join("")}</div></div>`).join("")}
    </section>`).join("");
 }
-const GROUPS = [["skill","Skills"],["generator","Générateurs"],["routine","Routines"],["connector","Connecteurs"],["tool","Outils"]];
+const GROUPS = [["skill","Skills"],["generator","Générateurs"],["routine","Routines"],["connector","Connecteurs"],["hook","Garde-fous"],["tool","Outils"]];
 function poste(bureau, kind, name){
   const box = document.getElementById("p-"+bureau+"-"+kind); if(!box) return null;
   let el = box.querySelector(`[data-k="${CSS.escape(kind+":"+name)}"]`);
@@ -264,7 +223,7 @@ function agentEl(bureau, a){
   let el = document.querySelector(`.agent[data-a="${CSS.escape(a)}"]`);
   if(!el){ const t = document.getElementById("t-"+bureau); if(!t) return null;
     el = document.createElement("div"); el.className="agent"; el.dataset.a=a;
-    el.innerHTML=`<div class="av" title="${esc(a)}">${esc(ini(a))}</div><div class="nm">${esc(a)}</div>`; t.appendChild(el); }
+    el.innerHTML=`<div class="av" title="${esc(a)}">${esc(ini(labelOf(a)))}</div><div class="nm">${esc(labelOf(a))}</div>`; t.appendChild(el); }
   return el;
 }
 function render(s){
@@ -277,8 +236,8 @@ function render(s){
   s.feed.filter(e => e.ev==="start" && e.ts >= pTs && e.kind!=="agent").forEach(e => { const el = poste(e.bureau, e.kind, e.conn || e.name); if(el) el.classList.add("recent"); });
   s.active.forEach(e => {
     document.getElementById("r-"+e.bureau)?.classList.add("on");
-    const who = e.kind==="agent" ? e.name : (e.agent || "claude");
-    const whoB = e.kind==="agent" ? e.bureau : (CAT.find(b=>b.agents.includes(who))?.id || "accueil");
+    const who = actor(e);
+    const whoB = CAT.find(b=>b.agents.some(a=>a.id===who))?.id || e.bureau;
     const a = agentEl(whoB, who);
     if(a){ a.classList.add("on"); const bb=document.createElement("div"); bb.className="bubble";
       bb.textContent = e.kind==="agent" ? (e.detail || "au travail") : `${short(e.kind,e.name)}${e.detail? " · "+e.detail:""}`.slice(0,60); a.appendChild(bb); }
@@ -288,7 +247,7 @@ function render(s){
   const now = document.getElementById("now");
   if(s.active.length){ now.classList.add("show");
     now.innerHTML = s.active.slice(-3).reverse().map(e => {
-      const who = e.kind==="agent" ? e.name : (e.agent||"claude");
+      const who = labelOf(actor(e));
       const what = e.kind==="agent" ? "agent appelé" : (e.conn ? e.conn+" · "+short(e.kind,e.name) : short(e.kind,e.name));
       return `<span>En cours : <b>${esc(who)}</b> <span class="sep">→</span> <b>${esc(what)}</b> <span class="k">${esc(e.kind)} · ${esc(CAT.find(b=>b.id===e.bureau)?.label||"")}${e.running===false?" · terminé":""}</span></span>`;
     }).join('<span class="sep">|</span>');
@@ -296,22 +255,23 @@ function render(s){
   const liveIds = new Set(s.active.map(e=>e.id));
   document.getElementById("feed").innerHTML = s.feed.slice().reverse().map(e => e.ev==="prompt"
     ? `<li class="prompt"><span class="t">${e.ts.slice(11,19)}</span><span class="w"><b>Demande</b><span class="d">${esc(e.detail)}</span></span></li>`
-    : `<li class="${liveIds.has(e.id)?"live":""}"><span class="t">${e.ts.slice(11,19)}</span><span class="w"><b>${esc(e.kind==="agent"?e.name:(e.agent||"claude"))}</b> → ${esc(short(e.kind,e.name))}
+    : `<li class="${liveIds.has(e.id)?"live":""}"><span class="t">${e.ts.slice(11,19)}</span><span class="w"><b>${esc(labelOf(actor(e)))}</b> → ${esc(short(e.kind,e.name))}
        <span class="d">${esc(CAT.find(b=>b.id===e.bureau)?.label||"")}${e.detail?" · "+esc(e.detail):""}</span></span></li>`).join("");
 }
 let demoUntil = 0;
 async function tick(){ if(Date.now() > demoUntil){ try{ const r = await fetch("/agence/state.json",{cache:"no-store"}); render(await r.json()); }catch(e){} } setTimeout(tick, 500); }
 const SCEN = [
   {kind:"prompt", detail:"Fais-moi le dossier projet du comité de jeudi"},
-  {kind:"skill", name:"slide-style", bureau:"studio", agent:"claude", detail:"charte des slides"},
-  {kind:"agent", name:"jira-sprints-audit", bureau:"jira", detail:"audit du plan de sprints"},
-  {kind:"connector", name:"mcp__atlassian__searchJiraIssuesUsingJql", bureau:"jira", agent:"jira-sprints-audit", detail:"tickets du sprint 3"},
-  {kind:"agent", name:"notion-topics-audit", bureau:"notion", detail:"relire les sujets"},
-  {kind:"connector", name:"mcp__notion__notion-query-data-sources", bureau:"notion", agent:"notion-topics-audit", detail:"base Suivi des sujets"},
-  {kind:"generator", name:"risks", bureau:"office", agent:"claude", detail:"registre des risques"},
-  {kind:"agent", name:"archi-audit", bureau:"studio", detail:"vue macro de l'architecture"},
-  {kind:"generator", name:"archi", bureau:"studio", agent:"archi-audit", detail:"rendu golden"},
-  {kind:"skill", name:"voice-slides", bureau:"redaction", agent:"claude", detail:"légendes des slides"},
+  {kind:"skill", name:"slide-style", bureau:"charte", agent:"claude", detail:"la chef de projet prend le classeur de la charte"},
+  {kind:"agent", name:"jira-sprints-audit", bureau:"planification", detail:"brief : auditer le plan de sprints"},
+  {kind:"connector", name:"mcp__atlassian__searchJiraIssuesUsingJql", conn:"Atlassian (Jira, Confluence)", bureau:"services", agent:"jira-sprints-audit", detail:"tickets du sprint 3"},
+  {kind:"agent", name:"notion-topics-audit", bureau:"suivi", detail:"brief : relire les sujets"},
+  {kind:"connector", name:"mcp__notion__notion-query-data-sources", conn:"Notion", bureau:"services", agent:"notion-topics-audit", detail:"base Suivi des sujets"},
+  {kind:"generator", name:"risks", bureau:"suivi", agent:"claude", detail:"registre des risques"},
+  {kind:"hook", name:"garde_office", bureau:"garde_fous", agent:"claude", detail:"écriture Office contrôlée"},
+  {kind:"agent", name:"archi-audit", bureau:"studio", detail:"brief : vue macro de l'architecture"},
+  {kind:"generator", name:"archi", bureau:"studio", agent:"archi-audit", detail:"rendu de référence"},
+  {kind:"skill", name:"voice-slides", bureau:"charte", agent:"claude", detail:"légendes des slides"},
   {kind:"generator", name:"dossier", bureau:"studio", agent:"claude", detail:"--build : PPTX + HTML"},
 ];
 document.getElementById("demo").onclick = () => {

@@ -143,6 +143,16 @@ def main():
     except Exception as e:
         warn(f"registre de templates illisible : {e}")
 
+    # organisation : chaque composant rattache a un departement (framework/organisation.yml)
+    try:
+        sys.path.insert(0, str(ROOT / "framework" / "lib"))
+        import organisation as ORG
+        for e in ORG.check():
+            err(e)
+        print("organisation : composants rattaches verifies.")
+    except Exception as e:
+        err(f"organisation.yml illisible : {e}")
+
     # rapport
     for w in warns: print(f"  AVERT  {w}")
     for e in errors: print(f"  ERREUR {e}")

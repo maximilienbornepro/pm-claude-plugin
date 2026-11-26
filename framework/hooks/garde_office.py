@@ -51,6 +51,10 @@ if reasons:
            "Passe par le helper framework/harness/onedrive_xlsx.py (ecriture chirurgicale "
            "+ sauvegarde + une seule ecriture), et seulement APRES le controle de fraicheur "
            "distant (lastModifiedDateTime). Voir framework/harness/HARNESS.md.")
+    try:  # journal for the « agence » screen; never changes the decision
+        import os as _o, sys as _s; _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__))); import _journal; _journal.guard("garde_office", msg)
+    except Exception:
+        pass
     print(json.dumps({"hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",
