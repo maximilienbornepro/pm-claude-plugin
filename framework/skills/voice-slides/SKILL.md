@@ -15,7 +15,7 @@ ne règle que ce que la slide ajoute : titre, sur-titre, légende, libellés.
   « Responsabilités inter-équipes ».
 
 ## Sur-titre
-- Petites capitales espacées, `Section · précision` : une période, une date, un périmètre
+- En casse normale, gris, `Section · précision` : une période, une date, un périmètre
   (« Sprint 3 · du 17 au 28 novembre »). Jamais un constat.
 
 ## Légende (sous le titre)
@@ -31,4 +31,5 @@ ne règle que ce que la slide ajoute : titre, sur-titre, légende, libellés.
 - En **jours** (1 point = 1 jour) ; le temps en **J+n** avec la date (« J+38 · 26/11 »).
 - Statuts et niveaux avec les mots du registre ou du suivi des sujets, accordés (« Élevé », « Critique »,
   « À risque », « Bloqué »).
-- Français, accents corrects ; pas de majuscules décoratives hors petites capitales de style.
+- **Casse normale partout** (décision du 26/11/2026) : sur-titres, en-têtes de tableau, légendes, titres de
+  section, pied de page. Jamais de texte en capitales, ni tapé ni par style. Français, accents corrects.

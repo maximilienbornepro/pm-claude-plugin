@@ -44,6 +44,18 @@ HEAT = {0: None, .5: C["e1"], 1: C["sable"]}
 # Light sans-serif, never serif. Windows falls back to Segoe UI Light if Helvetica Neue is missing.
 F_LIGHT, F_THIN, F_REG = "Helvetica Neue Light", "Helvetica Neue Thin", "Helvetica Neue"
 
+# Labels (eyebrows, headers, legends, section titles) are written in sentence case with light tracking.
+# Set CAPS = True to go back to spaced small capitals (validated choice 26/11/2026: sentence case).
+CAPS = False
+
+
+def label_style(size, spacing, caps):
+    """Size and tracking of a label run once the caps choice is applied."""
+    if caps and not CAPS:
+        return (round(size * 1.15, 3) if size < 1.2 else size), min(spacing, .2), False
+    return size, spacing, caps
+
+
 W_CQ, H_CQ = 100.0, 56.25
 EMU_CQ = 121920  # 12 192 000 EMU / 100
 
@@ -220,13 +232,14 @@ class Deck:
             for t, o in runs:
                 r = para.add_run()
                 r.text = t
-                if o.get("caps", caps):
-                    r._r.get_or_add_rPr().set("cap", "all")  # small caps by style, text keeps its case
+                rsize, sp, rcaps = label_style(o.get("size", size), o.get("spacing", spacing), o.get("caps", caps))
+                rPr = r._r.get_or_add_rPr()
+                rPr.set("cap", "all" if rcaps else "none")  # override layout styles (e.g. section header caps)
+                rPr.set("b", "0")  # weight comes from the font face, never from the layout's bold
                 f = r.font
                 f.name = bold_font if o.get("bold") else o.get("font", font)
-                f.size = Pt(pt_of(o.get("size", size)))
+                f.size = Pt(pt_of(rsize))
                 f.color.rgb = rgb(o.get("color", color))
-                sp = o.get("spacing", spacing)
                 if sp:
                     r._r.get_or_add_rPr().set("spc", str(int(sp * 100)))
                 if o.get("link", link):
@@ -340,14 +353,15 @@ class Deck:
                 for t, o in cell.get("runs", []):
                     r = para.add_run()
                     r.text = t
-                    if o.get("caps"):
+                    rsize, rsp, rcaps = label_style(o.get("size", size), o.get("spacing", 0), o.get("caps", False))
+                    if rcaps:
                         r._r.get_or_add_rPr().set("cap", "all")
                     f = r.font
                     f.name = F_REG if o.get("bold") else o.get("font", F_LIGHT)
-                    f.size = Pt(pt_of(o.get("size", size)))
+                    f.size = Pt(pt_of(rsize))
                     f.color.rgb = rgb(o.get("color", "encre"))
-                    if o.get("spacing"):
-                        r._r.get_or_add_rPr().set("spc", str(int(o["spacing"] * 100)))
+                    if rsp:
+                        r._r.get_or_add_rPr().set("spc", str(int(rsp * 100)))
                 bottom = ("encre", 1.0) if hdr else (cell.get("bline") or ("filet", 0.6))
                 top = cell.get("tline")
                 self._borders(tc, top=top, bottom=bottom)

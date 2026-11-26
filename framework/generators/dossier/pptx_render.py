@@ -83,7 +83,7 @@ def chrome(D, s, sl, deck, n, dark):
             D.picture(s, lg, 96 - 1.15 * iw / ih, 3.2, h=1.15)
     gray = "6D6862" if dark else "gris"
     D.text(s, 4, FOOT_Y, 30, 1.2, f"{project} · {sl.get('section', '')}", size=.85, color=gray, caps=True, spacing=3.2, name="dx:foot")
-    D.text(s, 86, FOOT_Y, 10, 1.2, f"{n:02d}", size=.85, color=gray, align="r", spacing=3.2, name="dx:num")
+    D.text(s, 86, FOOT_Y, 10, 1.2, f"{n:02d}", size=.85, color=gray, align="r", spacing=.2, name="dx:num")
     if sl.get("src"):
         first = sl["src"].split(" · ")[0].strip()
         link = first if Path(first).suffix in EXT else None
@@ -639,7 +639,7 @@ def render(deck, mdir, out, only=None):
                 D.picture(s, lg, 50 - 10 * iw / ih / 2, 13, h=10)
             D.placeholder(s, 0, 10, 27.5, 80, 4, sl["title"], size=3.6, color="blanc", caps=True, spacing=16, align="c", name=f"dx:slide:{sid}")
             D.line(s, 47, 33.2, 53, 33.2, color="or", w=.75)
-            D.placeholder(s, 1, 10, 35, 80, 2, sl["sub"], size=1.5, color="D8D2CA", spacing=2.6, align="c", name="dx:sub")
+            D.placeholder(s, 1, 10, 35, 80, 2, sl["sub"], size=1.5, color="D8D2CA", spacing=.3, align="c", name="dx:sub")
             chrome(D, s, sl, deck, num, True)
         elif k == "section":
             s = D.new(dark=True, layout=2)
@@ -649,7 +649,7 @@ def render(deck, mdir, out, only=None):
             D.placeholder(s, 0, 8, ty, 70, len(lines) * 6, lines, size=5, color="blanc", caps=True, spacing=11, line=1.05, name=f"dx:slide:{sid}")
             ry = ty + len(lines) * 6.3 + 1.4
             D.line(s, 8, ry, 14, ry, color="or", w=.75)
-            D.placeholder(s, 1, 8, ry + 1.8, 70, 2, sl.get("sub", ""), size=1.5, color="D8D2CA", spacing=2.6, name="dx:sub")
+            D.placeholder(s, 1, 8, ry + 1.8, 70, 2, sl.get("sub", ""), size=1.5, color="D8D2CA", spacing=.3, name="dx:sub")
             D.text(s, 60, 18, 32, 18, sl.get("num", ""), size=16, color="1F1F1F", font=S.F_THIN, align="r", name="dx:secnum")
             chrome(D, s, sl, deck, num, True)
         else:

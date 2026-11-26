@@ -40,7 +40,7 @@ body{background:var(--bg);font-family:var(--sans)}
 .xnav,.xtheme,#skin{display:none!important}
 .dh{position:relative;padding:8px 0 22px}
 .dh .logo{position:absolute;top:6px;right:0;height:15px}
-.dh .eyebrow{font:300 12px var(--sans);letter-spacing:.5em;text-transform:uppercase;color:var(--muted)}
+.dh .eyebrow{font:300 14px var(--sans);letter-spacing:.02em;color:var(--muted)}
 .dh h1{font:200 34px/1.15 var(--sans);letter-spacing:0;margin:10px 0 0;color:var(--ink)}
 .dh .cap{font:200 14px/1.6 var(--sans);color:#5a5550;max-width:900px;margin:10px 0 0}
 .crumb{margin:4px 0 14px}.crumb button{color:var(--ink);font-weight:300;letter-spacing:.08em}
@@ -54,8 +54,8 @@ svg text{font-family:var(--sans)}
 .blk rect.bg{stroke:var(--line)}
 .flow{animation:none;stroke-width:2}
 .df{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;margin-top:26px;padding-top:14px;border-top:1px solid var(--line);
-  font:300 11px var(--sans);letter-spacing:.4em;text-transform:uppercase;color:var(--muted)}
-.df a{color:var(--ink);text-decoration:none;letter-spacing:.1em;text-transform:none;border-bottom:1px solid #B8975A}
+  font:300 12.5px var(--sans);letter-spacing:.02em;color:var(--muted)}
+.df a{color:var(--ink);text-decoration:none;letter-spacing:.02em;border-bottom:1px solid #B8975A}
 """
 
 CAPTION = ("Le schéma présente l'architecture de la solution dans sa vue d'ensemble : les blocs regroupent les "

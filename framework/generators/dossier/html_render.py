@@ -58,27 +58,27 @@ CHARTER_CSS = r"""
     container-type: inline-size; overflow: hidden; background: var(--ivoire); color: var(--encre);
     box-shadow: 0 10px 40px rgba(0,0,0,.35); }
   .foot { position: absolute; left: 4cqw; right: 4cqw; bottom: 2.4cqw; display: flex; justify-content: space-between;
-    font: 300 .85cqw var(--sans); letter-spacing: .4em; text-transform: uppercase; color: var(--gris); }
-  .foot .src { color: var(--encre); text-decoration: none; letter-spacing: .12em; text-transform: none; font-weight: 300; border-bottom: 1px solid var(--or); }
+    font: 300 0.98cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); }
+  .foot .src { color: var(--encre); text-decoration: none; letter-spacing: .02em; text-transform: none; font-weight: 300; border-bottom: 1px solid var(--or); }
   .logo-c { position: absolute; top: 3.2cqw; right: 4cqw; height: 1.15cqw; opacity: .9; }
   .logo-n { position: absolute; top: 3.4cqw; left: 8cqw; height: 4.2cqw; }
 
   /* Black section slides, white type */
   .noire { background: var(--noir); color: var(--blanc); display: flex; flex-direction: column; justify-content: center; padding: 0 8cqw; }
-  .noire .kicker { font: 300 1cqw var(--sans); letter-spacing: .6em; text-transform: uppercase; color: #9a948c; margin-bottom: 2.6cqw; }
-  .noire h1 { font: 200 5cqw/1.1 var(--sans); letter-spacing: .22em; text-transform: uppercase; }
+  .noire .kicker { font: 300 1.15cqw var(--sans); letter-spacing: .02em; text-transform: none; color: #9a948c; margin-bottom: 2.6cqw; }
+  .noire h1 { font: 200 5.0cqw/1.1 var(--sans); letter-spacing: .01em; text-transform: none; }
   .noire .rule { width: 6cqw; height: 1px; background: var(--or); margin: 3cqw 0 2.2cqw; }
-  .noire .sub { font: 200 1.5cqw var(--sans); letter-spacing: .18em; color: #d8d2ca; }
+  .noire .sub { font: 200 1.5cqw var(--sans); letter-spacing: .02em; color: #d8d2ca; }
   .noire .foot { color: #6d6862; }
   .noire .num { position: absolute; right: 8cqw; top: 50%; transform: translateY(-50%); font: 100 16cqw var(--sans); color: #1f1f1f; }
   .cover { align-items: center; text-align: center; padding: 0; }
   .cover .big { height: 10cqw; margin-bottom: 4cqw; }
-  .cover h1 { font-size: 3.6cqw; letter-spacing: .45em; }
+  .cover h1 { font-size: 4.2cqw; letter-spacing: .04em; }
   .cover .rule { margin: 2.6cqw auto 2cqw; }
 
   /* Content slides */
   .content { padding: 4.4cqw 6cqw 6cqw; }
-  .eyebrow { font: 300 .95cqw var(--sans); letter-spacing: .5em; text-transform: uppercase; color: var(--gris); }
+  .eyebrow { font: 300 1.09cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); }
   .title { font: 200 2.4cqw/1.15 var(--sans); margin: .8cqw 0 0; }
   .cap { font: 200 .98cqw/1.55 var(--sans); color: #5a5550; max-width: 82cqw; margin-top: .9cqw; }
   .lead { font: 200 1.3cqw/1.5 var(--sans); color: #4a4643; }
@@ -87,14 +87,14 @@ CHARTER_CSS = r"""
 
   /* Tables */
   table.t { width: 100%; border-collapse: collapse; margin-top: 2.2cqw; }
-  .t th { font: 400 .75cqw var(--sans); letter-spacing: .28em; text-transform: uppercase; color: var(--gris); text-align: left; padding: 0 .9cqw .9cqw; border-bottom: 1px solid var(--encre); white-space: nowrap; }
+  .t th { font: 400 0.86cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); text-align: left; padding: 0 .9cqw .9cqw; border-bottom: 1px solid var(--encre); white-space: nowrap; }
   .t td { font: 300 1cqw/1.35 var(--sans); padding: .85cqw .9cqw; border-bottom: 1px solid var(--filet); vertical-align: top; }
   .t td.k { color: var(--gris); letter-spacing: .15em; white-space: nowrap; }
   .t td.n, .t th.n { text-align: right; font-variant-numeric: tabular-nums; }
   .t tr.tot td { border-top: 1px solid var(--encre); border-bottom: none; font-weight: 400; }
   .t.small td { font-size: .92cqw; padding: .7cqw .8cqw; }
   .dot { display: inline-block; width: .8cqw; height: .8cqw; margin-right: .6cqw; vertical-align: middle; }
-  .pill { display: inline-block; font: 400 .72cqw var(--sans); letter-spacing: .2em; text-transform: uppercase; padding: .4cqw .8cqw; white-space: nowrap; }
+  .pill { display: inline-block; font: 400 0.83cqw var(--sans); letter-spacing: .02em; text-transform: none; padding: .4cqw .8cqw; white-space: nowrap; }
 
   /* Levels / statuses: flat colour blocks */
   .l1 { background: #EEE8DF; } .l2 { background: var(--sable); } .l3 { background: var(--taupe); } .l4 { background: var(--bordeaux); color: #fff; }
@@ -104,7 +104,7 @@ CHARTER_CSS = r"""
   /* Risk matrix */
   .matrix { display: grid; grid-template-columns: 3cqw repeat(4, 1fr); grid-template-rows: repeat(4, 1fr) 2.6cqw; gap: .35cqw; height: 26cqw; }
   .matrix .cell { display: flex; align-items: center; justify-content: center; gap: .5cqw; }
-  .matrix .ax { font: 300 .8cqw var(--sans); letter-spacing: .25em; text-transform: uppercase; color: var(--gris); display: flex; align-items: center; justify-content: center; }
+  .matrix .ax { font: 300 0.92cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); display: flex; align-items: center; justify-content: center; }
   .matrix .ay { writing-mode: vertical-rl; transform: rotate(180deg); }
   .chip { display: inline-flex; align-items: center; justify-content: center; min-width: 2.6cqw; height: 2.6cqw; border-radius: 50%; background: var(--blanc); color: var(--encre); font: 400 .8cqw var(--sans); }
   .toplist { list-style: none; }
@@ -117,24 +117,24 @@ CHARTER_CSS = r"""
   .kpi { font: 100 12cqw/.85 var(--sans); letter-spacing: -.03em; }
   .kpi sup { font: 200 3cqw var(--sans); vertical-align: top; margin-left: .4cqw; }
   .bars .row { display: grid; grid-template-columns: 9cqw 1fr 5cqw; align-items: center; gap: 1.4cqw; margin: 1.2cqw 0; }
-  .bars .lbl { font: 300 .95cqw var(--sans); letter-spacing: .25em; text-transform: uppercase; }
+  .bars .lbl { font: 300 1.09cqw var(--sans); letter-spacing: .02em; text-transform: none; }
   .bars .track { height: 2cqw; background: var(--voile); position: relative; }
   .bars .fill { position: absolute; inset: 0 auto 0 0; }
   .bars .mark { position: absolute; top: -.5cqw; bottom: -.5cqw; width: 1px; background: var(--bordeaux); }
   .bars .val { font: 200 1.5cqw var(--sans); text-align: right; }
   .tiles { display: grid; gap: 0; }
   .tile { padding: 2cqw 2cqw; display: flex; flex-direction: column; justify-content: space-between; min-height: 11cqw; }
-  .tile .k { font: 400 .75cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; }
+  .tile .k { font: 400 0.86cqw var(--sans); letter-spacing: .02em; text-transform: none; }
   .tile .v { font: 100 4.6cqw/1 var(--sans); }
   .tile .s { font: 200 .9cqw var(--sans); }
-  .legend { display: flex; gap: 2.4cqw; font: 300 .85cqw var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--gris); margin-top: 1cqw; }
+  .legend { display: flex; gap: 2.4cqw; font: 300 0.98cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); margin-top: 1cqw; }
   .legend i { display: inline-block; width: 1.6cqw; height: 2px; vertical-align: middle; margin-right: .6cqw; }
 
   svg text { font-family: var(--sans); font-weight: 300; }
 
   /* Columns (weekly, CR) */
   .cols { display: grid; gap: 2.6cqw; margin-top: 2.6cqw; }
-  .col h3 { font: 400 .8cqw var(--sans); letter-spacing: .4em; text-transform: uppercase; padding-bottom: .9cqw; border-bottom: 1px solid var(--encre); margin-bottom: 1cqw; }
+  .col h3 { font: 400 0.92cqw var(--sans); letter-spacing: .02em; text-transform: none; padding-bottom: .9cqw; border-bottom: 1px solid var(--encre); margin-bottom: 1cqw; }
   .col ul { list-style: none; }
   .col li { font: 300 1.02cqw/1.45 var(--sans); padding: .55cqw 0; border-bottom: 1px solid var(--filet); }
   .col li small { color: var(--gris); font-weight: 200; }
@@ -147,12 +147,12 @@ CHARTER_CSS = r"""
   /* Weather cards (technical follow-up) */
   .meteo { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5cqw; margin-top: 2.4cqw; }
   .dom { padding: 1.6cqw 1.4cqw; min-height: 9.5cqw; display: flex; flex-direction: column; justify-content: space-between; }
-  .dom .k { font: 400 .75cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; }
+  .dom .k { font: 400 0.86cqw var(--sans); letter-spacing: .02em; text-transform: none; }
   .dom .v { font: 200 1.05cqw/1.35 var(--sans); }
   .stack { display: flex; height: .6cqw; margin-top: .9cqw; }
   /* Weekly (mirror of the Notion block): nested bullets by theme */
   .wk { display: grid; grid-template-columns: 1.25fr 1fr 1.15fr; gap: 2.6cqw; margin-top: 1.8cqw; }
-  .wk h3 { font: 400 .8cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .7cqw; }
+  .wk h3 { font: 400 0.92cqw var(--sans); letter-spacing: .02em; text-transform: none; padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .7cqw; }
   .wk ul { list-style: none; }
   .wk > div > ul > li { font: 300 1.12cqw/1.45 var(--sans); padding: .6cqw 0; }
   .wk ul ul li { font: 200 1.06cqw/1.45 var(--sans); padding: .12cqw 0 .12cqw 1.3cqw; position: relative; }
@@ -160,7 +160,7 @@ CHARTER_CSS = r"""
   /* Partner report (mirror of the partner-report mail) */
   .mail { margin-top: 1.4cqw; font: 300 1.08cqw/1.5 var(--sans); }
   .mail .obj { font: 400 1.05cqw var(--sans); padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .8cqw; }
-  .mail .obj span { display: block; font: 300 .72cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; color: var(--gris); margin-bottom: .3cqw; }
+  .mail .obj span { display: block; font: 300 0.83cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); margin-bottom: .3cqw; }
   .mail > p { margin: .35cqw 0; }
   .mail .subj { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3cqw 2.6cqw; margin: 1.2cqw 0; }
   .mail h4 { font: 400 1.12cqw var(--sans); margin-bottom: .2cqw; }
@@ -175,7 +175,7 @@ CHARTER_CSS = r"""
   .staff th:nth-child(n+3) { width: 14%; }
   .staff td.k { text-align: left; }
   .staff th:nth-child(2), .staff td:nth-child(2) { text-align: left; }
-  .staff tr.ph td { font: 300 .78cqw var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--gris); border-bottom: 1px solid var(--filet); padding-top: .5cqw; }
+  .staff tr.ph td { font: 300 0.9cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--gris); border-bottom: 1px solid var(--filet); padding-top: .5cqw; }
   .staff tr.ph td.cur { background: var(--noir); color: #fff; }
   .staff td { padding: .42cqw .8cqw; }
   .staff .e0 { color: var(--gris); } .staff .e1 { background: #F0EBE3; } .staff .e2 { background: var(--sable); }
@@ -205,7 +205,7 @@ CHARTER_CSS = r"""
   .archi-svg .arr { stroke: var(--muted); stroke-width: 1.6; fill: none; } .archi-svg .flow { stroke: var(--sai); stroke-width: 2; fill: none; stroke-dasharray: 7 7; }
   .archi-svg .api { stroke: var(--sai); stroke-width: 3; fill: none; } .archi-svg .auth { stroke: var(--kc); stroke-width: 2.2; fill: none; stroke-dasharray: 3 4; }
   .archi-svg .zoom { display: none; }
-  .archi-link { display: inline-block; margin-top: .6cqw; font: 300 .8cqw var(--sans); letter-spacing: .25em; text-transform: uppercase; color: var(--encre); text-decoration: none; border-bottom: 1px solid var(--or); }
+  .archi-link { display: inline-block; margin-top: .6cqw; font: 300 0.92cqw var(--sans); letter-spacing: .02em; text-transform: none; color: var(--encre); text-decoration: none; border-bottom: 1px solid var(--or); }
 """
 
 # Additions for generated-only blocks (agenda, fitted charts, generic cells). Charter values only.
@@ -224,9 +224,9 @@ EXTRA_CSS = r"""
   .legend .bdg { display: inline-block; width: .9cqw; height: .9cqw; border-radius: 50%; background: var(--noir); vertical-align: middle; margin-right: .6cqw; }
   /* Agenda (sommaire) */
   .agenda { display: grid; gap: 2.4cqw 2.6cqw; margin-top: 3.2cqw; align-items: start; }
-  .agenda h3 { font: 400 .8cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .5cqw; }
+  .agenda h3 { font: 400 0.92cqw var(--sans); letter-spacing: .02em; text-transform: none; padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .5cqw; }
   .agenda h3 a { color: var(--encre); text-decoration: none; }
-  .agenda h3 .n { color: var(--or); margin-right: .9cqw; letter-spacing: .2em; }
+  .agenda h3 .n { color: var(--or); margin-right: .9cqw; letter-spacing: .02em; }
   .agenda ul { list-style: none; }
   .agenda li { font: 300 1.02cqw/1.4 var(--sans); padding: .45cqw 0; border-bottom: 1px solid var(--filet); }
   .agenda li a { color: var(--encre); text-decoration: none; }
@@ -482,13 +482,13 @@ def chart_svg(c, big=True, label="Burn-down en jours"):
     ls = 3
     if c.get("elapsed_label"):
         o.append(f'<text x="{num((L + ex) / 2)}" y="{banner_y}" text-anchor="middle" font-size="{fs if big else 14}" '
-                 f'letter-spacing="{ls}" fill="#8A8580">{esc(c["elapsed_label"].upper())}</text>')
+                 f'letter-spacing=".3" fill="#8A8580">{esc(c["elapsed_label"])}</text>')
     if c.get("remain_label"):
         o.append(f'<text x="{num((ex + R) / 2)}" y="{banner_y}" text-anchor="middle" font-size="{fs if big else 14}" '
-                 f'letter-spacing="{ls}" fill="#8A8580">{esc(c["remain_label"].upper())}</text>')
+                 f'letter-spacing=".3" fill="#8A8580">{esc(c["remain_label"])}</text>')
     o.append(f'<g stroke="#D9D3CA" stroke-width="1"><line x1="{L}" y1="{B}" x2="{R}" y2="{B}"/>'
              f'<line x1="{L}" y1="{T}" x2="{L}" y2="{B}"/></g>')
-    o.append(f'<g font-size="{fs}" fill="#8A8580" letter-spacing="1">')
+    o.append(f'<g font-size="{fs}" fill="#8A8580" letter-spacing=".3">')
     for v in c.get("yticks", []):
         o.append(f'<text x="{L - 10}" y="{num(py(v) + fs * .35)}" text-anchor="end">{esc(v)}</text>')
     for d, lab in c.get("xticks", []):
@@ -509,8 +509,8 @@ def chart_svg(c, big=True, label="Burn-down en jours"):
         col = hexc(v.get("c", "encre"))
         tcol = hexc("ardoise") if v.get("c") == "sauge" else col
         o.append(f'<line x1="{num(X)}" y1="{band}" x2="{num(X)}" y2="{B}" stroke="{col}" stroke-width="1.2"/>')
-        o.append(f'<text x="{num(X - 4)}" y="{76 + 20 * i}" text-anchor="end" font-size="{fs}" letter-spacing="2" '
-                 f'fill="{tcol}">{esc(v["label"].upper())}</text>')
+        o.append(f'<text x="{num(X - 4)}" y="{76 + 20 * i}" text-anchor="end" font-size="{fs}" letter-spacing=".3" '
+                 f'fill="{tcol}">{esc(v["label"])}</text>')
     t = c.get("today")
     if t:
         o.append(f'<line x1="{num(ex)}" y1="{band}" x2="{num(ex)}" y2="{B}" stroke="#7A1F23" stroke-width="1"/>')
@@ -537,14 +537,14 @@ def gantt_svg(g):
     bottom = top + 50 * len(lanes) + 6
     H = bottom + 30
     o = [f'<svg viewBox="0 0 1000 {H}" preserveAspectRatio="xMidYMid meet" aria-label="Gantt">']
-    o.append('<g font-size="11" letter-spacing="3" fill="#8A8580">')
-    o += [f'<text x="{num(px(d))}" y="18">{esc(lab.upper())}</text>' for d, lab in g.get("months", [])]
+    o.append('<g font-size="11" letter-spacing=".3" fill="#8A8580">')
+    o += [f'<text x="{num(px(d))}" y="18">{esc(lab)}</text>' for d, lab in g.get("months", [])]
     o.append('</g><g stroke="#D9D3CA">')
     o += [f'<line x1="{num(px(d) - 10)}" y1="8" x2="{num(px(d) - 10)}" y2="{bottom}"/>' for d, _ in g.get("months", []) if d]
     o.append('</g><g font-size="10" fill="#8A8580">')
     o += [f'<text x="{num(px(d))}" y="36">{esc(lab)}</text>' for d, lab in g.get("weeks", [])]
-    o.append('</g><g font-size="13" fill="#1A1A1A" letter-spacing="2">')
-    o += [f'<text x="0" y="{72 + 50 * i}">{esc(ln["n"].upper())}</text>' for i, ln in enumerate(lanes)]
+    o.append('</g><g font-size="13" fill="#1A1A1A" letter-spacing=".3">')
+    o += [f'<text x="0" y="{72 + 50 * i}">{esc(ln["n"])}</text>' for i, ln in enumerate(lanes)]
     o.append('</g><g stroke="#ECE6DD">')
     o += [f'<line x1="0" y1="{92 + 50 * i}" x2="980" y2="{92 + 50 * i}"/>' for i in range(len(lanes) - 1)]
     o.append("</g>")
@@ -558,18 +558,18 @@ def gantt_svg(g):
     if t:
         X = px(t["d"])
         o.append(f'<line x1="{num(X)}" y1="{top}" x2="{num(X)}" y2="{bottom}" stroke="#7A1F23"/>')
-        o.append(f'<text x="{num(X + 4)}" y="{bottom + 12}" font-size="11" fill="#7A1F23" letter-spacing="2">'
-                 f'{esc(t["label"].upper())}</text>')
+        o.append(f'<text x="{num(X + 4)}" y="{bottom + 12}" font-size="11" fill="#7A1F23" letter-spacing=".3">'
+                 f'{esc(t["label"])}</text>')
     for m in g.get("milestones", []):
         X = px(m["d"])
         col = hexc(m.get("c", "encre"))
-        lab = m["label"].upper()
+        lab = m["label"]
         o.append(f'<rect x="{num(X - 5)}" y="{bottom + 5}" width="10" height="10" transform="rotate(45 {num(X)} {bottom + 10})" '
                  f'fill="{col}"/>')
         if X + 9 + len(lab) * 8.6 < 1000:
-            o.append(f'<text x="{num(X + 9)}" y="{bottom + 28}" font-size="11" letter-spacing="2" fill="{col}">{esc(lab)}</text>')
+            o.append(f'<text x="{num(X + 9)}" y="{bottom + 28}" font-size="11" letter-spacing=".3" fill="{col}">{esc(lab)}</text>')
         else:
-            o.append(f'<text x="{num(X - 12)}" y="{bottom + 28}" text-anchor="end" font-size="11" letter-spacing="2" '
+            o.append(f'<text x="{num(X - 12)}" y="{bottom + 28}" text-anchor="end" font-size="11" letter-spacing=".3" '
                      f'fill="{col}">{esc(lab)}</text>')
     o.append("</svg>")
     return "".join(o)
@@ -592,8 +592,8 @@ def milestones_svg(sl):
             mark = (f'<rect x="{num(X - s / 2)}" y="{100 - s / 2}" width="{s}" height="{s}" '
                     f'transform="rotate(45 {num(X)} 100)" fill="{col}"/>')
         tx = 980 if end else X  # last milestone: labels end at the line end, clear of their neighbour
-        o.append(f'<g>{mark}<text x="{num(tx)}" y="70" text-anchor="{anchor}" font-size="13" letter-spacing="3" '
-                 f'fill="#8A8580">{esc(it["top"].upper())}</text><text x="{num(tx)}" y="150" text-anchor="{anchor}" '
+        o.append(f'<g>{mark}<text x="{num(tx)}" y="70" text-anchor="{anchor}" font-size="13" letter-spacing=".3" '
+                 f'fill="#8A8580">{esc(it["top"])}</text><text x="{num(tx)}" y="150" text-anchor="{anchor}" '
                  f'font-size="18" fill="#1A1A1A">{esc(it["date"])}</text></g>')
     o.append("</g></svg>")
     return "".join(o)
@@ -637,7 +637,7 @@ def diagram_svg(g, uid, label="Schéma"):
         cx, cy = x + w / 2, y + h / 2
         if b.get("s"):
             o.append(f'<text x="{num(cx)}" y="{num(cy - 3)}" text-anchor="middle" font-size="{fs}" fill="{fg}">{esc(b["n"])}</text>')
-            o.append(f'<text x="{num(cx)}" y="{num(cy + 14)}" text-anchor="middle" font-size="{ss}" letter-spacing="{sls}" '
+            o.append(f'<text x="{num(cx)}" y="{num(cy + 14)}" text-anchor="middle" font-size="{ss}" letter-spacing=".3" '
                      f'fill="{fg}" opacity=".75">{esc(b["s"])}</text>')
         else:
             o.append(f'<text x="{num(cx)}" y="{num(cy + 5)}" text-anchor="middle" font-size="{fs}" fill="{fg}">{esc(b["n"])}</text>')

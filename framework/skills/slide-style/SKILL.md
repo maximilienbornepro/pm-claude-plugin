@@ -74,9 +74,12 @@ Le titre d'une slide est un **libellé court** qui dit **de quoi** parle la slid
 | Burn-down du plan | « À J+38, il reste 227 jours : la tendance finit à J+61 » |
 
 - 1 à 4 mots, sans verbe, sans chiffre, sans conclusion.
-- Le sur-titre (petites capitales espacées) situe la slide : `Section · précision` (« Sprint 3 · du 17 au
+- Le sur-titre (casse normale, gris) situe la slide : `Section · précision` (« Sprint 3 · du 17 au
   28 novembre »). Il peut porter une date ou une période, jamais une conclusion.
-- Les slides noires de section portent le nom de la section, en capitales espacées.
+- Les slides noires de section portent le nom de la section, en casse normale.
+- **Casse normale partout** (décision du 26/11/2026) : aucun texte en capitales, ni sur-titre, ni en-tête de
+  tableau, ni légende, ni pied de page ; espacement des lettres très léger. Réglage unique : `CAPS` dans
+  `framework/lib/slides.py` (PPTX) et la feuille de style de `html_render.py` (HTML).
 
 ## 2. Sous le titre : une légende qui explique la slide
 
@@ -129,4 +132,4 @@ Déclaré dans le profil (`profiles/<mission>/logos/`) en quatre variantes trans
 
 ## 6. Pied de page
 
-`<Projet> · <section>` à gauche, numéro de slide à droite, petites capitales grises.
+`<Projet> · <section>` à gauche, numéro de slide à droite, en gris, casse normale.
