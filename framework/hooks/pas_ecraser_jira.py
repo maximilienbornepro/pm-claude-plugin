@@ -143,6 +143,10 @@ def main():
     if cle and description_actuelle_vide(cle):
         return  # ticket vide : rien a ecraser, on laisse ecrire
 
+    try:  # journal for the « agence » screen; never changes the decision
+        import os as _o, sys as _s; _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__))); import _journal; _journal.guard("pas_ecraser_jira", cle or RAISON)
+    except Exception:
+        pass
     json.dump(
         {
             "hookSpecificOutput": {
