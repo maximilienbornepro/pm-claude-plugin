@@ -74,7 +74,7 @@ Limites à connaître :
    (ou décompresser l'archive et pointer Claude Code dessus).
 2. `python3 framework/pm.py run init <mission>` puis `run setup <mission>` : le profil se remplit champ par champ.
 3. `python3 framework/pm.py run preflight <mission>` avant toute écriture.
-4. Planning : copier `framework/generators/planning/planning.example.json` dans
+4. Planning : copier `framework/departements/planification/generators/planning/planning.example.json` dans
    `profiles/<mission>/planning.json`, l'adapter, puis `run planning <mission> --pptx planning.pptx`.
 5. Les règles apprises sur SINBAD (dossier `exemple-sinbad/regles-apprises/` de l'archive) se relisent une
    fois : beaucoup sont devenues des garde-fous, les autres sont des préférences de rédaction.

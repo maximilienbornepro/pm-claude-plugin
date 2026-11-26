@@ -4,9 +4,9 @@ import sys, zipfile, tempfile, importlib.util, json
 from pathlib import Path
 import xml.dom.minidom as m
 ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location("planning", ROOT / "framework/generators/planning/planning.py")
+spec = importlib.util.spec_from_file_location("planning", ROOT / "framework/departements/planification/generators/planning/planning.py")
 P = importlib.util.module_from_spec(spec); spec.loader.exec_module(P)
-data = json.load(open(ROOT / "framework/generators/planning/planning.example.json"))
+data = json.load(open(ROOT / "framework/departements/planification/generators/planning/planning.example.json"))
 ok = True
 def check(cond, msg):
     global ok

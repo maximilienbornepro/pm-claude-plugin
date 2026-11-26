@@ -54,7 +54,7 @@ Demander à Claude : « enregistre les routines de `framework/routines` selon le
 
 ## Garde-fous qui restent actifs d'office
 
-- `framework/hooks/` branchés par `.claude/settings.json` : `garde_office` (écriture Office),
+- `framework/garde-fous/` branchés par `.claude/settings.json` : `garde_office` (écriture Office),
   `garde_suppression` (rm/mv Drive + déplacement Notion), `pas_ecraser_jira`, `journal_usage`.
 - Règles d'or : on ne refactore pas la mission d'origine en place ; on n'écrase jamais l'existant
   (idempotence) ; aucune notification sans validation (voir `framework/NOTIFICATIONS.md`).

@@ -14,16 +14,18 @@
     "onboarding"
   ],
   "skills": [
-    "./framework/skills"
+    "./framework/departements/direction/skills",
+    "./framework/departements/planification/skills",
+    "./framework/charte/skills"
   ],
   "agents": [
-    "./framework/agents/adservio-writer.md",
-    "./framework/agents/archi-audit.md",
-    "./framework/agents/doc-writer.md",
-    "./framework/agents/front-audit.md",
-    "./framework/agents/jira-changes-audit.md",
-    "./framework/agents/jira-sprints-audit.md",
-    "./framework/agents/jira-tickets-audit.md",
-    "./framework/agents/notion-topics-audit.md"
+    "./framework/departements/studio/agents/adservio-writer.md",
+    "./framework/departements/studio/agents/archi-audit.md",
+    "./framework/departements/studio/agents/doc-writer.md",
+    "./framework/departements/qualite/agents/front-audit.md",
+    "./framework/departements/qualite/agents/jira-changes-audit.md",
+    "./framework/departements/planification/agents/jira-sprints-audit.md",
+    "./framework/departements/qualite/agents/jira-tickets-audit.md",
+    "./framework/departements/suivi/agents/notion-topics-audit.md"
   ]
 }

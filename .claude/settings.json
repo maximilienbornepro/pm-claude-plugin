@@ -6,13 +6,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/garde_office.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/garde_office.py\"",
             "timeout": 10,
             "statusMessage": "Garde-fou écriture Office synchronisée"
           },
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/garde_suppression.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/garde_suppression.py\"",
             "timeout": 10,
             "statusMessage": "Garde-fou suppression/déplacement (Drive synchronisé)"
           }
@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/pas_ecraser_jira.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/pas_ecraser_jira.py\"",
             "timeout": 30,
             "statusMessage": "Contrôle anti-écrasement (description Jira)"
           }
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/garde_suppression.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/garde_suppression.py\"",
             "timeout": 10,
             "statusMessage": "Garde-fou déplacement de page Notion (notifie)"
           }
@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_usage.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/journal_usage.py\"",
             "timeout": 10,
             "statusMessage": "Journal d'usage (skills/agents)"
           }
@@ -55,7 +55,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_activite.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/journal_activite.py\"",
             "timeout": 5
           }
         ],
@@ -67,7 +67,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_activite.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/journal_activite.py\"",
             "timeout": 5
           }
         ]
@@ -78,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/hooks/journal_activite.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/framework/garde-fous/journal_activite.py\"",
             "timeout": 5
           }
         ],

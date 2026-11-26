@@ -11,10 +11,12 @@ Pas de dependance : pas de PyYAML sur le poste. On parse le petit sous-ensemble 
 nous-memes (scalaires + listes en ligne `[a, b]`), c'est suffisant et robuste.
 """
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]            # framework/lib -> framework -> racine du depot
-GEN_DIR = ROOT / "framework" / "generators"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import paths  # noqa: E402
 
 
 def _scalar(v):
@@ -51,14 +53,14 @@ def _parse_meta(text):
 
 
 def load_all():
-    """{nom_de_commande: {skill_name, meta, desc}} pour chaque framework/generators/*/SKILL.md.
+    """{nom_de_commande: {skill_name, meta, desc}} pour chaque SKILL.md de generateur (framework/departements/*/generators/*).
 
     La CLE est le nom du DOSSIER, qui est le nom de commande (`pm run <dossier>`) et la cle de
     `routing.yml` - convention du registre GEN : « dossier == nom ». Le `name:` du frontmatter est
     le nom du SKILL pour Claude Code, qui peut differer (ex. deck-gate/gate-deck) : on le garde a
     part, sans s'en servir comme cle."""
     out = {}
-    for sk in sorted(GEN_DIR.glob("*/SKILL.md")):
+    for sk in sorted(p / "SKILL.md" for p in paths.all("generators").values() if (p / "SKILL.md").exists()):
         text = sk.read_text(encoding="utf-8")
         has_fm = bool(re.match(r"^---\s*\n", text))
         name_m = re.search(r"(?m)^name:\s*(.+)$", text) if has_fm else None

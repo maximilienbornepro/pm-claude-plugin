@@ -1,0 +1,102 @@
+# Organisation du plugin : un PMO, aligné sur le fonctionnement réel de Claude Code.
+#
+# Référentiel UNIQUE : chaque composant du plugin est rattaché ici à un département, et RANGÉ dans son
+# dossier : framework/departements/<id>/{generators,skills,agents,routines}/, framework/charte/ pour la
+# charte, framework/garde-fous/ pour les hooks. Les commandes `pm run <nom>` ne changent pas.
+# Contrôlé par framework/harness/verifier.py (tout composant rattaché, rangé au bon endroit, aucun
+# rattachement fantôme), lu par
+# le catalogue (framework/SKILLS.md), le guide et l'écran « agence » de la console.
+#
+# Ce que chaque TYPE de composant est vraiment, dans Claude Code :
+types:
+  chef:       { label: "Chef de projet", claude: "Claude principal : seul à réfléchir, décider et te répondre" }
+  skill:      { label: "Classeur",       claude: "mode d'emploi chargé par Claude, qu'il suit lui-même (outil Skill)" }
+  generator:  { label: "Machine",        claude: "script lancé par Claude via Bash (`pm run <nom>`), résultat déterministe" }
+  agent:      { label: "Collègue",       claude: "sous-agent : reçoit un brief, travaille dans son propre contexte, rend un rapport (outil Agent)" }
+  connector:  { label: "Service",        claude: "connecteur MCP externe, appelé par celui qui travaille" }
+  hook:       { label: "Garde-fou",      claude: "script déclenché automatiquement autour d'une action ; peut la bloquer" }
+  routine:    { label: "Chef de garde",  claude: "tâche planifiée : une autre session, à heure fixe, qui suit le SKILL de la routine" }
+
+departements:
+  - id: direction
+    label: Direction de projet
+    role: Chef de projet
+    mission: cadrer la demande, préparer la mission, vérifier les connexions, décider des gates
+    generators: [setup, init, preflight, cockpit, method, gate, templates, agent, drive-scaffold, notion-scaffold, console, reset]
+    skills: [setup, list, run, demo]
+    agents: []
+    routines: []
+  - id: planification
+    label: Planification
+    role: PMO planning
+    mission: planning, plan de sprints, projection de fin, objectifs de sprint
+    generators: [planning, plan, projection, jira-sprints-audit, notion-planning]
+    skills: [technical-planning]
+    agents: [jira-sprints-audit]
+    routines: [publish-projection, align-sprint-goals, track-progress, audit-scope]
+  - id: suivi
+    label: Suivi et gouvernance
+    role: Responsable du suivi
+    mission: sujets, risques, RACI, traçabilité, cohérence des documents
+    generators: [risks, raci, traceability, trace-audit, docs-coherence-audit, notion-topics-audit]
+    skills: []
+    agents: [notion-topics-audit]
+    routines: [review-topics, review-risks]
+  - id: qualite
+    label: Qualité du backlog
+    role: Responsable qualité
+    mission: tickets propres et à jour, écarts maquette / tickets / contrat d'API
+    generators: [jira-changes-audit, jira-images]
+    skills: []
+    agents: [jira-changes-audit, jira-tickets-audit, front-audit]
+    routines: []
+  - id: communication
+    label: Communication
+    role: Chargé de communication
+    mission: comptes rendus, weekly, ordres du jour, relances, transcriptions
+    generators: [partner-report, weekly-report, meeting-agenda, activity, transcripts, slack, omi-sync]
+    skills: []
+    agents: []
+    routines: [draft-followups, morning-digest, collect-activity, omi-sync]
+  - id: studio
+    label: Studio
+    role: Designer
+    mission: mettre en forme les livrables (dossier projet, deck, architecture, documents, POC)
+    generators: [dossier, deck-gate, archi, poc, office]
+    skills: []
+    agents: [archi-audit, doc-writer, adservio-writer]
+    routines: []
+
+# Transverse : utilisé par tous les départements, jamais « à » un seul.
+charte:
+  label: Charte et tons
+  mission: la forme de tous les livrables (slides, tons de rédaction)
+  skills: [slide-style, voice-slides, voice-deliverable, voice-maximilien, voice-casual, voice-adservio]
+  generators: [tones]
+
+renforts:
+  label: Renforts
+  mission: agents génériques de Claude Code ; ils vont travailler dans le département qui les appelle
+  agents: [Explore, general-purpose, Plan, claude-code-guide, web-fetch]
+
+garde_fous:   # framework/garde-fous/<nom>.py ; `controle` = ce qu'ils surveillent
+  - { name: garde_office,      controle: "écriture d'un fichier Office synchronisé (OneDrive, SharePoint)", bloque: true }
+  - { name: garde_suppression, controle: "suppression ou déplacement dans un Drive synchronisé, déplacement de page Notion", bloque: true }
+  - { name: pas_ecraser_jira,  controle: "écrasement d'une description de ticket Jira modifiée entre-temps", bloque: true }
+  - { name: archi_kit,         controle: "kit du générateur d'architecture tenu à jour après modification", bloque: false }
+  - { name: onboarding_hint,   controle: "rappel du profil à compléter à l'ouverture de session", bloque: false }
+  - { name: journal_usage,     controle: "journal des skills et agents appelés (.claude/usage.log)", bloque: false }
+  - { name: journal_activite,  controle: "journal de chaque action pour l'écran agence (.claude/activity.log)", bloque: false }
+
+services:   # connecteurs, par service : motifs du nom d'outil MCP
+  - { label: "Atlassian (Jira, Confluence)", motifs: ["*Jira*", "*Confluence*", "*Atlassian*", "*atlassian*", "*Compass*", "*Teamwork*"] }
+  - { label: Notion,             motifs: ["*notion-*"] }
+  - { label: Omi,                motifs: ["*omi-memory*"] }
+  - { label: Slack,              motifs: ["*slack*"] }
+  - { label: "Microsoft 365",    motifs: ["*sharepoint*", "*outlook*", "*teams_*", "*get_me*", "*read_resource*", "*search_people*", "*find_meeting*", "*get_granted_scopes*"] }
+  - { label: "Google Drive",     motifs: ["*_file*", "*shared_drive*", "*list_recent_files*", "*request_access*"] }
+  - { label: Figma,              motifs: ["*figma*", "*83325d23*"] }
+  - { label: Navigateur,         motifs: ["*Claude_Browser*", "*claude-in-chrome*"] }
+  - { label: Visualisation,      motifs: ["*visualize*", "*easel*"] }
+  - { label: "Tâches planifiées", motifs: ["*scheduled-tasks*"] }
+  - { label: "App Claude",       motifs: ["*ccd_*"] }

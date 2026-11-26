@@ -4,5 +4,5 @@ planning_tracker: "collection://demo-planning-0000"
 tone: voice-maximilien
 guard: demander-avant
 # Source de verite des dates : le sample du framework (a remplacer par le vrai doc d'une mission).
-source: "framework/generators/notion-planning/planning.sample.yml"
-roadmap: "framework/generators/projection/roadmap.sample.yml"
+source: "framework/departements/planification/generators/notion-planning/planning.sample.yml"
+roadmap: "framework/departements/planification/generators/projection/roadmap.sample.yml"

@@ -1,0 +1,3 @@
+# Dependances des tests (python3 framework/pm.py test). Le moteur lui-meme n'en exige aucune hors PPTX.
+python-pptx>=1.0
+pyyaml>=6.0

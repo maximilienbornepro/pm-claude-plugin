@@ -21,7 +21,7 @@ Tons disponibles : `voice-deliverable`, `voice-casual`, `voice-maximilien`, `voi
 
 ## Famille B - agents d'analyse / visuels (pas de ton, forte valeur)
 
-Portés dans `framework/agents/` (génériques, config-driven, aucune constante de mission en dur) :
+Portés dans `framework/departements/<dep>/agents/` (génériques, config-driven, aucune constante de mission en dur) :
 
 | Agent | Ce qu'il fait | Réglages (profil) |
 |---|---|---|

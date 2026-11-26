@@ -41,7 +41,7 @@
       "name": "agence",
       "runtimeExecutable": "python3",
       "runtimeArgs": [
-        "framework/generators/console/console.py",
+        "framework/departements/direction/generators/console/console.py",
         "--port",
         "8765"
       ],

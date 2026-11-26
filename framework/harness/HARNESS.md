@@ -18,7 +18,7 @@ Toute action qui ecrit quelque part suit ce patron :
 
 ## 2. Garde-fous
 
-### a) Hooks bloquants (`framework/hooks/`)
+### a) Hooks bloquants (`framework/garde-fous/`)
 Le vrai filet : executes par le harness, independants de la bonne volonte.
 
 | Hook | Evenement | Role | Etat |
@@ -47,7 +47,7 @@ locale = quelqu'un est dedans -> on n'ecrit pas, on transmet a la personne qui a
 Avant toute action **notifiante ou irreversible** (Jira, Notion, Drive, mail) :
 montrer le contenu exact / un diff, attendre la validation. Jamais de `@` reel, de
 partage, de deplacement de page qui notifie. Carte des notifications par generateur
-(ex. `framework/generators/scaffold/NOTIFICATIONS.md`).
+(ex. `framework/departements/direction/generators/scaffold/NOTIFICATIONS.md`).
 
 ## 3. Contexte
 
@@ -64,3 +64,21 @@ une donnee perimee (relire avant d'ecrire, lire la fraicheur distante).
   la bloque).
 - **Nouveau generateur qui ecrit dehors** : livrer d'abord sa carte de notifications et
   sa version dry-run, avant toute ecriture.
+
+## Tests systématiques
+
+Point d'entrée unique : `python3 framework/pm.py test` (`run_tests.py`) - le vérificateur, puis chaque
+`test_*.py`. `--quick` saute les deux suites de bout en bout ; un argument filtre par nom de fichier.
+
+| Suite | Ce qu'elle prouve |
+|---|---|
+| `test_livrables.py` | chaque livrable généré pour de vrai sur la mission de test, sortie contrôlée (PPTX ouvrable et nombre de slides, XLSX valide, HTML complet, JSON lisible, contenu attendu) ; un générateur qui a besoin de Jira doit répondre par un message clair |
+| `test_smoke.py` | chaque commande et chaque hook tournent sans trace d'erreur ; `--json` sert à comparer deux versions (avant / après un déplacement) |
+| les autres `test_*.py` | tests unitaires d'un générateur (calculs, règles) |
+
+La mission de test (`fixtures/profiles/test/`) est copiée dans un dossier jetable à chaque run (`PMF_PROFILES`) :
+rien n'est écrit dans le dépôt ni dehors. Règle tenue par le vérificateur : **chaque commande `pm run` a au moins
+un cas dans `test_livrables.CASES`**.
+
+Exécution automatique : GitHub Actions à chaque push et PR (`.github/workflows/tests.yml`, dépendances dans
+`requirements.txt`) ; en local, `pm test --install-hook` pose un hook git `pre-commit` (`pm test --quick`).

@@ -1,0 +1,23 @@
+# Les ITEMS de la chaîne de traçabilité (données de la mission). La DÉFINITION de la chaîne - l'ordre
+# des maillons, leur propriétaire, à partir de quelle phase chacun est exigible - vit dans method.yaml
+# (bloc `tracabilite`). Ici : pour chaque besoin/TR, quels maillons sont RELIÉS aujourd'hui.
+#
+# Un lien RELIÉ = une valeur vraie (true, ou un identifiant comme un ticket) ; absent ou false = manquant.
+# En mission réelle, ce fichier est produit par la synchro (matrice IADT + perimetre_scope.json + Jira),
+# pas tenu à la main ; l'audit reste le même.
+
+phase_courante: build
+
+items:
+  - id: TR-01
+    label: "Détection de véhicules militaires"
+    liens: { besoin: true, ticket: SIN-15, poc: true, test: false }   # test pas encore exigible (recette)
+  - id: TR-02
+    label: "Configuration d'une alerte"
+    liens: { besoin: true, ticket: false, poc: false }                # RUPTURE : ticket manquant dès cadrage
+  - id: TR-03
+    label: "Carte de la zone d'intérêt"
+    liens: { besoin: true, ticket: SIN-131, poc: false }              # RUPTURE : POC exigible en build, absent
+  - id: TR-04
+    label: "Export des événements"
+    liens: { besoin: true, ticket: SIN-173, poc: true, test: true }   # chaîne complète

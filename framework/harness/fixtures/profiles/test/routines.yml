@@ -1,0 +1,19 @@
+# Routines de la mission DEMO - instance d'exemple (gabarit : framework/routines/routines.example.yml).
+# Montre la chaîne SKILL générique <-> config de mission : la clé `demo-audit-scope` pointe vers
+# framework/departements/planification/routines/audit-scope/SKILL.md (skill: audit-scope). Lecture seule : rien n'est écrit.
+project_root_env: PMF_PROJECT_ROOT
+
+routines:
+
+  demo-audit-scope:
+    skill: audit-scope
+    title: "DEMO · Audit du périmètre et du plan de sprints"
+    schedule: manual
+    chains: [jira-sprints-audit]
+    validation: none
+    default_mode: read-only
+    output: chat-md
+    reads:
+      profile: [jira.board, jira.project_key]
+    writes: []
+    notifies: none

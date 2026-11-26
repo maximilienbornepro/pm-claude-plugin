@@ -1,4 +1,4 @@
-# Portes GTF de la mission DEMO (instanciation du gabarit framework/generators/gate/gtf.sample.yml).
+# Portes GTF de la mission DEMO (instanciation du gabarit framework/departements/direction/generators/gate/gtf.sample.yml).
 # Montre : 2 portes franchies, une à seuil atteint SANS acte humain (pas franchie), une avec un
 # bloquant ouvert et un waiver EXPIRÉ (fail-closed), les suivantes non entamées.
 gates:

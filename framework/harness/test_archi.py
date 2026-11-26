@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "archi"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "studio" / "generators" / "archi"))
 import abstraction as A    # noqa: E402
 import build_html as B     # noqa: E402
 import export_drawio as X  # noqa: E402

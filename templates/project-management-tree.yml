@@ -45,7 +45,7 @@ notion_only:
 databases:
   planning:
     title: "Planning de build"
-    sample: "framework/generators/notion-planning/planning.sample.yml"
+    sample: "framework/departements/planification/generators/notion-planning/planning.sample.yml"
     rows_from: workstreams
     properties: ["Workstream:title", "Pole:text", "Debut:date", "Fin:date", "Statut:select", "Avancement:number"]
     views:
@@ -54,7 +54,7 @@ databases:
       - { name: "Par pole", type: board, group_by: "Pole" }
   sujets:
     title: "Suivi des sujets"
-    sample: "framework/generators/notion-topics-audit/sujets.sample.yml"
+    sample: "framework/departements/suivi/generators/notion-topics-audit/sujets.sample.yml"
     rows_from: sujets
     properties: ["Sujet:title", "Statut:select", "Priorite:select", "Responsable:text", "Suivi projet:select", "Action attendue:text"]
     views:

@@ -1,0 +1,5 @@
+output: poc
+preview: { name: poc-test, port: 5199 }
+screens:
+  - { name: Accueil, path: /, title: Accueil, recit: ETQ utilisateur je vois mon tableau de bord }
+  - { name: Detail, path: /detail, title: Detail, recit: ETQ utilisateur je consulte un element }

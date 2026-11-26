@@ -1,0 +1,2 @@
+chains:
+  - { derived: sortie.md, sources: [source.md], rule: newer }

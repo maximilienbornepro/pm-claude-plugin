@@ -123,7 +123,7 @@ def main():
     arch_model = base / "architecture" / "model.json"
     if arch_model.exists():
         try:
-            r = subprocess.run([sys.executable, str(ROOT/"framework"/"generators"/"archi"/"architecture.py"), mission],
+            r = subprocess.run([sys.executable, str(ROOT/"framework" / "departements" / "studio" / "generators" / "archi"/"architecture.py"), mission],
                                capture_output=True, text=True, timeout=120)
             ok = r.returncode == 0
             tail = (r.stdout or r.stderr).strip().splitlines()
@@ -145,7 +145,7 @@ def main():
         npl = profile._load_yaml(base / "notion-planning.yml") or {}
     except Exception:
         pass
-    rm = _sample(npl.get("roadmap") or "framework/generators/projection/roadmap.sample.yml")
+    rm = _sample(npl.get("roadmap") or "framework/departements/planification/generators/projection/roadmap.sample.yml")
     if rm.get("chantiers"):
         note("roadmap (sample) par chantiers :")
         for c in rm["chantiers"]:
@@ -163,7 +163,7 @@ def main():
 
     # 8. Planning Notion ------------------------------------------------------
     hdr(8, "Planning Notion + slide")
-    pl = _sample(npl.get("source") or "framework/generators/notion-planning/planning.sample.yml")
+    pl = _sample(npl.get("source") or "framework/departements/planification/generators/notion-planning/planning.sample.yml")
     if pl.get("jalons"):
         note("planning (sample) - jalons :")
         for j in pl["jalons"]:
@@ -198,8 +198,8 @@ def main():
 
     # 14. Routines ------------------------------------------------------------
     hdr(14, "Routines planifiees")
-    rdir = ROOT / "framework" / "routines"
-    routs = sorted(p.name for p in rdir.iterdir() if p.is_dir() and (p/"SKILL.md").exists()) if rdir.is_dir() else []
+    sys.path.insert(0, str(ROOT / "framework" / "lib")); import paths  # noqa: E402
+    routs = sorted(paths.all("routines"))
     sim("j'enregistrerais", f"{len(routs)} routines (taskId « {mission}-<nom> », titre « {mission.upper()} · ... »)")
     for r in routs: note(f"  • {mission}-{r}")
     note("aucune routine n'envoie de notification.")

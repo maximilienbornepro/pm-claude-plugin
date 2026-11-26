@@ -11,9 +11,9 @@ import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-GEN = ROOT / "framework" / "generators" / "plan"
+GEN = ROOT / "framework" / "departements" / "planification" / "generators" / "plan"
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "projection"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "planification" / "generators" / "projection"))
 sys.path.insert(0, str(GEN))
 import render as R        # noqa: E402
 import validate as V      # noqa: E402

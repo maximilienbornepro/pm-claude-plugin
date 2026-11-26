@@ -5,8 +5,8 @@ explicite. Avant toute écriture, consulter cette carte : qui serait notifié ? 
 et on attend. Une notification partie ne se rattrape pas.
 
 Cette carte couvre **toutes les cibles**. La carte détaillée du scaffold (Drive + Notion) reste dans
-`framework/generators/scaffold/NOTIFICATIONS.md` ; les hooks qui *appliquent* ces règles sont dans
-`framework/hooks/` (`garde_office.py`, `garde_suppression.py`, `pas_ecraser_jira.py`).
+`framework/departements/direction/generators/scaffold/NOTIFICATIONS.md` ; les hooks qui *appliquent* ces règles sont dans
+`framework/garde-fous/` (`garde_office.py`, `garde_suppression.py`, `pas_ecraser_jira.py`).
 
 ## Drive (SharePoint / OneDrive consortium)
 

@@ -56,6 +56,16 @@ Une écriture Office reste en plus **sous `drive.root`** et sur le bon `web_site
 5. Chemins d'un poste : paramétrés par variables d'env déclarées dans les YAML de la mission
    (`${VAR:-défaut}`, ex. `CLAUDE_PROJECTS`, `PMF_JIRA_ENV`) ; un clone frais exporte ces vars, n'édite pas les YAML.
 
+## Tests : systématiques
+
+- `python3 framework/pm.py test` : vérificateur + toutes les suites, dont **chaque livrable généré pour de vrai**
+  sur la mission de test `framework/harness/fixtures/profiles/test/` (fausses données, rien n'est écrit dehors).
+- Après toute modification de code : lancer `pm test` avant de dire que c'est fait.
+- Tout nouveau générateur (ou nouvelle option de sortie) ajoute son cas dans `framework/harness/test_livrables.py` ;
+  le vérificateur échoue sinon. Un bug corrigé ajoute le cas qui l'aurait attrapé.
+- Automatique : GitHub Actions à chaque push et PR (`.github/workflows/tests.yml`) ; en local,
+  `pm test --install-hook` lance `pm test --quick` avant chaque commit.
+
 ## Commandes
 
 ```bash
@@ -63,4 +73,5 @@ python3 framework/pm.py list                 # tous les generateurs + les missio
 python3 framework/pm.py run <gen> <mission>  # lance un generateur (lecture seule par defaut)
 python3 framework/pm.py run setup <mission>  # etat de configuration du profil
 python3 framework/pm.py demo [mission]       # faux projet : simule tout, n'ecrit rien
+python3 framework/pm.py test [--quick]       # verificateur + tous les tests (avant de dire « c'est fait »)
 ```
