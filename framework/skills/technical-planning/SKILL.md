@@ -13,7 +13,7 @@ Un deck de comité en 4 parties, **toutes calculées depuis une seule source** :
 |---|---|---|
 | 1. Gantt | couloirs (équipes / partenaires), barres, jalons, traits verticaux (aujourd'hui, signature, ouverture) | `lanes`, `vlines` de `planning.json` |
 | 2. Échéances | deux tableaux Domaine / Élément / Date | **dérivé du Gantt** : jamais saisi, donc jamais désynchronisé |
-| 3+. Situation | une slide par groupe de sujets : Domaine, Sujet, Statut, Situation, Levier en cours, Échéance ; titre = message clé | `status` de `planning.json`, rempli depuis le suivi des sujets |
+| 3+. Situation | une slide par groupe de sujets : Domaine, Sujet, Statut, Situation, Levier en cours, Échéance ; titre court + légende (skill `slide-style`) | `status` de `planning.json`, rempli depuis le suivi des sujets |
 | Fin. Tableaux | responsabilités et charge, RACI résumée… | `tables` de `planning.json` |
 
 Moteur : générateur `planning` (`framework/generators/planning/planning.py`, sans dépendance).
@@ -42,8 +42,10 @@ Contrat de données détaillé : `framework/generators/planning/SKILL.md`. Exemp
 2. **Mettre à jour `planning.json`** selon la demande :
    - une date ou un jalon bouge : modifier l'élément du couloir (la slide des échéances suit seule) ;
    - une ligne de situation : la réécrire depuis le sujet (Contexte → situation, prochaine action → levier) ;
-   - le titre de chaque slide = **le message clé** (« On ouvre le 18/12 seulement si… »), jamais un titre
-     descriptif ; `subtitle` / `status.subtitle` portent la date de situation (« au JJ/MM »).
+   - titres et légendes suivent le skill **`slide-style`** : titre **court** (« Planning », « Situation
+     technique »), jamais une phrase de message ; sous le titre, une légende qui explique ce que la slide
+     représente et comment la lire, sans recopier ses chiffres ; durées en **jours** ;
+     `subtitle` / `status.subtitle` portent la date de situation (« au JJ/MM »).
    **Toute modification d'une date du planning se signale explicitement** à l'utilisateur.
 3. **Générer et contrôler** :
    ```bash
@@ -66,7 +68,7 @@ Contrat de données détaillé : `framework/generators/planning/SKILL.md`. Exemp
 - « Le pentest est décalé au 08/12 : mets à jour le Gantt et les échéances. »
 - « Ajoute dans le couloir KSAT un jalon "Endpoint de prod" le 30/11. »
 - « La reprise par l'infogérant passe à risque : mets à jour la slide de situation. »
-- « Donne aux slides de situation des titres qui disent le message, pas le sujet. »
+- « Ajoute sous chaque slide de situation la légende qui explique comment la lire. »
 - « Monte ce planning pour la mission X avec le gabarit de l'entreprise Y. »
 
 ## Monter ce deck sur une nouvelle mission

@@ -1,0 +1,3950 @@
+{
+ "project": "Atlas",
+ "kicker": "Atlas · Comité de pilotage",
+ "logos": {
+  "dark": "logos/client-blanc.png",
+  "light": "logos/client-noir-texte.png"
+ },
+ "slides": [
+  {
+   "kind": "cover",
+   "title": "Atlas",
+   "sub": "Dossier projet · Comité de pilotage du 26 novembre 2026",
+   "section": "Dossier projet"
+  },
+  {
+   "id": "etat-des-lieux",
+   "kind": "tiles_table",
+   "section": "Synthèse",
+   "eyebrow": "Synthèse · Semaine 48",
+   "title": "État des lieux",
+   "cap": "Cette slide rassemble les quatre indicateurs suivis à chaque comité : l'avancement de la version 1, le jour du projet rapporté à la date d'ouverture, le nombre de risques critiques ouverts et l'état de la prochaine gate. Le tableau du dessous reprend, depuis le suivi des sujets, ceux qui conditionnent la date, avec leur statut, leur situation, le levier engagé et son échéance.",
+   "src": "Notion · Suivi des sujets · cockpit de la mission",
+   "tiles": [
+    {
+     "k": "Avancement V1",
+     "v": "46 %",
+     "s": "53 % du temps écoulé",
+     "c": "noir"
+    },
+    {
+     "k": "Jours",
+     "v": "J+38",
+     "s": "27 jours avant l'ouverture",
+     "c": "sable"
+    },
+    {
+     "k": "Risques critiques",
+     "v": "2",
+     "s": "sur 7 ouverts",
+     "c": "bordeaux"
+    },
+    {
+     "k": "Gate 2",
+     "v": "7/9",
+     "s": "critères remplis",
+     "c": "sauge"
+    }
+   ],
+   "table": {
+    "cols": [
+     {
+      "h": "Sujet",
+      "w": 0.16
+     },
+     {
+      "h": "Statut",
+      "w": 0.13
+     },
+     {
+      "h": "Situation",
+      "w": 0.3
+     },
+     {
+      "h": "Levier",
+      "w": 0.31
+     },
+     {
+      "h": "Échéance",
+      "w": 0.1
+     }
+    ],
+    "rows": [
+     [
+      "API partenaire",
+      {
+       "pill": "bloque",
+       "t": "Bloqué"
+      },
+      "Livraison de production annoncée après le gel",
+      "Jalon intermédiaire, bouchon de contournement",
+      "05/12"
+     ],
+     [
+      "Espace client",
+      {
+       "pill": "risque",
+       "t": "À risque"
+      },
+      "Six tickets bloqués côté front",
+      "Renfort d'un développeur en S49",
+      "12/12"
+     ],
+     [
+      "Astreinte SRE",
+      {
+       "pill": "cours",
+       "t": "En discussion"
+      },
+      "Décembre non couvert",
+      "Arbitrage du sponsor en séance",
+      "COPIL"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "chantiers",
+   "kind": "table",
+   "section": "Chantiers",
+   "eyebrow": "Chantiers transverses · au 26 novembre",
+   "title": "Chantiers",
+   "cap": "Le tableau liste les chantiers transverses du projet, du développement aux interfaces avec les partenaires et aux discussions contractuelles. Pour chacun figurent son porteur, son échéance, son avancement estimé par le porteur, une pastille de statut selon la légende ci-dessous et, en commentaire, l'état des lieux à date. L'étoile signale les priorités de la semaine.",
+   "src": "Project_dashboard_ATLAS.pptx · chantiers.yml",
+   "small": true,
+   "size": 0.82,
+   "legend": [
+    [
+     "st:v",
+     "Dans les temps"
+    ],
+    [
+     "st:j",
+     "À clarifier"
+    ],
+    [
+     "st:o",
+     "Risque de retard ou de non-conformité"
+    ],
+    [
+     "st:r",
+     "En retard ou bloqué"
+    ],
+    [
+     "star",
+     "Priorité de la semaine"
+    ]
+   ],
+   "table": {
+    "cols": [
+     {
+      "h": "#",
+      "w": 0.03
+     },
+     {
+      "h": "Chantier",
+      "w": 0.2
+     },
+     {
+      "h": "Porteur",
+      "w": 0.12
+     },
+     {
+      "h": "Échéance",
+      "w": 0.09
+     },
+     {
+      "h": "Avancement",
+      "w": 0.12
+     },
+     {
+      "h": "Statut",
+      "w": 0.06,
+      "align": "c"
+     },
+     {
+      "h": "Où en est-on",
+      "w": 0.38
+     }
+    ],
+    "rows": [
+     [
+      {
+       "t": "1",
+       "muted": true
+      },
+      {
+       "t": "Documentation qualité et SLA",
+       "star": false
+      },
+      "Responsable qualité",
+      "02/12 · J+44",
+      {
+       "bar": 70
+      },
+      {
+       "st": "j"
+      },
+      {
+       "t": "Plan qualité : deux contributions à finir ; procédures de sécurité à rédiger",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "2",
+       "muted": true
+      },
+      {
+       "t": "Développement du portail",
+       "star": true
+      },
+      "Engineering manager",
+      "12/12 · J+54",
+      {
+       "bar": 62
+      },
+      {
+       "st": "o"
+      },
+      {
+       "t": "Back à 65 %, front à 58 % ; 52 jours de backlog back restants",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "3",
+       "muted": true
+      },
+      {
+       "t": "Environnement de production",
+       "star": true
+      },
+      "Lead SRE",
+      "08/12 · J+50",
+      {
+       "bar": 50
+      },
+      {
+       "st": "r"
+      },
+      {
+       "t": "Commande de l'infogérant en attente ; 2 à 4 semaines de mise en route",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "4",
+       "muted": true
+      },
+      {
+       "t": "Matrice de recette (IADT)",
+       "star": false
+      },
+      "Responsable recette",
+      "05/12 · J+47",
+      {
+       "bar": 90
+      },
+      {
+       "st": "v"
+      },
+      {
+       "t": "Relue par les partenaires ; ajustement final au périmètre V1",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "5",
+       "muted": true
+      },
+      {
+       "t": "Recette du service",
+       "star": false
+      },
+      "Responsable recette",
+      "19/12 · J+61",
+      {
+       "bar": 33
+      },
+      {
+       "st": "j"
+      },
+      {
+       "t": "Plan de test partagé avec les partenaires ; dates de campagne à fixer",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "6",
+       "muted": true
+      },
+      {
+       "t": "Supervision",
+       "star": false
+      },
+      "Lead SRE",
+      "12/12 · J+54",
+      {
+       "bar": 1
+      },
+      {
+       "st": "r"
+      },
+      {
+       "t": "Démarrage conditionné à la plateforme de production",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "7",
+       "muted": true
+      },
+      {
+       "t": "Interface avec le partenaire A",
+       "star": true
+      },
+      "Lead back",
+      "05/12 · J+47",
+      {
+       "bar": 65
+      },
+      {
+       "st": "o"
+      },
+      {
+       "t": "Accès de qualification ouverts ; production en attente",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "8",
+       "muted": true
+      },
+      {
+       "t": "Interface avec le partenaire B",
+       "star": false
+      },
+      "Lead back",
+      "08/12 · J+50",
+      {
+       "bar": 50
+      },
+      {
+       "st": "v"
+      },
+      {
+       "t": "Plateforme du partenaire prête fin novembre",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "9",
+       "muted": true
+      },
+      {
+       "t": "Formation des utilisateurs",
+       "star": false
+      },
+      "Product owner",
+      "23/12 · J+65",
+      {
+       "bar": 20
+      },
+      {
+       "st": "v"
+      },
+      {
+       "t": "Supports produits en interne ; programme en cours de définition",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "10",
+       "muted": true
+      },
+      {
+       "t": "Support et helpdesk",
+       "star": false
+      },
+      "Product owner",
+      "19/12 · J+61",
+      {
+       "bar": 50
+      },
+      {
+       "st": "v"
+      },
+      {
+       "t": "Processus défini dans Jira ; à valider avec les partenaires",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "11",
+       "muted": true
+      },
+      {
+       "t": "Surveillance cyber 24/7",
+       "star": false
+      },
+      "Responsable cyber",
+      "19/12 · J+61",
+      {
+       "bar": 1
+      },
+      {
+       "st": "j"
+      },
+      {
+       "t": "Calendrier du prestataire inconnu ; deux semaines après la commande",
+       "light": true
+      }
+     ],
+     [
+      {
+       "t": "12",
+       "muted": true
+      },
+      {
+       "t": "Discussions contractuelles",
+       "star": true
+      },
+      "Chef de projet",
+      "28/11 · J+40",
+      {
+       "bar": 50
+      },
+      {
+       "st": "o"
+      },
+      {
+       "t": "Plan d'assurance qualité v2 prêt ; revue avec le client lundi",
+       "light": true
+      }
+     ]
+    ]
+   }
+  },
+  {
+   "kind": "section",
+   "title": "Avancement\n& sprints",
+   "sub": "Version 1 · Sprint 3 sur 4 · J+38",
+   "num": "01",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Avancement"
+  },
+  {
+   "id": "avancement",
+   "kind": "progress",
+   "section": "Avancement",
+   "eyebrow": "Avancement · Version 1",
+   "title": "Avancement",
+   "cap": "Le grand chiffre donne l'avancement de la version 1, mesuré en jours de charge livrés sur la charge totale. La première barre indique le temps écoulé depuis le démarrage ; les suivantes détaillent l'avancement de chaque pôle, et le trait bordeaux marque sur chacune l'avancement attendu à date pour tenir le planning.",
+   "src": "Jira · page Avancement et sprints (plan.html)",
+   "kpi": "46",
+   "unit": "%",
+   "lead": "Fin projetée le 19 décembre (J+61), quatre jours avant l'ouverture.",
+   "expected": 53,
+   "bars": [
+    {
+     "l": "Temps",
+     "p": 53,
+     "c": "ardoise",
+     "v": "J+38 / 72",
+     "time": true
+    },
+    {
+     "l": "Back",
+     "p": 62,
+     "c": "encre"
+    },
+    {
+     "l": "Front",
+     "p": 31,
+     "c": "bordeaux"
+    },
+    {
+     "l": "SRE",
+     "p": 48,
+     "c": "taupe"
+    },
+    {
+     "l": "Recette",
+     "p": 12,
+     "c": "sauge"
+    }
+   ]
+  },
+  {
+   "id": "burn-down-du-plan",
+   "kind": "burndown",
+   "section": "Avancement",
+   "eyebrow": "Avancement · Burn-down du plan",
+   "title": "Burn-down du plan",
+   "cap": "La courbe noire suit, jour après jour depuis le démarrage, la charge restant à réaliser sur la version 1, exprimée en jours. La droite pointillée claire figure le rythme idéal pour atteindre zéro au gel, et le pointillé noir prolonge la tendance observée jusqu'à son terme. La zone grisée couvre les jours déjà écoulés ; les traits verticaux repèrent aujourd'hui, le gel, la fin projetée et l'ouverture.",
+   "src": "Jira · page Avancement et sprints (plan.html)",
+   "chart": {
+    "x": [
+     0,
+     70
+    ],
+    "y": [
+     0,
+     420
+    ],
+    "xticks": [
+     [
+      0,
+      "J0"
+     ],
+     [
+      7,
+      "J7"
+     ],
+     [
+      14,
+      "J14"
+     ],
+     [
+      21,
+      "J21"
+     ],
+     [
+      28,
+      "J28"
+     ],
+     [
+      35,
+      "J35"
+     ],
+     [
+      42,
+      "J42"
+     ],
+     [
+      49,
+      "J49"
+     ],
+     [
+      56,
+      "J56"
+     ],
+     [
+      63,
+      "J63"
+     ],
+     [
+      70,
+      "J70"
+     ]
+    ],
+    "xdates": [
+     [
+      0,
+      "19/10"
+     ],
+     [
+      28,
+      "16/11"
+     ],
+     [
+      56,
+      "14/12"
+     ]
+    ],
+    "yticks": [
+     0,
+     210,
+     420
+    ],
+    "ideal": [
+     [
+      0,
+      420
+     ],
+     [
+      54,
+      0
+     ]
+    ],
+    "real": [
+     [
+      0,
+      420
+     ],
+     [
+      7,
+      400
+     ],
+     [
+      14,
+      372
+     ],
+     [
+      21,
+      340
+     ],
+     [
+      28,
+      300
+     ],
+     [
+      35,
+      250
+     ],
+     [
+      38,
+      227
+     ]
+    ],
+    "trend": [
+     [
+      38,
+      227
+     ],
+     [
+      61,
+      0
+     ]
+    ],
+    "elapsed": 38,
+    "elapsed_label": "38 jours écoulés",
+    "remain_label": "27 jours avant l'ouverture",
+    "today": {
+     "x": 38,
+     "y": 227,
+     "label": "Aujourd'hui · J+38 · 227 j restants"
+    },
+    "vlines": [
+     {
+      "x": 54,
+      "label": "Gel J+54",
+      "c": "encre"
+     },
+     {
+      "x": 61,
+      "label": "Fin projetée J+61",
+      "c": "sauge"
+     },
+     {
+      "x": 65,
+      "label": "Ouverture J+65",
+      "c": "or"
+     }
+    ]
+   },
+   "legend": [
+    [
+     "line:encre",
+     "Réel"
+    ],
+    [
+     "line:taupe",
+     "Idéal jusqu'au gel"
+    ],
+    [
+     "dash:encre",
+     "Tendance"
+    ],
+    [
+     "line:bordeaux",
+     "Aujourd'hui"
+    ]
+   ]
+  },
+  {
+   "id": "tableau-des-etats",
+   "kind": "table",
+   "section": "Avancement",
+   "eyebrow": "Avancement · Tableau des états",
+   "title": "Tableau des états",
+   "cap": "Ce tableau présente, pour chaque pôle, la répartition des tickets de la version 1 selon leur état dans le tracker, arrêtée au jour du comité. La dernière colonne reprend cette répartition en barre, de l'à-faire au fermé, pour comparer les pôles d'un coup d'œil ; la ligne de total couvre l'ensemble du périmètre.",
+   "src": "Jira · tableau du projet ATLAS",
+   "table": {
+    "cols": [
+     {
+      "h": "Pôle",
+      "w": 0.14
+     },
+     {
+      "h": "À faire",
+      "w": 0.1,
+      "align": "r",
+      "key": "afaire"
+     },
+     {
+      "h": "En cours",
+      "w": 0.1,
+      "align": "r",
+      "key": "cours"
+     },
+     {
+      "h": "En test",
+      "w": 0.1,
+      "align": "r",
+      "key": "risque"
+     },
+     {
+      "h": "Bloqué",
+      "w": 0.1,
+      "align": "r",
+      "key": "bloque"
+     },
+     {
+      "h": "Fermé",
+      "w": 0.1,
+      "align": "r",
+      "key": "fait"
+     },
+     {
+      "h": "Total",
+      "w": 0.08,
+      "align": "r"
+     },
+     {
+      "h": "Répartition",
+      "w": 0.28
+     }
+    ],
+    "rows": [
+     [
+      "Back",
+      "10",
+      "8",
+      "6",
+      "1",
+      "27",
+      "52",
+      {
+       "stack": [
+        [
+         "afaire",
+         0.19230769230769232
+        ],
+        [
+         "cours",
+         0.15384615384615385
+        ],
+        [
+         "risque",
+         0.11538461538461539
+        ],
+        [
+         "bloque",
+         0.019230769230769232
+        ],
+        [
+         "fait",
+         0.5192307692307693
+        ]
+       ]
+      }
+     ],
+     [
+      "Front",
+      "18",
+      "9",
+      "4",
+      "6",
+      "14",
+      "51",
+      {
+       "stack": [
+        [
+         "afaire",
+         0.35294117647058826
+        ],
+        [
+         "cours",
+         0.17647058823529413
+        ],
+        [
+         "risque",
+         0.0784313725490196
+        ],
+        [
+         "bloque",
+         0.11764705882352941
+        ],
+        [
+         "fait",
+         0.27450980392156865
+        ]
+       ]
+      }
+     ],
+     [
+      "SRE",
+      "6",
+      "4",
+      "2",
+      "1",
+      "12",
+      "25",
+      {
+       "stack": [
+        [
+         "afaire",
+         0.24
+        ],
+        [
+         "cours",
+         0.16
+        ],
+        [
+         "risque",
+         0.08
+        ],
+        [
+         "bloque",
+         0.04
+        ],
+        [
+         "fait",
+         0.48
+        ]
+       ]
+      }
+     ],
+     [
+      "Recette",
+      "7",
+      "1",
+      "0",
+      "1",
+      "5",
+      "14",
+      {
+       "stack": [
+        [
+         "afaire",
+         0.5
+        ],
+        [
+         "cours",
+         0.07142857142857142
+        ],
+        [
+         "risque",
+         0.0
+        ],
+        [
+         "bloque",
+         0.07142857142857142
+        ],
+        [
+         "fait",
+         0.35714285714285715
+        ]
+       ]
+      }
+     ]
+    ],
+    "total": [
+     "Total",
+     "41",
+     "22",
+     "12",
+     "9",
+     "58",
+     "142",
+     {
+      "stack": [
+       [
+        "afaire",
+        0.2887323943661972
+       ],
+       [
+        "cours",
+        0.15492957746478872
+       ],
+       [
+        "risque",
+        0.08450704225352113
+       ],
+       [
+        "bloque",
+        0.06338028169014084
+       ],
+       [
+        "fait",
+        0.4084507042253521
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "sprint-en-cours",
+   "kind": "sprint",
+   "section": "Sprints",
+   "eyebrow": "Sprint 3 · du 17 au 28 novembre · objectif : parcours de souscription en recette",
+   "title": "Sprint en cours",
+   "cap": "Les trois tuiles donnent l'état des tickets engagés dans le sprint et la charge qui reste à réaliser, en jours. La courbe suit ce reste jour après jour sur les dix jours du sprint : la diagonale pointillée correspond au rythme idéal, et le pointillé noir prolonge la tendance jusqu'à la fin du sprint.",
+   "src": "Jira · sprint 3 · page Avancement et sprints",
+   "tiles": [
+    {
+     "k": "Fermés",
+     "v": "18 / 29",
+     "c": "noir"
+    },
+    {
+     "k": "En test",
+     "v": "6",
+     "s": "dont 2 bloqués",
+     "c": "sable"
+    },
+    {
+     "k": "Reste",
+     "v": "31 j",
+     "c": "sauge"
+    }
+   ],
+   "chart": {
+    "x": [
+     1,
+     10
+    ],
+    "y": [
+     0,
+     55
+    ],
+    "xticks": [
+     [
+      1,
+      "J1"
+     ],
+     [
+      2,
+      "J2"
+     ],
+     [
+      3,
+      "J3"
+     ],
+     [
+      4,
+      "J4"
+     ],
+     [
+      5,
+      "J5"
+     ],
+     [
+      6,
+      "J6"
+     ],
+     [
+      7,
+      "J7"
+     ],
+     [
+      8,
+      "J8"
+     ],
+     [
+      9,
+      "J9"
+     ],
+     [
+      10,
+      "J10"
+     ]
+    ],
+    "xdates": [
+     [
+      1,
+      "17/11"
+     ],
+     [
+      7,
+      "25/11"
+     ],
+     [
+      10,
+      "28/11"
+     ]
+    ],
+    "yticks": [
+     0,
+     55
+    ],
+    "ideal": [
+     [
+      1,
+      55
+     ],
+     [
+      10,
+      0
+     ]
+    ],
+    "real": [
+     [
+      1,
+      55
+     ],
+     [
+      2,
+      53
+     ],
+     [
+      3,
+      50
+     ],
+     [
+      4,
+      46
+     ],
+     [
+      5,
+      41
+     ],
+     [
+      6,
+      36
+     ],
+     [
+      7,
+      31
+     ]
+    ],
+    "trend": [
+     [
+      7,
+      31
+     ],
+     [
+      10,
+      15
+     ]
+    ],
+    "elapsed": 7,
+    "elapsed_label": "7 jours écoulés · 3 restants",
+    "today": {
+     "x": 7,
+     "y": 31,
+     "label": "J7 · 31 j restants"
+    },
+    "end_label": "≈ 15 j non terminés à J10",
+    "vlines": []
+   }
+  },
+  {
+   "id": "sprints",
+   "kind": "table",
+   "section": "Sprints",
+   "eyebrow": "Sprints · Historique et vélocité",
+   "title": "Sprints",
+   "cap": "Ce tableau retrace chaque sprint de la version 1 : sa période, l'objectif fixé à son lancement, la charge engagée et la charge livrée en jours, puis le taux de réalisation. La dernière colonne indique si l'objectif a été atteint, tel que constaté à la revue de sprint.",
+   "src": "Jira · plan de sprints (plan.json)",
+   "note": "* À J7 du sprint. Vélocité moyenne S1-S2 : 45 jours ; capacité S4 : 50 jours.",
+   "table": {
+    "cols": [
+     {
+      "h": "Sprint",
+      "w": 0.07
+     },
+     {
+      "h": "Période",
+      "w": 0.14
+     },
+     {
+      "h": "Objectif",
+      "w": 0.33
+     },
+     {
+      "h": "Engagé (j)",
+      "w": 0.1,
+      "align": "r"
+     },
+     {
+      "h": "Livré (j)",
+      "w": 0.1,
+      "align": "r"
+     },
+     {
+      "h": "Taux",
+      "w": 0.08,
+      "align": "r"
+     },
+     {
+      "h": "Objectif atteint",
+      "w": 0.18
+     }
+    ],
+    "rows": [
+     [
+      {
+       "t": "S1",
+       "muted": true
+      },
+      "20/10 → 31/10",
+      "Socle technique et authentification",
+      "52",
+      "41",
+      "79 %",
+      {
+       "pill": "cours",
+       "t": "Partiel"
+      }
+     ],
+     [
+      {
+       "t": "S2",
+       "muted": true
+      },
+      "03/11 → 14/11",
+      "Catalogue et fiche produit",
+      "50",
+      "49",
+      "98 %",
+      {
+       "pill": "ok",
+       "t": "Oui"
+      }
+     ],
+     [
+      {
+       "t": "S3",
+       "muted": true
+      },
+      "17/11 → 28/11",
+      "Parcours de souscription en recette",
+      "55",
+      "24*",
+      "—",
+      {
+       "pill": "risque",
+       "t": "En cours"
+      }
+     ],
+     [
+      {
+       "t": "S4",
+       "muted": true
+      },
+      "01/12 → 12/12",
+      "Paiement, notifications, gel",
+      "54",
+      "—",
+      "—",
+      {
+       "pill": "afaire",
+       "t": "À venir"
+      }
+     ]
+    ]
+   }
+  },
+  {
+   "id": "projection",
+   "kind": "table",
+   "section": "Projection",
+   "eyebrow": "Avancement · Projection par pôle",
+   "title": "Projection",
+   "cap": "Pour chaque pôle, ce tableau rapproche la charge totale, le reste à faire et la capacité hebdomadaire de l'équipe, tous exprimés en jours, pour en déduire une date de fin projetée. La marge compare cette date au gel du 12 décembre ; la dernière colonne nomme les sujets qui déterminent cette date.",
+   "src": "Jira · projection.yml · page Avancement et sprints",
+   "table": {
+    "cols": [
+     {
+      "h": "Pôle",
+      "w": 0.1
+     },
+     {
+      "h": "Charge (j)",
+      "w": 0.1,
+      "align": "r"
+     },
+     {
+      "h": "Reste (j)",
+      "w": 0.1,
+      "align": "r"
+     },
+     {
+      "h": "Capacité (j / sem.)",
+      "w": 0.13,
+      "align": "r"
+     },
+     {
+      "h": "Fin projetée",
+      "w": 0.15
+     },
+     {
+      "h": "Marge / gel",
+      "w": 0.14,
+      "align": "r"
+     },
+     {
+      "h": "Chemin critique",
+      "w": 0.28
+     }
+    ],
+    "rows": [
+     [
+      "Back",
+      "160",
+      "61",
+      "28",
+      "08/12 · J+50",
+      "+4 j",
+      "API paiement"
+     ],
+     [
+      "Front",
+      "150",
+      "104",
+      "24",
+      "17/12 · J+59",
+      {
+       "t": "−5 j",
+       "c": "bordeaux"
+      },
+      "Souscription, espace client"
+     ],
+     [
+      "SRE",
+      "70",
+      "36",
+      "14",
+      "11/12 · J+53",
+      "+1 j",
+      "Bascule DNS"
+     ],
+     [
+      "Recette",
+      "40",
+      "26",
+      "12",
+      "19/12 · J+61",
+      "—",
+      "Dépend du front"
+     ]
+    ],
+    "total": [
+     "Projet",
+     "420",
+     "227",
+     "78",
+     "19/12 · J+61",
+     "4 j avant ouverture",
+     ""
+    ]
+   }
+  },
+  {
+   "kind": "section",
+   "title": "Planning",
+   "sub": "Du 19 octobre au 23 décembre",
+   "num": "02",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Planning"
+  },
+  {
+   "id": "planning",
+   "kind": "gantt",
+   "section": "Planning",
+   "eyebrow": "Planning · Gantt",
+   "title": "Planning",
+   "cap": "Le Gantt présente, pour chaque pôle, la période de travail prévue, de la semaine 43 à la semaine 52. La partie foncée de chaque barre correspond à ce qui est déjà réalisé, la partie claire au reste à faire ; le trait bordeaux situe le jour du comité, et les losanges marquent le gel et l'ouverture.",
+   "src": "Planning_ATLAS.pptx · Gantt_ATLAS.xlsx",
+   "gantt": {
+    "days": 72,
+    "months": [
+     [
+      0,
+      "Octobre"
+     ],
+     [
+      13,
+      "Novembre"
+     ],
+     [
+      43,
+      "Décembre"
+     ]
+    ],
+    "weeks": [
+     [
+      0,
+      "S43"
+     ],
+     [
+      7,
+      "S44"
+     ],
+     [
+      14,
+      "S45"
+     ],
+     [
+      21,
+      "S46"
+     ],
+     [
+      28,
+      "S47"
+     ],
+     [
+      35,
+      "S48"
+     ],
+     [
+      42,
+      "S49"
+     ],
+     [
+      49,
+      "S50"
+     ],
+     [
+      56,
+      "S51"
+     ],
+     [
+      63,
+      "S52"
+     ]
+    ],
+    "lanes": [
+     {
+      "n": "Cadrage",
+      "a": 0,
+      "b": 10,
+      "done": 10,
+      "c": "noir"
+     },
+     {
+      "n": "Back",
+      "a": 7,
+      "b": 50,
+      "done": 34,
+      "c": "noir"
+     },
+     {
+      "n": "Front",
+      "a": 14,
+      "b": 58,
+      "done": 28,
+      "c": "bordeaux"
+     },
+     {
+      "n": "SRE",
+      "a": 10,
+      "b": 60,
+      "done": 34,
+      "c": "taupe"
+     },
+     {
+      "n": "Recette",
+      "a": 40,
+      "b": 61,
+      "done": 42.5,
+      "c": "sauge"
+     },
+     {
+      "n": "Déploiement",
+      "a": 61,
+      "b": 65,
+      "done": 61,
+      "c": "noir"
+     }
+    ],
+    "today": {
+     "d": 38,
+     "label": "Aujourd'hui J+38"
+    },
+    "milestones": [
+     {
+      "d": 54,
+      "label": "Gel",
+      "c": "encre"
+     },
+     {
+      "d": 65,
+      "label": "Ouverture",
+      "c": "or"
+     }
+    ]
+   }
+  },
+  {
+   "id": "jalons",
+   "kind": "milestones",
+   "section": "Planning",
+   "eyebrow": "Planning · Jalons",
+   "title": "Jalons",
+   "cap": "La frise reprend les dates clés du projet, du jour du comité jusqu'à l'ouverture, avec pour chacune le numéro de jour compté depuis le démarrage. Le trait épais couvre la période déjà écoulée.",
+   "src": "Planning_ATLAS.pptx · planning.json",
+   "elapsed": 0.31,
+   "items": [
+    {
+     "p": 0.31,
+     "top": "Aujourd'hui",
+     "date": "26 nov. · J+38",
+     "shape": "dot",
+     "c": "bordeaux"
+    },
+    {
+     "p": 0.47,
+     "top": "Jalon API",
+     "date": "5 déc. · J+47",
+     "shape": "diamond",
+     "c": "or"
+    },
+    {
+     "p": 0.63,
+     "top": "Gel",
+     "date": "12 déc. · J+54",
+     "shape": "diamond",
+     "c": "encre"
+    },
+    {
+     "p": 0.79,
+     "top": "Fin projetée",
+     "date": "19 déc. · J+61",
+     "shape": "diamond",
+     "c": "sauge"
+    },
+    {
+     "p": 0.955,
+     "top": "Ouverture",
+     "date": "23 déc. · J+65",
+     "shape": "diamond",
+     "c": "noir"
+    }
+   ]
+  },
+  {
+   "kind": "section",
+   "title": "Suivi\ntechnique",
+   "sub": "23 sujets suivis · 5 domaines",
+   "num": "03",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Suivi technique"
+  },
+  {
+   "id": "suivi-technique",
+   "kind": "meteo",
+   "section": "Suivi technique",
+   "eyebrow": "Suivi technique · Météo des domaines",
+   "title": "Suivi technique",
+   "cap": "Chaque carte correspond à un domaine technique ; sa couleur traduit le statut le plus défavorable parmi les sujets qu'il regroupe, selon la légende ci-dessous. Le texte résume la situation du domaine, et la barre en pied de carte indique la part de ses sujets déjà clos.",
+   "src": "Notion · Suivi des sujets",
+   "domains": [
+    {
+     "k": "Intégrations",
+     "v": "API partenaire en retard, contournement à l'étude",
+     "st": "bloque",
+     "closed": 0.4
+    },
+    {
+     "k": "Front",
+     "v": "Retard sur l'espace client, renfort en S49",
+     "st": "risque",
+     "closed": 0.3
+    },
+    {
+     "k": "Données",
+     "v": "Volumétrie de migration à confirmer",
+     "st": "risque",
+     "closed": 0.55
+    },
+    {
+     "k": "Infrastructure",
+     "v": "Tir de charge validé, bascule prête",
+     "st": "ok",
+     "closed": 0.8
+    },
+    {
+     "k": "Sécurité",
+     "v": "Pentest planifié, aucun bloquant",
+     "st": "ok",
+     "closed": 0.7
+    }
+   ],
+   "legend": [
+    [
+     "pill:bloque",
+     "Bloqué"
+    ],
+    [
+     "pill:risque",
+     "À risque"
+    ],
+    [
+     "pill:cours",
+     "En cours"
+    ],
+    [
+     "pill:ok",
+     "Maîtrisé"
+    ],
+    [
+     "",
+     "Barre : part des sujets clos"
+    ]
+   ]
+  },
+  {
+   "id": "situation-technique",
+   "kind": "table",
+   "section": "Suivi technique",
+   "eyebrow": "Suivi technique · Situation",
+   "title": "Situation technique",
+   "cap": "Ce tableau détaille les sujets techniques suivis en comité, regroupés par domaine. Pour chacun, il indique le statut, la situation connue à date, le levier actionné pour la faire évoluer et l'échéance de ce levier.",
+   "src": "Notion · Suivi des sujets",
+   "small": true,
+   "table": {
+    "cols": [
+     {
+      "h": "Domaine",
+      "w": 0.13
+     },
+     {
+      "h": "Sujet",
+      "w": 0.15
+     },
+     {
+      "h": "Statut",
+      "w": 0.11
+     },
+     {
+      "h": "Situation",
+      "w": 0.26
+     },
+     {
+      "h": "Levier",
+      "w": 0.25
+     },
+     {
+      "h": "Échéance",
+      "w": 0.1
+     }
+    ],
+    "rows": [
+     [
+      {
+       "t": "Intégrations",
+       "muted": true
+      },
+      "API partenaire",
+      {
+       "pill": "bloque",
+       "t": "Bloqué"
+      },
+      "Livraison annoncée après le gel",
+      "Jalon intermédiaire, bouchon de contournement",
+      "05/12"
+     ],
+     [
+      {
+       "t": "Front",
+       "muted": true
+      },
+      "Espace client",
+      {
+       "pill": "risque",
+       "t": "À risque"
+      },
+      "31 % livré, 6 tickets bloqués",
+      "Renfort d'un développeur en S49",
+      "12/12"
+     ],
+     [
+      {
+       "t": "Données",
+       "muted": true
+      },
+      "Migration des contrats",
+      {
+       "pill": "risque",
+       "t": "À risque"
+      },
+      "Volumétrie 3× supérieure à l'estimation",
+      "Tir à blanc complet",
+      "12/12"
+     ],
+     [
+      {
+       "t": "Infrastructure",
+       "muted": true
+      },
+      "Bascule DNS",
+      {
+       "pill": "cours",
+       "t": "En cours"
+      },
+      "Procédure rédigée, répétition à planifier",
+      "Répétition en préproduction",
+      "15/12"
+     ],
+     [
+      {
+       "t": "Sécurité",
+       "muted": true
+      },
+      "Test d'intrusion",
+      {
+       "pill": "ok",
+       "t": "Maîtrisé"
+      },
+      "Prestataire retenu, créneau réservé",
+      "—",
+      "08/12"
+     ],
+     [
+      {
+       "t": "Infrastructure",
+       "muted": true
+      },
+      "Tir de charge",
+      {
+       "pill": "fait",
+       "t": "Clos"
+      },
+      "2 000 req/s tenues, p95 à 180 ms",
+      "—",
+      "21/11"
+     ]
+    ]
+   }
+  },
+  {
+   "kind": "section",
+   "title": "Registre\ndes risques",
+   "sub": "7 risques ouverts · 2 critiques",
+   "num": "04",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Risques"
+  },
+  {
+   "id": "risques",
+   "kind": "matrix",
+   "section": "Risques",
+   "eyebrow": "Risques · Vue d'ensemble",
+   "title": "Risques",
+   "cap": "La matrice positionne chaque risque ouvert selon sa probabilité, en ordonnée, et son impact, en abscisse ; la couleur de la case donne le niveau qui en résulte, du sable pour un niveau faible au bordeaux pour un niveau critique. La liste de droite reprend les risques les plus élevés, avec le levier engagé pour chacun.",
+   "src": "Risks_ATLAS.xlsx",
+   "grid": [
+    [
+     "l2",
+     "l3",
+     "l4",
+     "l4"
+    ],
+    [
+     "l2",
+     "l3",
+     "l3",
+     "l4"
+    ],
+    [
+     "l1",
+     "l2",
+     "l3",
+     "l3"
+    ],
+    [
+     "l1",
+     "l1",
+     "l2",
+     "l2"
+    ]
+   ],
+   "chips": {
+    "0,2": [
+     "R-02"
+    ],
+    "1,1": [
+     "R-05"
+    ],
+    "1,3": [
+     "R-01"
+    ],
+    "2,0": [
+     "R-07"
+    ],
+    "2,1": [
+     "R-04"
+    ],
+    "2,2": [
+     "R-03"
+    ],
+    "3,2": [
+     "R-06"
+    ]
+   },
+   "top": [
+    {
+     "id": "R-01",
+     "t": "Livraison de l'API partenaire après le gel",
+     "lev": "Levier : jalon intermédiaire au 05/12, bouchon de contournement",
+     "lvl": "l4",
+     "lt": "Critique"
+    },
+    {
+     "id": "R-02",
+     "t": "Recette utilisateur compressée à une semaine",
+     "lev": "Levier : recette au fil de l'eau dès le sprint 3",
+     "lvl": "l4",
+     "lt": "Critique"
+    },
+    {
+     "id": "R-05",
+     "t": "Disponibilité de l'équipe SRE en décembre",
+     "lev": "Levier : astreinte partagée, arbitrage au COPIL",
+     "lvl": "l3",
+     "lt": "Élevé"
+    },
+    {
+     "id": "R-03",
+     "t": "Volumétrie de migration sous-estimée",
+     "lev": "Levier : tir à blanc le 12/12",
+     "lvl": "l3",
+     "lt": "Élevé"
+    }
+   ]
+  },
+  {
+   "id": "registre-des-risques",
+   "kind": "table",
+   "section": "Risques",
+   "eyebrow": "Risques · Registre",
+   "title": "Registre des risques",
+   "cap": "Le registre reprend l'ensemble des risques ouverts, classés par niveau. Pour chacun figurent la tendance depuis le comité précédent, la mitigation engagée, la personne qui en est responsable et l'échéance de la prochaine action.",
+   "src": "Risks_ATLAS.xlsx",
+   "table": {
+    "cols": [
+     {
+      "h": "Id",
+      "w": 0.06
+     },
+     {
+      "h": "Risque",
+      "w": 0.24
+     },
+     {
+      "h": "Niveau",
+      "w": 0.1
+     },
+     {
+      "h": "Tendance",
+      "w": 0.11,
+      "align": "c"
+     },
+     {
+      "h": "Mitigation",
+      "w": 0.26
+     },
+     {
+      "h": "Responsable",
+      "w": 0.13
+     },
+     {
+      "h": "Échéance",
+      "w": 0.1
+     }
+    ],
+    "rows": [
+     [
+      {
+       "t": "R-01",
+       "muted": true
+      },
+      "API partenaire livrée après le gel",
+      {
+       "dot": "l4",
+       "t": "Critique"
+      },
+      {
+       "t": "↑",
+       "align": "c"
+      },
+      "Jalon intermédiaire, bouchon de contournement",
+      "Chef de projet",
+      "05/12"
+     ],
+     [
+      {
+       "t": "R-02",
+       "muted": true
+      },
+      "Recette compressée à une semaine",
+      {
+       "dot": "l4",
+       "t": "Critique"
+      },
+      {
+       "t": "=",
+       "align": "c"
+      },
+      "Recette au fil de l'eau dès S3",
+      "PO",
+      "09/12"
+     ],
+     [
+      {
+       "t": "R-05",
+       "muted": true
+      },
+      "Disponibilité SRE en décembre",
+      {
+       "dot": "l3",
+       "t": "Élevé"
+      },
+      {
+       "t": "↑",
+       "align": "c"
+      },
+      "Astreinte partagée",
+      "Lead SRE",
+      "COPIL"
+     ],
+     [
+      {
+       "t": "R-03",
+       "muted": true
+      },
+      "Volumétrie de migration",
+      {
+       "dot": "l3",
+       "t": "Élevé"
+      },
+      {
+       "t": "↓",
+       "align": "c"
+      },
+      "Tir à blanc",
+      "Lead back",
+      "12/12"
+     ],
+     [
+      {
+       "t": "R-04",
+       "muted": true
+      },
+      "Dépendance à la bibliothèque UI",
+      {
+       "dot": "l2",
+       "t": "Moyen"
+      },
+      {
+       "t": "=",
+       "align": "c"
+      },
+      "Version figée",
+      "Lead front",
+      "—"
+     ],
+     [
+      {
+       "t": "R-06",
+       "muted": true
+      },
+      "Charge du support après ouverture",
+      {
+       "dot": "l2",
+       "t": "Moyen"
+      },
+      {
+       "t": "=",
+       "align": "c"
+      },
+      "Renfort niveau 1 en janvier",
+      "Run",
+      "—"
+     ],
+     [
+      {
+       "t": "R-07",
+       "muted": true
+      },
+      "Accès aux environnements de test",
+      {
+       "dot": "l1",
+       "t": "Faible"
+      },
+      {
+       "t": "↓",
+       "align": "c"
+      },
+      "Demande ouverte",
+      "SRE",
+      "—"
+     ]
+    ]
+   }
+  },
+  {
+   "kind": "section",
+   "title": "Gouvernance",
+   "sub": "RACI · interfaces · staffing · gates",
+   "num": "05",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Gouvernance"
+  },
+  {
+   "id": "raci",
+   "kind": "table",
+   "section": "Gouvernance",
+   "eyebrow": "Gouvernance · RACI",
+   "title": "RACI",
+   "cap": "La matrice indique, pour chaque activité clé du projet, le rôle de chaque partie prenante : celle qui réalise, celle qui approuve, celles qui sont consultées et celles qui sont tenues informées.",
+   "src": "RACI_ATLAS.xlsx · onglet par rôle",
+   "small": true,
+   "legend": [
+    [
+     "raci:R",
+     "Réalise"
+    ],
+    [
+     "raci:A",
+     "Approuve"
+    ],
+    [
+     "raci:C",
+     "Consulté"
+    ],
+    [
+     "raci:I",
+     "Informé"
+    ]
+   ],
+   "table": {
+    "cols": [
+     {
+      "h": "Activité",
+      "w": 0.28
+     },
+     {
+      "h": "Sponsor",
+      "w": 0.12,
+      "align": "c"
+     },
+     {
+      "h": "Chef de projet",
+      "w": 0.12,
+      "align": "c"
+     },
+     {
+      "h": "PO",
+      "w": 0.12,
+      "align": "c"
+     },
+     {
+      "h": "Lead tech",
+      "w": 0.12,
+      "align": "c"
+     },
+     {
+      "h": "SRE",
+      "w": 0.12,
+      "align": "c"
+     },
+     {
+      "h": "Partenaire",
+      "w": 0.12,
+      "align": "c"
+     }
+    ],
+    "rows": [
+     [
+      "Cadrage et périmètre",
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "I"
+      }
+     ],
+     [
+      "Planning et suivi",
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "I"
+      }
+     ],
+     [
+      "Spécifications fonctionnelles",
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "C"
+      }
+     ],
+     [
+      "Architecture",
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "C"
+      }
+     ],
+     [
+      "Recette",
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "I"
+      }
+     ],
+     [
+      "Mise en production",
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "R"
+      },
+      {
+       "raci": "I"
+      }
+     ],
+     [
+      "Gestion des risques",
+      {
+       "raci": "I"
+      },
+      {
+       "raci": "A"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "C"
+      },
+      {
+       "raci": "I"
+      }
+     ]
+    ]
+   }
+  },
+  {
+   "id": "responsabilites-inter-equipes",
+   "kind": "diagram",
+   "section": "Gouvernance",
+   "eyebrow": "Gouvernance · Dépendances et activités entre équipes",
+   "title": "Responsabilités inter-équipes",
+   "cap": "Le schéma situe chaque équipe autour du pilotage du projet et montre qui travaille avec qui. Une flèche pleine relie une équipe à celle à qui elle doit un livrable ou une décision, avec l'activité correspondante ; une flèche en pointillé indique une collaboration avec un partenaire extérieur. Les blocs cerclés sont hors de l'équipe projet.",
+   "src": "Dependances_inter-equipes_ATLAS.drawio",
+   "diagram": {
+    "w": 1000,
+    "h": 440,
+    "boxes": [
+     {
+      "x": 380,
+      "y": 0,
+      "w": 240,
+      "h": 56,
+      "n": "Client",
+      "s": "besoins · validation",
+      "fill": "sable",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 380,
+      "y": 148,
+      "w": 240,
+      "h": 66,
+      "n": "Pilotage",
+      "s": "chef de projet · TEM / TPM",
+      "fill": "noir",
+      "color": "blanc",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 30,
+      "y": 110,
+      "w": 232,
+      "h": 56,
+      "n": "IA",
+      "s": "détecteurs · score",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 30,
+      "y": 200,
+      "w": 232,
+      "h": 56,
+      "n": "Développement",
+      "s": "4 devs · développement, intégration",
+      "fill": "taupe",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 30,
+      "y": 290,
+      "w": 232,
+      "h": 56,
+      "n": "Infra & SRE",
+      "s": "environnements · déploiement",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 738,
+      "y": 110,
+      "w": 232,
+      "h": 56,
+      "n": "Cyber",
+      "s": "revue de sécurité",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 738,
+      "y": 200,
+      "w": 232,
+      "h": 56,
+      "n": "Recette",
+      "s": "tests · matrice IADT",
+      "fill": "sauge",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 738,
+      "y": 290,
+      "w": 232,
+      "h": 56,
+      "n": "Qualité",
+      "s": "plan qualité · conformité",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 160,
+      "y": 378,
+      "w": 210,
+      "h": 54,
+      "n": "Partenaire A",
+      "s": "API de souscription",
+      "fill": null,
+      "color": "encre",
+      "outline": true,
+      "badge": null
+     },
+     {
+      "x": 390,
+      "y": 378,
+      "w": 210,
+      "h": 54,
+      "n": "Partenaire B",
+      "s": "données de référence",
+      "fill": null,
+      "color": "encre",
+      "outline": true,
+      "badge": null
+     },
+     {
+      "x": 620,
+      "y": 378,
+      "w": 210,
+      "h": 54,
+      "n": "Infogérant",
+      "s": "run après ouverture",
+      "fill": null,
+      "color": "encre",
+      "outline": true,
+      "badge": null
+     }
+    ],
+    "links": [
+     {
+      "p": [
+       [
+        500,
+        56
+       ],
+       [
+        500,
+        148
+       ]
+      ],
+      "start": true,
+      "end": true
+     },
+     {
+      "p": [
+       [
+        380,
+        166
+       ],
+       [
+        262,
+        138
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        380,
+        182
+       ],
+       [
+        262,
+        226
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        380,
+        200
+       ],
+       [
+        262,
+        316
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        620,
+        166
+       ],
+       [
+        738,
+        138
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        620,
+        182
+       ],
+       [
+        738,
+        226
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        620,
+        200
+       ],
+       [
+        738,
+        316
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        262,
+        236
+       ],
+       [
+        738,
+        236
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        145,
+        166
+       ],
+       [
+        145,
+        200
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        855,
+        256
+       ],
+       [
+        855,
+        290
+       ]
+      ],
+      "start": true,
+      "end": true
+     },
+     {
+      "p": [
+       [
+        800,
+        198
+       ],
+       [
+        785,
+        120
+       ],
+       [
+        740,
+        60
+       ],
+       [
+        622,
+        30
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        170,
+        256
+       ],
+       [
+        270,
+        378
+       ]
+      ],
+      "start": true,
+      "end": true,
+      "dash": true
+     },
+     {
+      "p": [
+       [
+        230,
+        256
+       ],
+       [
+        480,
+        378
+       ]
+      ],
+      "start": true,
+      "end": true,
+      "dash": true
+     },
+     {
+      "p": [
+       [
+        262,
+        334
+       ],
+       [
+        700,
+        378
+       ]
+      ],
+      "end": true,
+      "dash": true
+     }
+    ],
+    "labels": [
+     [
+      510,
+      108,
+      "besoins · validation"
+     ],
+     [
+      322,
+      150,
+      "pilote"
+     ],
+     [
+      678,
+      150,
+      "pilote"
+     ],
+     [
+      430,
+      252,
+      "livre les incréments à recetter"
+     ],
+     [
+      152,
+      186,
+      "détecteurs"
+     ],
+     [
+      862,
+      276,
+      "plan de test"
+     ],
+     [
+      790,
+      70,
+      "procès-verbal de recette"
+     ],
+     [
+      300,
+      300,
+      "intégration des API"
+     ],
+     [
+      560,
+      350,
+      "transfert du run"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "responsabilites-inter-equipes-hierarchie",
+   "kind": "diagram",
+   "section": "Gouvernance",
+   "eyebrow": "Gouvernance · Variante hiérarchique",
+   "title": "Responsabilités inter-équipes",
+   "cap": "Le schéma range les profils par niveau de responsabilité : plus un profil porte d'activités en responsable ou en approbateur au RACI, nombre indiqué par la pastille, plus il est placé haut. Les flèches descendent à angle droit, du profil qui pilote ou qui doit un livrable vers celui qui en dépend, et les échanges entre équipes de même niveau passent à l'horizontale, sur le côté, pour ne jamais croiser les autres liens.",
+   "src": "Dependances_inter-equipes_ATLAS.drawio",
+   "diagram": {
+    "w": 1000,
+    "h": 330,
+    "boxes": [
+     {
+      "x": 457.0,
+      "y": 14,
+      "w": 150,
+      "h": 52,
+      "n": "Pilotage",
+      "s": "chef de projet · TEM / TPM",
+      "fill": "noir",
+      "color": "blanc",
+      "outline": false,
+      "badge": 6
+     },
+     {
+      "x": 800.0,
+      "y": 14,
+      "w": 150,
+      "h": 52,
+      "n": "Client",
+      "s": "besoins · validation",
+      "fill": "sable",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 177.0,
+      "y": 128,
+      "w": 150,
+      "h": 52,
+      "n": "Développement",
+      "s": "4 devs · intégration",
+      "fill": "taupe",
+      "color": "encre",
+      "outline": false,
+      "badge": 4
+     },
+     {
+      "x": 497.0,
+      "y": 128,
+      "w": 150,
+      "h": 52,
+      "n": "Recette",
+      "s": "tests · matrice IADT",
+      "fill": "sauge",
+      "color": "encre",
+      "outline": false,
+      "badge": 3
+     },
+     {
+      "x": 737.0,
+      "y": 128,
+      "w": 150,
+      "h": 52,
+      "n": "Infra & SRE",
+      "s": "environnements · run",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": 3
+     },
+     {
+      "x": 17.0,
+      "y": 246,
+      "w": 150,
+      "h": 52,
+      "n": "IA",
+      "s": "détecteurs · score",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": 1
+     },
+     {
+      "x": 177.0,
+      "y": 246,
+      "w": 150,
+      "h": 52,
+      "n": "Partenaire A",
+      "s": "API de souscription",
+      "fill": null,
+      "color": "encre",
+      "outline": true,
+      "badge": null
+     },
+     {
+      "x": 337.0,
+      "y": 246,
+      "w": 150,
+      "h": 52,
+      "n": "Partenaire B",
+      "s": "données de référence",
+      "fill": null,
+      "color": "encre",
+      "outline": true,
+      "badge": null
+     },
+     {
+      "x": 497.0,
+      "y": 246,
+      "w": 150,
+      "h": 52,
+      "n": "Qualité",
+      "s": "plan qualité",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": 1
+     },
+     {
+      "x": 657.0,
+      "y": 246,
+      "w": 150,
+      "h": 52,
+      "n": "Cyber",
+      "s": "revue de sécurité",
+      "fill": "voile",
+      "color": "encre",
+      "outline": false,
+      "badge": 1
+     },
+     {
+      "x": 817.0,
+      "y": 246,
+      "w": 150,
+      "h": 52,
+      "n": "Infogérant",
+      "s": "run après ouverture",
+      "fill": null,
+      "color": "encre",
+      "outline": true,
+      "badge": null
+     }
+    ],
+    "links": [
+     {
+      "p": [
+       [
+        532,
+        66
+       ],
+       [
+        532,
+        96
+       ],
+       [
+        252,
+        96
+       ],
+       [
+        252,
+        128
+       ]
+      ],
+      "end": true,
+      "dash": false
+     },
+     {
+      "p": [
+       [
+        532,
+        66
+       ],
+       [
+        532,
+        96
+       ],
+       [
+        572,
+        96
+       ],
+       [
+        572,
+        128
+       ]
+      ],
+      "end": true,
+      "dash": false
+     },
+     {
+      "p": [
+       [
+        532,
+        66
+       ],
+       [
+        532,
+        96
+       ],
+       [
+        812,
+        96
+       ],
+       [
+        812,
+        128
+       ]
+      ],
+      "end": true,
+      "dash": false
+     },
+     {
+      "p": [
+       [
+        252,
+        180
+       ],
+       [
+        252,
+        212
+       ],
+       [
+        92,
+        212
+       ],
+       [
+        92,
+        246
+       ]
+      ],
+      "end": true,
+      "dash": false
+     },
+     {
+      "p": [
+       [
+        252,
+        180
+       ],
+       [
+        252,
+        212
+       ],
+       [
+        252,
+        212
+       ],
+       [
+        252,
+        246
+       ]
+      ],
+      "end": true,
+      "dash": true
+     },
+     {
+      "p": [
+       [
+        252,
+        180
+       ],
+       [
+        252,
+        212
+       ],
+       [
+        412,
+        212
+       ],
+       [
+        412,
+        246
+       ]
+      ],
+      "end": true,
+      "dash": true
+     },
+     {
+      "p": [
+       [
+        572,
+        180
+       ],
+       [
+        572,
+        212
+       ],
+       [
+        572,
+        212
+       ],
+       [
+        572,
+        246
+       ]
+      ],
+      "end": true,
+      "dash": false
+     },
+     {
+      "p": [
+       [
+        812,
+        180
+       ],
+       [
+        812,
+        212
+       ],
+       [
+        732,
+        212
+       ],
+       [
+        732,
+        246
+       ]
+      ],
+      "end": true,
+      "dash": false
+     },
+     {
+      "p": [
+       [
+        812,
+        180
+       ],
+       [
+        812,
+        212
+       ],
+       [
+        892,
+        212
+       ],
+       [
+        892,
+        246
+       ]
+      ],
+      "end": true,
+      "dash": true
+     },
+     {
+      "p": [
+       [
+        327.0,
+        154.0
+       ],
+       [
+        497.0,
+        154.0
+       ]
+      ],
+      "end": true
+     },
+     {
+      "p": [
+       [
+        607.0,
+        40.0
+       ],
+       [
+        800,
+        40.0
+       ]
+      ],
+      "start": true,
+      "end": true
+     }
+    ],
+    "labels": [
+     [
+      362.0,
+      136.0,
+      "livre les incréments"
+     ],
+     [
+      653.5,
+      22.0,
+      "besoins · validation"
+     ],
+     [
+      538,
+      80,
+      "pilote"
+     ],
+     [
+      258,
+      196,
+      "intègre"
+     ],
+     [
+      578,
+      196,
+      "s'appuie sur"
+     ],
+     [
+      818,
+      196,
+      "fait valider · transfère"
+     ]
+    ]
+   },
+   "legend": [
+    [
+     "badge",
+     "Activités portées par le profil (R ou A au RACI), qui fixent son niveau"
+    ],
+    [
+     "line:encre",
+     "Pilote ou doit un livrable"
+    ],
+    [
+     "dash:gris",
+     "Partenaire extérieur"
+    ]
+   ]
+  },
+  {
+   "id": "staffing",
+   "kind": "table",
+   "section": "Gouvernance",
+   "eyebrow": "Gouvernance · Du trimestre en cours aux trois suivants",
+   "title": "Staffing",
+   "cap": "Le tableau donne, pour chaque ressource, sa part de temps prévue sur le projet à chaque trimestre, en équivalent temps plein ; le trimestre en cours est signalé en noir. Une ligne « à staffer » marque un besoin sans personne nommée. Les deux dernières lignes totalisent les effectifs et les convertissent en jours, sur une base de soixante jours ouvrés par trimestre.",
+   "src": "Staffing_plan_ATLAS.xlsx",
+   "small": true,
+   "table": {
+    "current_col": 2,
+    "cols": [
+     {
+      "h": "Ressource",
+      "w": 0.22
+     },
+     {
+      "h": "Rôle",
+      "w": 0.22
+     },
+     {
+      "h": "T4 2026 · en cours",
+      "w": 0.14,
+      "align": "c"
+     },
+     {
+      "h": "T1 2027",
+      "w": 0.14,
+      "align": "c"
+     },
+     {
+      "h": "T2 2027",
+      "w": 0.14,
+      "align": "c"
+     },
+     {
+      "h": "T3 2027",
+      "w": 0.14,
+      "align": "c"
+     }
+    ],
+    "rows": [
+     [
+      "Camille Martin",
+      {
+       "t": "Chef de projet",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Julien Robert",
+      {
+       "t": "TEM / TPM",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Sarah Petit",
+      {
+       "t": "Product owner",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Léa Durand",
+      {
+       "t": "Engineering manager",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Hugo Bernard",
+      {
+       "t": "Développeur back",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Nina Moreau",
+      {
+       "t": "Développeuse back",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 0,
+       "t": "—"
+      }
+     ],
+     [
+      "Tom Girard",
+      {
+       "t": "Développeur front",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      {
+       "t": "À staffer",
+       "c": "bordeaux"
+      },
+      {
+       "t": "Développeur front",
+       "muted": true
+      },
+      {
+       "heat": 0,
+       "t": "—"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0,
+       "t": "—"
+      }
+     ],
+     [
+      "Yanis Faure",
+      {
+       "t": "SRE",
+       "muted": true
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Emma Roux",
+      {
+       "t": "Recette (SPV)",
+       "muted": true
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 1,
+       "t": "1"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ],
+     [
+      "Paul Lefèvre",
+      {
+       "t": "Qualité",
+       "muted": true
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      },
+      {
+       "heat": 0.5,
+       "t": "0,5"
+      }
+     ]
+    ],
+    "total": [
+     "Total (ETP)",
+     "",
+     "9",
+     "10,5",
+     "9",
+     "4,5"
+    ],
+    "total2": [
+     "Capacité en jours",
+     "",
+     "540",
+     "630",
+     "540",
+     "270"
+    ]
+   }
+  },
+  {
+   "id": "gate-2",
+   "kind": "gate",
+   "section": "Gouvernance",
+   "eyebrow": "Gouvernance · Gate 2 · Prêt pour la recette",
+   "title": "Gate 2",
+   "cap": "La gate 2 conditionne le démarrage de la recette. Le chiffre de gauche rapporte les critères remplis au nombre total de critères ; la liste détaille chacun d'eux avec son état et le rôle qui le porte. Le passage est décidé en comité.",
+   "src": "Notion · checklist GATE 2",
+   "kpi": "7",
+   "of": "/9",
+   "lead": "Décision au comité du 5 décembre.",
+   "table": {
+    "cols": [
+     {
+      "h": "État",
+      "w": 0.18
+     },
+     {
+      "h": "Critère",
+      "w": 0.6
+     },
+     {
+      "h": "Porteur",
+      "w": 0.22
+     }
+    ],
+    "nohead": true,
+    "rows": [
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Environnement de recette disponible",
+      {
+       "t": "SRE",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Jeux de données anonymisés",
+      {
+       "t": "Données",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Cahier de recette validé",
+      {
+       "t": "PO",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Tir de charge concluant",
+      {
+       "t": "SRE",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Aucune anomalie bloquante ouverte",
+      {
+       "t": "Lead tech",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Plan de bascule rédigé",
+      {
+       "t": "SRE",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "fait",
+       "t": "Fait"
+      },
+      "Registre des risques à jour",
+      {
+       "t": "Chef de projet",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "risque",
+       "t": "En cours"
+      },
+      "Parcours de souscription complet",
+      {
+       "t": "Front",
+       "muted": true
+      }
+     ],
+     [
+      {
+       "pill": "bloque",
+       "t": "Manque"
+      },
+      "API partenaire en préproduction",
+      {
+       "t": "Partenaire",
+       "muted": true
+      }
+     ]
+    ]
+   }
+  },
+  {
+   "kind": "section",
+   "title": "Comptes\nrendus",
+   "sub": "Weekly · CR partenaire · Ordre du jour",
+   "num": "06",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Comptes rendus"
+  },
+  {
+   "id": "weekly-report",
+   "kind": "weekly",
+   "section": "Weekly report",
+   "eyebrow": "Weekly report · Semaine du 23/11 - CR du 27/11",
+   "title": "Weekly report",
+   "cap": "Rendu exact du bloc hebdomadaire de la page de suivi Notion, tel que le produit le générateur weekly-report : les activités réalisées regroupées par thème, les difficultés et points d'attention issus du suivi des sujets, puis le plan d'action classé par criticité face au gel et à l'ouverture.",
+   "src": "Notion · page de suivi · weekly-reports/2026-W48.md",
+   "cols": [
+    {
+     "h": "Activités réalisées",
+     "items": [
+      {
+       "b": "Pilotage :",
+       "sub": [
+        "Planning technique mis à jour au 26/11",
+        "Registre des risques revu : R-01 relevé à critique",
+        "Checklist gate 2 : 7 critères sur 9"
+       ]
+      },
+      {
+       "b": "Build :",
+       "sub": [
+        "Parcours de souscription livré en recette",
+        "Tir de charge validé à 2 000 requêtes par seconde"
+       ]
+      },
+      {
+       "b": "Partenaires :",
+       "sub": [
+        "Point hebdo : jalon intermédiaire obtenu au 05/12",
+        "Contrat d'interface v2 reçu en relecture"
+       ]
+      }
+     ]
+    },
+    {
+     "h": "Difficultés / Points d'attention",
+     "items": [
+      {
+       "b": "API partenaire :",
+       "t": "production annoncée après le gel",
+       "sub": [
+        "bouchon de contournement en cours"
+       ]
+      },
+      {
+       "b": "Front :",
+       "t": "6 tickets bloqués sur l'espace client"
+      },
+      {
+       "b": "SRE :",
+       "t": "astreinte de décembre non couverte"
+      },
+      {
+       "b": "Migration :",
+       "t": "volumétrie trois fois supérieure à l'estimation"
+      }
+     ]
+    },
+    {
+     "h": "Plan d'action - sujets à cadrer et faire avancer",
+     "items": [
+      {
+       "b": "Critique avant le gel :",
+       "sub": [
+        "Sécuriser le jalon API du 05/12 - point hebdo partenaire",
+        "Débloquer l'espace client - renfort front en S49"
+       ]
+      },
+      {
+       "b": "Avant l'ouverture :",
+       "sub": [
+        "Arbitrer l'astreinte SRE - décision au COPIL",
+        "Répéter la bascule DNS - créneau en préproduction",
+        "Lancer le tir à blanc de migration - le 12/12"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "compte-rendu-partenaire",
+   "kind": "mail",
+   "section": "CR partenaire",
+   "eyebrow": "Compte rendu · Point partenaire du 25 novembre",
+   "title": "Compte rendu partenaire",
+   "cap": "Rendu exact du mail produit par le générateur partner-report après le point avec le partenaire : objet, introduction, un paragraphe par sujet avec sa situation et une seule prochaine étape dont le jalon est en gras, puis la conclusion. Rien n'est envoyé ; ce texte est celui que l'on copie dans la messagerie.",
+   "src": "Notion · page Partenaire · CR du 25/11",
+   "obj": "Atlas x Partenaire - Point hebdo, suivi du 25/11",
+   "intro": [
+    "Bonjour à tous,",
+    "Merci pour le point d'aujourd'hui. Voici où en est chaque sujet et la suite."
+   ],
+   "subjects": [
+    {
+     "h": "Livraison de l'API",
+     "s": "La version de production est annoncée pour le 15/12, après notre gel du 12/12.",
+     "n": "Prochaine étape : vous livrez une version intermédiaire en préproduction **le 05/12**."
+    },
+    {
+     "h": "Contrat d'interface",
+     "s": "La version 2 intègre les champs de souscription demandés.",
+     "n": "Prochaine étape : vous nous transmettez le document final **d'ici le 28/11**."
+    },
+    {
+     "h": "Accès à la préproduction",
+     "s": "Les flux sont ouverts de votre côté ; il manque l'ouverture de nos IP.",
+     "n": "Prochaine étape : nous ouvrons les IP et confirmons par mail **le 02/12**."
+    },
+    {
+     "h": "Comptes de test",
+     "s": "La liste des trois comptes est validée des deux côtés.",
+     "n": "Prochaine étape : aucune, ce point est clos."
+    }
+   ],
+   "closing": [
+    "Merci de nous confirmer ces points et ces délais, et n'hésitez pas à les ajuster si besoin.",
+    "Bien cordialement,\nCamille"
+   ]
+  },
+  {
+   "id": "ordre-du-jour",
+   "kind": "table",
+   "section": "Ordre du jour",
+   "eyebrow": "Ordre du jour · Comité de pilotage · 26 novembre · 1 h",
+   "title": "Ordre du jour",
+   "cap": "L'ordre du jour liste les points du comité dans leur ordre de passage, avec la personne qui présente chacun d'eux et le temps qui lui est consacré. Les points qui appellent une décision sont signalés comme tels.",
+   "src": "Notion · page Comité de pilotage du 26/11",
+   "table": {
+    "nohead": true,
+    "cols": [
+     {
+      "h": "",
+      "w": 0.07
+     },
+     {
+      "h": "",
+      "w": 0.6
+     },
+     {
+      "h": "",
+      "w": 0.2
+     },
+     {
+      "h": "",
+      "w": 0.13,
+      "align": "r"
+     }
+    ],
+    "rows": [
+     [
+      {
+       "t": "01",
+       "muted": true
+      },
+      "Avancement et projection de fin",
+      {
+       "t": "Chef de projet",
+       "muted": true
+      },
+      "10 min"
+     ],
+     [
+      {
+       "t": "02",
+       "muted": true
+      },
+      "Risques critiques : API partenaire, recette",
+      {
+       "t": "Chef de projet",
+       "muted": true
+      },
+      "15 min"
+     ],
+     [
+      {
+       "t": "03",
+       "muted": true
+      },
+      "**Décision** · astreinte SRE de décembre",
+      {
+       "t": "Sponsor",
+       "muted": true
+      },
+      "10 min"
+     ],
+     [
+      {
+       "t": "04",
+       "muted": true
+      },
+      "**Décision** · périmètre V1.1",
+      {
+       "t": "PO",
+       "muted": true
+      },
+      "15 min"
+     ],
+     [
+      {
+       "t": "05",
+       "muted": true
+      },
+      "**Décision** · préparation de la gate 2",
+      {
+       "t": "Sponsor",
+       "muted": true
+      },
+      "5 min"
+     ],
+     [
+      {
+       "t": "06",
+       "muted": true
+      },
+      "Points divers",
+      {
+       "t": "—",
+       "muted": true
+      },
+      "5 min"
+     ]
+    ]
+   }
+  },
+  {
+   "kind": "section",
+   "title": "Semaine 48",
+   "sub": "Du 23 au 29 novembre 2026 · pm-framework",
+   "num": "S48",
+   "kicker": "Weekly report · Maximilien",
+   "section": "Weekly report",
+   "project": "pm-framework"
+  },
+  {
+   "id": "weekly-report-2",
+   "kind": "weekly",
+   "section": "Weekly report",
+   "eyebrow": "Weekly report · Semaine du 23/11 - CR du 26/11",
+   "title": "Weekly report",
+   "cap": "Rendu exact du bloc publié dans la page de suivi Notion et archivé dans weekly-reports/2026-W48.md : les trois sections du générateur weekly-report, dans le même ordre, avec les mêmes puces imbriquées par thème. La matière vient des demandes de la semaine et des commits du plugin.",
+   "src": "Notion · page de suivi · weekly-reports/2026-W48.md",
+   "project": "pm-framework",
+   "cols": [
+    {
+     "h": "Activités réalisées",
+     "items": [
+      {
+       "b": "Plugin pm-framework :",
+       "sub": [
+        "Planning technique dans le gabarit PowerPoint de l'entreprise",
+        "Skill technical-planning et guide d'utilisation complet",
+        "Guide web : catalogue filtrable, 36 captures, prompts à copier",
+        "Agenda de réunion ; weekly publié dans la page de suivi",
+        "RACI Excel complète ; setup générique, sans SINBAD en dur"
+       ]
+      },
+      {
+       "b": "Omi :",
+       "sub": [
+        "Générateur et routine omi-sync vers Notion perso",
+        "Synthèse des conversations de travail"
+       ]
+      },
+      {
+       "b": "Audit et harmonisation :",
+       "sub": [
+        "Audit du code, des routines et des livrables",
+        "Plan d'harmonisation en six phases",
+        "Charte des slides : maquette 16:9, logo client, skill slide-style"
+       ]
+      }
+     ]
+    },
+    {
+     "h": "Difficultés / Points d'attention",
+     "items": [
+      {
+       "b": "Routines :",
+       "t": "jamais enregistrées dans les tâches planifiées",
+       "sub": [
+        "aucun routines.yml de mission"
+       ]
+      },
+      {
+       "b": "omi-sync :",
+       "t": "en attente des jetons et des bases Notion perso"
+      },
+      {
+       "b": "Risques :",
+       "t": "cinq formats sans modèle commun"
+      },
+      {
+       "b": "Moteur :",
+       "t": "SINBAD encore en dur dans 17 scripts"
+      }
+     ]
+    },
+    {
+     "h": "Plan d'action - sujets à cadrer et faire avancer",
+     "items": [
+      {
+       "b": "Avant la prochaine démo :",
+       "sub": [
+        "Valider la charte des slides - maquette en relecture",
+        "Nettoyer le code par lots - liste à cocher"
+       ]
+      },
+      {
+       "b": "Dans le mois :",
+       "sub": [
+        "Harmoniser les 10 routines - gabarit unique, preflight",
+        "Piloter risques et avancement - HTML, PPTX, XLSX"
+       ]
+      },
+      {
+       "b": "Quand les accès sont prêts :",
+       "sub": [
+        "Activer omi-sync - jetons et bases Notion"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "section",
+   "title": "Architecture",
+   "sub": "Vue d'ensemble",
+   "num": "07",
+   "kicker": "Atlas · Comité de pilotage",
+   "section": "Architecture"
+  },
+  {
+   "id": "architecture",
+   "kind": "diagram",
+   "section": "Architecture",
+   "eyebrow": "Architecture · Vue d'ensemble",
+   "title": "Architecture",
+   "cap": "Le schéma présente les quatre couches de la solution, des canaux utilisés par les clients jusqu'aux données. Les blocs en aplat sont construits dans le projet ; le bloc cerclé de bordeaux est un service externe dont le projet dépend, relié en pointillé.",
+   "src": "architecture_ATLAS.html · vues draw.io",
+   "diagram": {
+    "w": 1000,
+    "h": 340,
+    "boxes": [
+     {
+      "x": 170,
+      "y": 20,
+      "w": 250,
+      "h": 48,
+      "n": "Site web",
+      "s": "",
+      "fill": "sable",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 440,
+      "y": 20,
+      "w": 250,
+      "h": 48,
+      "n": "Application mobile",
+      "s": "",
+      "fill": "sable",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 170,
+      "y": 100,
+      "w": 520,
+      "h": 48,
+      "n": "BFF · passerelle d'API",
+      "s": "",
+      "fill": "noir",
+      "color": "blanc",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 170,
+      "y": 180,
+      "w": 160,
+      "h": 48,
+      "n": "Souscription",
+      "s": "",
+      "fill": "taupe",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 350,
+      "y": 180,
+      "w": 160,
+      "h": 48,
+      "n": "Paiement",
+      "s": "",
+      "fill": "taupe",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 530,
+      "y": 180,
+      "w": 160,
+      "h": 48,
+      "n": "Notifications",
+      "s": "",
+      "fill": "taupe",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 170,
+      "y": 260,
+      "w": 250,
+      "h": 48,
+      "n": "Base contrats",
+      "s": "",
+      "fill": "sauge",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 440,
+      "y": 260,
+      "w": 250,
+      "h": 48,
+      "n": "Entrepôt analytique",
+      "s": "",
+      "fill": "sauge",
+      "color": "encre",
+      "outline": false,
+      "badge": null
+     },
+     {
+      "x": 770,
+      "y": 180,
+      "w": 200,
+      "h": 48,
+      "n": "API partenaire",
+      "s": "",
+      "fill": null,
+      "color": "bordeaux",
+      "outline": true,
+      "badge": null
+     }
+    ],
+    "links": [
+     {
+      "p": [
+       [
+        430,
+        68
+       ],
+       [
+        430,
+        100
+       ]
+      ]
+     },
+     {
+      "p": [
+       [
+        430,
+        148
+       ],
+       [
+        430,
+        180
+       ]
+      ]
+     },
+     {
+      "p": [
+       [
+        250,
+        148
+       ],
+       [
+        250,
+        180
+       ]
+      ]
+     },
+     {
+      "p": [
+       [
+        610,
+        148
+       ],
+       [
+        610,
+        180
+       ]
+      ]
+     },
+     {
+      "p": [
+       [
+        250,
+        228
+       ],
+       [
+        250,
+        260
+       ]
+      ]
+     },
+     {
+      "p": [
+       [
+        610,
+        228
+       ],
+       [
+        610,
+        260
+       ]
+      ]
+     },
+     {
+      "p": [
+       [
+        690,
+        204
+       ],
+       [
+        770,
+        204
+       ]
+      ],
+      "dash": true,
+      "c": "bordeaux"
+     }
+    ],
+    "labels": [
+     [
+      0,
+      36,
+      "CANAUX"
+     ],
+     [
+      0,
+      116,
+      "EXPOSITION"
+     ],
+     [
+      0,
+      196,
+      "SERVICES"
+     ],
+     [
+      0,
+      276,
+      "DONNÉES"
+     ]
+    ]
+   }
+  }
+ ]
+}

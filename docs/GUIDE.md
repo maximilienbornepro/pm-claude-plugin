@@ -177,6 +177,44 @@ explicite et après accord.
 
 ---
 
+## 4 bis. Livrables et exports
+
+Pour chaque livrable : la source, l'agent, le skill et le ton qui le produisent, le fichier de référence
+auquel chaque slide renvoie, et ses formats. **Gras** = existe aujourd'hui ; *(proposé)* = prévu par
+l'harmonisation (dossier projet HTML 16:9 et export PowerPoint, skill `slide-style`, ton `voice-slides`).
+Chaque format renvoie à sa capture ou à la slide de la [maquette du dossier projet](maquette/index.html) ;
+la version PowerPoint ([Atlas_dossier_projet.pptx](maquette/Atlas_dossier_projet.pptx)) sort de
+`pm run dossier demo --pptx <fichier>`.
+Un livrable qui n'a de sens que dans Notion ou par mail le reste.
+
+| Livrable | Source / générateur | Agent | Skill | Ton | Fichier rattaché | Exports |
+|---|---|---|---|---|---|---|
+| État des lieux (synthèse du comité) | cockpit, projection, suivi des sujets | `notion-topics-audit` | slide-style | voice-slides | Notion · suivi des sujets | [**Terminal**](img/cmd-cockpit.png) · [HTML *(proposé)*](maquette/index.html#etat-des-lieux) · [PPT *(proposé)*](maquette/index.html#etat-des-lieux) — Indicateurs du comité et sujets qui conditionnent la date. |
+| Chantiers transverses | à créer : chantiers.yml (reflet du Project dashboard) | — | slide-style | voice-slides | Project_dashboard_<MISSION>.pptx · chantiers.yml | Notion *(proposé)* · [HTML *(proposé)*](maquette/index.html#chantiers) · [PPT *(proposé)*](maquette/index.html#chantiers) — barre d'avancement, statut en 4 couleurs, porteur, commentaire |
+| Avancement V1 et burn-down du plan | plan, projection (Jira) | `jira-sprints-audit` | slide-style | voice-slides | page Avancement et sprints | [**HTML**](img/plan-avancement.png) · [PPT *(proposé)*](maquette/index.html#avancement) — La page web existe ; slides 16:9 à produire depuis le même JSON. |
+| Tableau des états des tickets | plan (Jira) | `jira-sprints-audit` | slide-style | voice-slides | Jira | [HTML *(proposé)*](maquette/index.html#tableau-des-etats) · [PPT *(proposé)*](maquette/index.html#tableau-des-etats) — Nouveau : par pôle, à faire / en cours / en test / bloqué / fermé. |
+| Sprint en cours et historique des sprints | plan (Jira), routine align-sprint-goals | `jira-sprints-audit` | slide-style | voice-slides | Jira · plan.json | [**HTML**](img/plan-avancement.png) · [PPT *(proposé)*](maquette/index.html#sprint-en-cours) · **Jira** — Objectifs de sprint écrits dans Jira (champ texte). |
+| Projection par pôle | projection (Jira), routine track-progress | — | slide-style | voice-slides | page Avancement et sprints | [**Terminal**](img/gate-slide1.png) · **Notion** · [HTML *(proposé)*](maquette/index.html#projection) · [PPT *(proposé)*](maquette/index.html#projection) — Notion : le seul pourcentage d'avancement V1. |
+| Planning technique (Gantt, échéances) | planning (planning.json) | — | technical-planning, slide-style | voice-slides | Planning_<MISSION>.pptx, Gantt Excel | [**PPT**](img/planning-gantt.png) · **Excel** · [HTML *(proposé)*](maquette/index.html#planning) · **Notion** — Notion : vue timeline via notion-planning. |
+| État des sujets (situation technique) | base Notion des sujets, routine review-topics | `notion-topics-audit` | technical-planning, slide-style | voice-maximilien (sujets), voice-slides (slide) | Notion · suivi des sujets (pas d'Excel) | [**Notion**](img/revue-sujets.png) · [**PPT**](img/planning-situation.png) · [HTML *(proposé)*](maquette/index.html#situation-technique) — La source reste Notion ; la slide de situation la reflète mot pour mot. |
+| Suivi technique (météo des domaines) | base Notion des sujets | `notion-topics-audit` | slide-style | voice-slides | Notion · suivi des sujets | [HTML *(proposé)*](maquette/index.html#suivi-technique) · [PPT *(proposé)*](maquette/index.html#suivi-technique) — Nouveau : agrège les sujets par domaine. |
+| Registre des risques | risks, office, routine review-risks | — | slide-style | voice-deliverable | Risks_<MISSION>.xlsx | [**Excel**](img/xlsx-risks.png) · **Notion** · [HTML *(proposé)*](maquette/index.html#risques) · [PPT *(proposé)*](maquette/index.html#registre-des-risques) — Excel = référence ; revue en séance : voir la capture revue-risques. |
+| RACI | raci (raci.yml), office | — | slide-style | voice-deliverable | RACI_<MISSION>.xlsx (onglet par rôle) | [**Excel**](img/xlsx-raci.png) · **Notion** · [HTML *(proposé)*](maquette/index.html#raci) · [PPT *(proposé)*](maquette/index.html#raci) — Le lien vers l'Excel est toujours donné : l'onglet par rôle n'existe que là. |
+| Responsabilités inter-équipes | à créer : schéma de dépendances (GATE 1) | — | slide-style | voice-slides | Dependances_inter-equipes_<MISSION>.drawio | [HTML *(proposé)*](maquette/index.html#responsabilites-inter-equipes) · [PPT *(proposé)*](maquette/index.html#responsabilites-inter-equipes) · draw.io *(proposé)* — Schéma de blocs et de flèches : qui doit quoi à qui, qui travaille avec qui. |
+| Staffing par trimestre | à créer : plan de staffing | — | slide-style | voice-slides | Staffing_plan_<MISSION>.xlsx | Excel *(proposé)* · [HTML *(proposé)*](maquette/index.html#staffing) · [PPT *(proposé)*](maquette/index.html#staffing) — Une ligne par ressource, T1 / T2 / T3, trimestre en cours toujours présent. |
+| Gate (checklist et deck) | gate, deck-gate (gate.yml) | — | slide-style | voice-deliverable | Notion · checklist de la gate | [**Terminal**](img/cmd-gate.png) · [PPT *(proposé)*](maquette/index.html#gate-2) · [HTML *(proposé)*](maquette/index.html#gate-2) — Le contenu du deck existe ; l'assemblage PPTX est encore manuel. |
+| Matrice de traçabilité | traceability, trace-audit | — | — | voice-deliverable | traceability.xlsx | [**Terminal**](img/cmd-trace.png) · **Excel** · **Notion** — Registre long : extrait en slide si besoin. |
+| Weekly report | weekly-report | — | slide-style | voice-maximilien | Notion · page de suivi · weekly-reports/<AAAA-Www>.md | [**Markdown**](img/weekly-report.png) · **Notion** · [HTML *(proposé)*](maquette/index.html#weekly-report) · [PPT *(proposé)*](maquette/index.html#weekly-report-2) — Bloc de la page Notion de suivi ; la slide le reflète à l'identique. |
+| Compte rendu partenaire | partner-report | — | slide-style | voice-maximilien (FR ou EN selon le partenaire) | Notion · page du partenaire | [**Mail**](img/cr-partenaire.png) · [HTML *(proposé)*](maquette/index.html#compte-rendu-partenaire) · [PPT *(proposé)*](maquette/index.html#compte-rendu-partenaire) — Rendu texte, jamais envoyé ; brouillon Outlook sur demande. |
+| Ordre du jour | meeting-agenda | — | slide-style | voice-maximilien | Notion · page de la réunion | [**Conversation**](img/agenda.png) · [HTML *(proposé)*](maquette/index.html#ordre-du-jour) · [PPT *(proposé)*](maquette/index.html#ordre-du-jour) |
+| Relances | routine draft-followups | — | — | voice-maximilien | fichiers .eml locaux | **Mail (.eml)** · **Slack** — Pas de slide : sans objet. |
+| Morning digest | routine morning-digest | — | — | voice-casual | canal Slack dédié | **Slack** — Pas de slide : sans objet. |
+| Schéma d'architecture | archi (model.json) | `archi-audit` | voice-adservio (schéma) | voice-adservio | architecture_<MISSION>.html, vues .drawio | [**HTML**](img/archi-showcase.png) · **draw.io** · [PPT *(proposé)*](maquette/index.html#architecture) — PPT : une slide par vue, depuis le SVG. |
+| Note de fond, dossier | — | `adservio-writer` | voice-adservio | voice-adservio | fichier HTML autonome | **HTML** · Notion *(proposé)* |
+| Chapitres d'un livrable contractuel | sources du projet | `doc-writer` | — | voice-deliverable | document du livrable | **Document Office** — Plan qualité, dossier contractuel. |
+
+---
+
 ## 5. Guides pas à pas
 
 ### 5.1 Le planning technique (PPT)
@@ -510,6 +548,7 @@ Des sous-agents spécialisés, appelés par Claude quand une tâche le justifie.
 | `voice-maximilien` | sujets de suivi, CR, messages signés par la personne (sa voix) |
 | `voice-casual` | échanges informels, messages courts |
 | `voice-adservio` | notes de fond, dossiers, decks à la charte Adservio |
+| `voice-slides` | slides du dossier projet : titre court, légende qui explique la slide, en jours |
 
 *« Écris ce mail dans le ton voice-casual. »* Le ton par défaut de chaque agent se règle dans
 `profiles/<mission>/pipeline.yml`.

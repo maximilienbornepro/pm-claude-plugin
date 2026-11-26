@@ -34,6 +34,7 @@ GEN = {
     "transcripts":         ("framework/generators/transcripts/read_transcripts.py",  "normalise transcriptions/CR vers {date,title,url,text} (--dump|--files)", True),
     "omi-sync":            ("framework/generators/omi-sync/omi_sync.py",             "pendentif Omi -> Notion perso : --fetch / --import (classes, fusionnes) ; --unlock complete les pages verrouillees", False),
     "slack":               ("framework/generators/slack/read_slack.py",              "normalise un export Slack (canaux+DM, threads) vers {date,author,channel,thread,text,url} ; lecture via Claude in Chrome, jamais d'ecriture", True),
+    "dossier":             ("framework/generators/dossier/dossier.py",                "dossier projet en slides 16:9 (charte slide-style) depuis dossier.json : liste + controles, --pptx natif (tableaux editables, logo client, lien source)", True),
     "partner-report":      ("framework/generators/partner-report/cr_partenaire.py",  "mail de suivi d'un call partenaire (--input ; rendu texte, jamais d'envoi)", True),
     # --- domaine Jira ---
     "jira-images":         ("framework/generators/jira-images/jira_image.py",        "images des tickets Jira via API (check ; --apply garde)", True),

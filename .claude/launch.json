@@ -12,6 +12,18 @@
         "profiles/demo/architecture"
       ],
       "port": 5179
+    },
+    {
+      "name": "docs",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "5180", "--directory", "docs"],
+      "port": 5180
+    },
+    {
+      "name": "maquettes",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "5181", "--bind", "127.0.0.1"],
+      "port": 5181
     }
   ]
 }

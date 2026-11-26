@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Maquette · dossier projet, tous les livrables</title>
+<style>
+  /* ── Design tokens: single source for HTML and PPTX export ─────────────── */
+  :root {
+    --noir: #0B0B0B; --ivoire: #F7F4EF; --blanc: #FFFFFF; --encre: #1A1A1A;
+    --gris: #8A8580; --filet: #D9D3CA; --voile: #ECE6DD;
+    --sable: #E9DFD1; --taupe: #B7A99A; --sauge: #A9B5A0; --ardoise: #5E6670;
+    --bordeaux: #7A1F23; --or: #B8975A;
+    --sans: "Helvetica Neue", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-padding-top: 24px; }
+  .slide:target { outline: 2px solid #B8975A; outline-offset: 6px; }
+  body { background: #2a2a2a; font-family: var(--sans); padding: 32px 0 64px; }
+  .note { max-width: 1100px; margin: 0 auto 28px; color: #cfcac3; font: 300 14px/1.6 var(--sans); }
+  .note b { color: #fff; font-weight: 500; }
+
+  /* One slide = one 16:9 frame, sized in cqw so it scales exactly */
+  .slide { position: relative; width: min(1100px, 94vw); aspect-ratio: 16 / 9; margin: 0 auto 28px;
+    container-type: inline-size; overflow: hidden; background: var(--ivoire); color: var(--encre);
+    box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+  .foot { position: absolute; left: 4cqw; right: 4cqw; bottom: 2.4cqw; display: flex; justify-content: space-between;
+    font: 300 .85cqw var(--sans); letter-spacing: .4em; text-transform: uppercase; color: var(--gris); }
+  .foot .src { color: var(--encre); text-decoration: none; letter-spacing: .12em; text-transform: none; font-weight: 300; border-bottom: 1px solid var(--or); }
+  .logo-c { position: absolute; top: 3.2cqw; right: 4cqw; height: 1.15cqw; opacity: .9; }
+  .logo-n { position: absolute; top: 3.4cqw; left: 8cqw; height: 4.2cqw; }
+
+  /* Black section slides, white type */
+  .noire { background: var(--noir); color: var(--blanc); display: flex; flex-direction: column; justify-content: center; padding: 0 8cqw; }
+  .noire .kicker { font: 300 1cqw var(--sans); letter-spacing: .6em; text-transform: uppercase; color: #9a948c; margin-bottom: 2.6cqw; }
+  .noire h1 { font: 200 5cqw/1.1 var(--sans); letter-spacing: .22em; text-transform: uppercase; }
+  .noire .rule { width: 6cqw; height: 1px; background: var(--or); margin: 3cqw 0 2.2cqw; }
+  .noire .sub { font: 200 1.5cqw var(--sans); letter-spacing: .18em; color: #d8d2ca; }
+  .noire .foot { color: #6d6862; }
+  .noire .num { position: absolute; right: 8cqw; top: 50%; transform: translateY(-50%); font: 100 16cqw var(--sans); color: #1f1f1f; }
+  .cover { align-items: center; text-align: center; padding: 0; }
+  .cover .big { height: 10cqw; margin-bottom: 4cqw; }
+  .cover h1 { font-size: 3.6cqw; letter-spacing: .45em; }
+  .cover .rule { margin: 2.6cqw auto 2cqw; }
+
+  /* Content slides */
+  .content { padding: 4.4cqw 6cqw 6cqw; }
+  .eyebrow { font: 300 .95cqw var(--sans); letter-spacing: .5em; text-transform: uppercase; color: var(--gris); }
+  .title { font: 200 2.4cqw/1.15 var(--sans); margin: .8cqw 0 0; }
+  .cap { font: 200 .98cqw/1.55 var(--sans); color: #5a5550; max-width: 82cqw; margin-top: .9cqw; }
+  .lead { font: 200 1.3cqw/1.5 var(--sans); color: #4a4643; }
+  .grid { display: grid; gap: 2.4cqw; margin-top: 2.4cqw; }
+  b, strong { font-weight: 400; }
+
+  /* Tables */
+  table.t { width: 100%; border-collapse: collapse; margin-top: 2.2cqw; }
+  .t th { font: 400 .75cqw var(--sans); letter-spacing: .28em; text-transform: uppercase; color: var(--gris); text-align: left; padding: 0 .9cqw .9cqw; border-bottom: 1px solid var(--encre); white-space: nowrap; }
+  .t td { font: 300 1cqw/1.35 var(--sans); padding: .85cqw .9cqw; border-bottom: 1px solid var(--filet); vertical-align: top; }
+  .t td.k { color: var(--gris); letter-spacing: .15em; white-space: nowrap; }
+  .t td.n, .t th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .t tr.tot td { border-top: 1px solid var(--encre); border-bottom: none; font-weight: 400; }
+  .t.small td { font-size: .92cqw; padding: .7cqw .8cqw; }
+  .dot { display: inline-block; width: .8cqw; height: .8cqw; margin-right: .6cqw; vertical-align: middle; }
+  .pill { display: inline-block; font: 400 .72cqw var(--sans); letter-spacing: .2em; text-transform: uppercase; padding: .4cqw .8cqw; white-space: nowrap; }
+
+  /* Levels / statuses: flat colour blocks */
+  .l1 { background: #EEE8DF; } .l2 { background: var(--sable); } .l3 { background: var(--taupe); } .l4 { background: var(--bordeaux); color: #fff; }
+  .s-ok { background: var(--sauge); } .s-cours { background: var(--sable); } .s-risque { background: var(--taupe); }
+  .s-bloque { background: var(--bordeaux); color: #fff; } .s-afaire { background: var(--voile); } .s-fait { background: var(--noir); color: #fff; }
+
+  /* Risk matrix */
+  .matrix { display: grid; grid-template-columns: 3cqw repeat(4, 1fr); grid-template-rows: repeat(4, 1fr) 2.6cqw; gap: .35cqw; height: 26cqw; }
+  .matrix .cell { display: flex; align-items: center; justify-content: center; gap: .5cqw; }
+  .matrix .ax { font: 300 .8cqw var(--sans); letter-spacing: .25em; text-transform: uppercase; color: var(--gris); display: flex; align-items: center; justify-content: center; }
+  .matrix .ay { writing-mode: vertical-rl; transform: rotate(180deg); }
+  .chip { display: inline-flex; align-items: center; justify-content: center; min-width: 2.6cqw; height: 2.6cqw; border-radius: 50%; background: var(--blanc); color: var(--encre); font: 400 .8cqw var(--sans); }
+  .toplist { list-style: none; }
+  .toplist li { display: grid; grid-template-columns: 4cqw 1fr auto; align-items: baseline; gap: 1.2cqw; padding: 1.15cqw 0; border-bottom: 1px solid var(--filet); }
+  .toplist .id { font: 300 .9cqw var(--sans); letter-spacing: .2em; color: var(--gris); }
+  .toplist .lb { font: 300 1.25cqw/1.35 var(--sans); }
+  .toplist .lb small { display: block; font: 200 .9cqw/1.4 var(--sans); color: var(--gris); margin-top: .3cqw; }
+
+  /* KPIs, bars, tiles */
+  .kpi { font: 100 12cqw/.85 var(--sans); letter-spacing: -.03em; }
+  .kpi sup { font: 200 3cqw var(--sans); vertical-align: top; margin-left: .4cqw; }
+  .bars .row { display: grid; grid-template-columns: 9cqw 1fr 5cqw; align-items: center; gap: 1.4cqw; margin: 1.2cqw 0; }
+  .bars .lbl { font: 300 .95cqw var(--sans); letter-spacing: .25em; text-transform: uppercase; }
+  .bars .track { height: 2cqw; background: var(--voile); position: relative; }
+  .bars .fill { position: absolute; inset: 0 auto 0 0; }
+  .bars .mark { position: absolute; top: -.5cqw; bottom: -.5cqw; width: 1px; background: var(--bordeaux); }
+  .bars .val { font: 200 1.5cqw var(--sans); text-align: right; }
+  .tiles { display: grid; gap: 0; }
+  .tile { padding: 2cqw 2cqw; display: flex; flex-direction: column; justify-content: space-between; min-height: 11cqw; }
+  .tile .k { font: 400 .75cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; }
+  .tile .v { font: 100 4.6cqw/1 var(--sans); }
+  .tile .s { font: 200 .9cqw var(--sans); }
+  .legend { display: flex; gap: 2.4cqw; font: 300 .85cqw var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--gris); margin-top: 1cqw; }
+  .legend i { display: inline-block; width: 1.6cqw; height: 2px; vertical-align: middle; margin-right: .6cqw; }
+
+  svg text { font-family: var(--sans); font-weight: 300; }
+
+  /* Columns (weekly, CR) */
+  .cols { display: grid; gap: 2.6cqw; margin-top: 2.6cqw; }
+  .col h3 { font: 400 .8cqw var(--sans); letter-spacing: .4em; text-transform: uppercase; padding-bottom: .9cqw; border-bottom: 1px solid var(--encre); margin-bottom: 1cqw; }
+  .col ul { list-style: none; }
+  .col li { font: 300 1.02cqw/1.45 var(--sans); padding: .55cqw 0; border-bottom: 1px solid var(--filet); }
+  .col li small { color: var(--gris); font-weight: 200; }
+
+  /* RACI */
+  .raci td.r { text-align: center; font: 400 1cqw var(--sans); padding: .75cqw 0; }
+  .raci .R { background: var(--noir); color: #fff; } .raci .A { background: var(--bordeaux); color: #fff; }
+  .raci .C { background: var(--sable); } .raci .I { background: var(--voile); color: var(--gris); }
+
+  /* Weather cards (technical follow-up) */
+  .meteo { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5cqw; margin-top: 2.4cqw; }
+  .dom { padding: 1.6cqw 1.4cqw; min-height: 9.5cqw; display: flex; flex-direction: column; justify-content: space-between; }
+  .dom .k { font: 400 .75cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; }
+  .dom .v { font: 200 1.05cqw/1.35 var(--sans); }
+  .stack { display: flex; height: .6cqw; margin-top: .9cqw; }
+  /* Weekly (mirror of the Notion block): nested bullets by theme */
+  .wk { display: grid; grid-template-columns: 1.25fr 1fr 1.15fr; gap: 2.6cqw; margin-top: 1.8cqw; }
+  .wk h3 { font: 400 .8cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .7cqw; }
+  .wk ul { list-style: none; }
+  .wk > div > ul > li { font: 300 1.12cqw/1.45 var(--sans); padding: .6cqw 0; }
+  .wk ul ul li { font: 200 1.06cqw/1.45 var(--sans); padding: .12cqw 0 .12cqw 1.3cqw; position: relative; }
+  .wk ul ul li::before { content: "–"; position: absolute; left: 0; color: var(--gris); }
+  /* Partner report (mirror of the partner-report mail) */
+  .mail { margin-top: 1.4cqw; font: 300 1.08cqw/1.5 var(--sans); }
+  .mail .obj { font: 400 1.05cqw var(--sans); padding-bottom: .8cqw; border-bottom: 1px solid var(--encre); margin-bottom: .8cqw; }
+  .mail .obj span { display: block; font: 300 .72cqw var(--sans); letter-spacing: .35em; text-transform: uppercase; color: var(--gris); margin-bottom: .3cqw; }
+  .mail > p { margin: .35cqw 0; }
+  .mail .subj { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3cqw 2.6cqw; margin: 1.2cqw 0; }
+  .mail h4 { font: 400 1.12cqw var(--sans); margin-bottom: .2cqw; }
+  .mail .subj p { margin: 0; }
+  /* Inter-team responsibilities and staffing */
+  .inter td.own { background: var(--sable); }
+  .staff th, .staff td { text-align: center; }
+  .staff th:first-child, .staff td:first-child { text-align: left; }
+  .staff th.cur { background: var(--noir); color: #fff; }
+  .staff td:nth-child(3) { box-shadow: inset 2px 0 0 var(--noir), inset -2px 0 0 var(--noir); }
+  .staff tr.tbd td:first-child { color: var(--bordeaux); }
+  .staff th:nth-child(n+3) { width: 14%; }
+  .staff td.k { text-align: left; }
+  .staff th:nth-child(2), .staff td:nth-child(2) { text-align: left; }
+  .staff tr.ph td { font: 300 .78cqw var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--gris); border-bottom: 1px solid var(--filet); padding-top: .5cqw; }
+  .staff tr.ph td.cur { background: var(--noir); color: #fff; }
+  .staff td { padding: .42cqw .8cqw; }
+  .staff .e0 { color: var(--gris); } .staff .e1 { background: #F0EBE3; } .staff .e2 { background: var(--sable); }
+  .staff .e3 { background: var(--taupe); } .staff .e4 { background: var(--ardoise); color: #fff; }
+  .staff tr.tot2 td { border-bottom: none; color: var(--gris); }
+  /* Workstreams (mirror of the project dashboard "Build workstreams" slide) */
+  .chant { margin-top: 1.4cqw; }
+  .chant td { font-size: .95cqw; padding: .62cqw .6cqw; vertical-align: middle; }
+  .chant th { padding-bottom: .6cqw; }
+  .chant td.k2 { color: #4a4643; white-space: nowrap; }
+  .chant td.cm { font-weight: 200; color: #3a3633; }
+  .chant td:nth-child(5) { white-space: nowrap; width: 11cqw; }
+  .pbar { display: inline-block; vertical-align: middle; width: 6.4cqw; height: .85cqw; background: var(--voile); position: relative; margin-right: .6cqw; }
+  .pbar span { position: absolute; inset: 0 auto 0 0; background: var(--encre); }
+  .pc { font-variant-numeric: tabular-nums; }
+  .st { display: inline-block; width: .95cqw; height: .95cqw; border-radius: 50%; vertical-align: middle; }
+  .prio { color: var(--or); font-size: .9em; }
+  .legend.chl { margin-top: 1.2cqw; gap: 1.8cqw; font-size: .75cqw; }
+  .legend.chl .st { margin-right: .5cqw; width: .8cqw; height: .8cqw; }
+</style>
+</head>
+<body>
+
+<p class="note"><b>Maquette du dossier projet : tous les livrables.</b> Chaque bloc est une slide 16:9. La même page sert de HTML du dossier projet et de modèle pour l'export PPTX natif, avec le logo du client aux mêmes places : en blanc sur les slides noires, en petit en haut à droite sur les slides de contenu. Logo de test et données fictives (projet « Atlas »).</p>
+
+<!-- ═══ Couverture ═══ -->
+<section class="slide noire cover" data-s="Dossier projet">
+  <img class="big" src="logos/client-blanc.png" alt="Logo client">
+  <h1>Atlas</h1>
+  <div class="rule"></div>
+  <div class="sub">Dossier projet · Comité de pilotage du 26 novembre 2026</div>
+</section>
+
+<!-- ═══ Synthèse ═══ -->
+<section id="etat-des-lieux" class="slide content" data-s="Synthèse" data-src="Notion · Suivi des sujets · cockpit de la mission">
+  <div class="eyebrow">Synthèse · Semaine 48</div>
+  <h2 class="title">État des lieux</h2>
+  <p class="cap">Cette slide rassemble les quatre indicateurs suivis à chaque comité : l'avancement de la version 1, le jour du projet rapporté à la date d'ouverture, le nombre de risques critiques ouverts et l'état de la prochaine gate. Le tableau du dessous reprend, depuis le suivi des sujets, ceux qui conditionnent la date, avec leur statut, leur situation, le levier engagé et son échéance.</p>
+  <div class="tiles" style="grid-template-columns: repeat(4, 1fr); margin-top: 2.6cqw;">
+    <div class="tile" style="background:var(--noir);color:#fff"><span class="k">Avancement V1</span><span class="v">46 %</span><span class="s">53 % du temps écoulé</span></div>
+    <div class="tile" style="background:var(--sable)"><span class="k">Jours</span><span class="v">J+38</span><span class="s">27 jours avant l'ouverture</span></div>
+    <div class="tile" style="background:var(--bordeaux);color:#fff"><span class="k">Risques critiques</span><span class="v">2</span><span class="s">sur 7 ouverts</span></div>
+    <div class="tile" style="background:var(--sauge)"><span class="k">Gate 2</span><span class="v">7/9</span><span class="s">critères remplis</span></div>
+  </div>
+  <table class="t small" style="margin-top:2.2cqw">
+    <thead><tr><th>Sujet</th><th>Statut</th><th>Situation</th><th>Levier</th><th>Échéance</th></tr></thead>
+    <tbody>
+      <tr><td>API partenaire</td><td><span class="pill s-bloque">Bloqué</span></td><td>Livraison de production annoncée après le gel</td><td>Jalon intermédiaire, bouchon de contournement</td><td>05/12</td></tr>
+      <tr><td>Espace client</td><td><span class="pill s-risque">À risque</span></td><td>Six tickets bloqués côté front</td><td>Renfort d'un développeur en S49</td><td>12/12</td></tr>
+      <tr><td>Astreinte SRE</td><td><span class="pill s-cours">En discussion</span></td><td>Décembre non couvert</td><td>Arbitrage du sponsor en séance</td><td>COPIL</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ Avancement & sprints ═══ -->
+<section id="chantiers" class="slide content" data-s="Chantiers" data-src="Project_dashboard_ATLAS.pptx · chantiers.yml">
+  <div class="eyebrow">Chantiers transverses · au 26 novembre</div>
+  <h2 class="title">Chantiers</h2>
+  <p class="cap">Le tableau liste les chantiers transverses du projet, du développement aux interfaces avec les partenaires et aux discussions contractuelles. Pour chacun figurent son porteur, son échéance, son avancement estimé par le porteur, une pastille de statut selon la légende ci-dessous et, en commentaire, l'état des lieux à date. L'étoile signale les priorités de la semaine.</p>
+  <table class="t chant">
+    <thead><tr><th>#</th><th>Chantier</th><th>Porteur</th><th>Échéance</th><th>Avancement</th><th>Statut</th><th>Où en est-on</th></tr></thead>
+    <tbody>
+      <tr><td class="k">1</td><td>Documentation qualité et SLA</td><td class="k2">Responsable qualité</td><td class="k2">02/12 · J+44</td><td><div class="pbar"><span style="width:70%"></span></div><span class="pc">70 %</span></td><td><span class="st" style="background:#D9B44A" title="À clarifier"></span></td><td class="cm">Plan qualité : deux contributions et la relecture à finir ; procédures de sécurité à rédiger</td></tr>
+      <tr><td class="k">2</td><td>Développement du portail <span class="prio" title="Priorité de la semaine">★</span></td><td class="k2">Engineering manager</td><td class="k2">12/12 · J+54</td><td><div class="pbar"><span style="width:62%"></span></div><span class="pc">62 %</span></td><td><span class="st" style="background:#C9803A" title="Risque de retard ou de non-conformité"></span></td><td class="cm">Back à 65 %, front à 58 % ; 52 jours de backlog restants côté back</td></tr>
+      <tr><td class="k">3</td><td>Environnement de production <span class="prio" title="Priorité de la semaine">★</span></td><td class="k2">Lead SRE</td><td class="k2">08/12 · J+50</td><td><div class="pbar"><span style="width:50%"></span></div><span class="pc">50 %</span></td><td><span class="st" style="background:#7A1F23" title="En retard ou bloqué"></span></td><td class="cm">Bon de commande de l&#x27;infogérant en attente ; 2 à 4 semaines de mise en route ensuite</td></tr>
+      <tr><td class="k">4</td><td>Matrice de recette (IADT)</td><td class="k2">Responsable recette</td><td class="k2">05/12 · J+47</td><td><div class="pbar"><span style="width:90%"></span></div><span class="pc">90 %</span></td><td><span class="st" style="background:#7E9A6E" title="Dans les temps"></span></td><td class="cm">Relue par les partenaires ; ajustement final au périmètre V1</td></tr>
+      <tr><td class="k">5</td><td>Recette du service</td><td class="k2">Responsable recette</td><td class="k2">19/12 · J+61</td><td><div class="pbar"><span style="width:33%"></span></div><span class="pc">33 %</span></td><td><span class="st" style="background:#D9B44A" title="À clarifier"></span></td><td class="cm">Plan de test partagé avec les partenaires ; dates de campagne à fixer</td></tr>
+      <tr><td class="k">6</td><td>Supervision</td><td class="k2">Lead SRE</td><td class="k2">12/12 · J+54</td><td><div class="pbar"><span style="width:1%"></span></div><span class="pc">1 %</span></td><td><span class="st" style="background:#7A1F23" title="En retard ou bloqué"></span></td><td class="cm">Démarrage conditionné à la plateforme de production</td></tr>
+      <tr><td class="k">7</td><td>Interface avec le partenaire A <span class="prio" title="Priorité de la semaine">★</span></td><td class="k2">Lead back</td><td class="k2">05/12 · J+47</td><td><div class="pbar"><span style="width:65%"></span></div><span class="pc">65 %</span></td><td><span class="st" style="background:#C9803A" title="Risque de retard ou de non-conformité"></span></td><td class="cm">Accès de qualification ouverts ; production en attente</td></tr>
+      <tr><td class="k">8</td><td>Interface avec le partenaire B</td><td class="k2">Lead back</td><td class="k2">08/12 · J+50</td><td><div class="pbar"><span style="width:50%"></span></div><span class="pc">50 %</span></td><td><span class="st" style="background:#7E9A6E" title="Dans les temps"></span></td><td class="cm">Plateforme du partenaire prête fin novembre</td></tr>
+      <tr><td class="k">9</td><td>Formation des utilisateurs</td><td class="k2">Product owner</td><td class="k2">23/12 · J+65</td><td><div class="pbar"><span style="width:20%"></span></div><span class="pc">20 %</span></td><td><span class="st" style="background:#7E9A6E" title="Dans les temps"></span></td><td class="cm">Supports produits en interne ; programme en cours de définition</td></tr>
+      <tr><td class="k">10</td><td>Support et helpdesk</td><td class="k2">Product owner</td><td class="k2">19/12 · J+61</td><td><div class="pbar"><span style="width:50%"></span></div><span class="pc">50 %</span></td><td><span class="st" style="background:#7E9A6E" title="Dans les temps"></span></td><td class="cm">Processus défini, première version dans Jira ; à valider avec les partenaires</td></tr>
+      <tr><td class="k">11</td><td>Surveillance cyber 24/7</td><td class="k2">Responsable cyber</td><td class="k2">19/12 · J+61</td><td><div class="pbar"><span style="width:1%"></span></div><span class="pc">1 %</span></td><td><span class="st" style="background:#D9B44A" title="À clarifier"></span></td><td class="cm">Calendrier du prestataire inconnu ; deux semaines après la commande</td></tr>
+      <tr><td class="k">12</td><td>Discussions contractuelles <span class="prio" title="Priorité de la semaine">★</span></td><td class="k2">Chef de projet</td><td class="k2">28/11 · J+40</td><td><div class="pbar"><span style="width:50%"></span></div><span class="pc">50 %</span></td><td><span class="st" style="background:#C9803A" title="Risque de retard ou de non-conformité"></span></td><td class="cm">Version 2 du plan d&#x27;assurance qualité prête ; revue avec le client lundi</td></tr>
+    </tbody>
+  </table>
+  <div class="legend chl"><span><span class="st" style="background:#7E9A6E"></span>Dans les temps</span><span><span class="st" style="background:#D9B44A"></span>À clarifier</span><span><span class="st" style="background:#C9803A"></span>Risque de retard ou de non-conformité</span><span><span class="st" style="background:#7A1F23"></span>En retard ou bloqué</span><span><span class="prio">★</span>Priorité de la semaine</span></div>
+</section>
+
+<section class="slide noire" data-s="Avancement"><div class="kicker">Atlas · Comité de pilotage</div><h1>Avancement<br>&amp; sprints</h1><div class="rule"></div><div class="sub">Version 1 · Sprint 3 sur 4 · J+38</div><div class="num">01</div></section>
+
+<section id="avancement" class="slide content" data-s="Avancement" data-src="Jira · page Avancement et sprints (plan.html)">
+  <div class="eyebrow">Avancement · Version 1</div>
+  <h2 class="title">Avancement</h2>
+  <p class="cap">Le grand chiffre donne l'avancement de la version 1, mesuré en jours de charge livrés sur la charge totale. La première barre indique le temps écoulé depuis le démarrage ; les suivantes détaillent l'avancement de chaque pôle, et le trait bordeaux marque sur chacune l'avancement attendu à date pour tenir le planning.</p>
+  <div class="grid" style="grid-template-columns: 1fr 1.5fr; align-items: center; margin-top: 3cqw;">
+    <div>
+      <div class="kpi">46<sup>%</sup></div>
+      <p class="lead" style="margin-top:1.8cqw">Fin projetée le <b>19 décembre</b> (J+61), quatre jours avant l'ouverture.</p>
+    </div>
+    <div class="bars">
+      <div class="row"><span class="lbl">Temps</span><span class="track"><span class="fill" style="width:53%;background:var(--ardoise)"></span></span><span class="val">J+38<small style="font-size:.55em;color:var(--gris)"> /72</small></span></div>
+      <div class="row" style="margin-bottom:2cqw"><span></span><span style="font:200 .85cqw var(--sans);color:var(--gris)">Trait bordeaux : avancement attendu à date (53 %)</span><span></span></div>
+      <div class="row"><span class="lbl">Back</span><span class="track"><span class="fill" style="width:62%;background:var(--encre)"></span><span class="mark" style="left:53%"></span></span><span class="val">62 %</span></div>
+      <div class="row"><span class="lbl">Front</span><span class="track"><span class="fill" style="width:31%;background:var(--bordeaux)"></span><span class="mark" style="left:53%"></span></span><span class="val">31 %</span></div>
+      <div class="row"><span class="lbl">SRE</span><span class="track"><span class="fill" style="width:48%;background:var(--taupe)"></span><span class="mark" style="left:53%"></span></span><span class="val">48 %</span></div>
+      <div class="row"><span class="lbl">Recette</span><span class="track"><span class="fill" style="width:12%;background:var(--sauge)"></span><span class="mark" style="left:53%"></span></span><span class="val">12 %</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="burn-down-du-plan" class="slide content" data-s="Avancement" data-src="Jira · page Avancement et sprints (plan.html)">
+  <div class="eyebrow">Avancement · Burn-down du plan</div>
+  <h2 class="title">Burn-down du plan</h2>
+  <p class="cap">La courbe noire suit, jour après jour depuis le démarrage, la charge restant à réaliser sur la version 1, exprimée en jours. La droite pointillée claire figure le rythme idéal pour atteindre zéro au gel, et le pointillé noir prolonge la tendance observée jusqu'à son terme. La zone grisée couvre les jours déjà écoulés ; les traits verticaux repèrent aujourd'hui, le gel, la fin projetée et l'ouverture.</p>
+  <svg viewBox="0 0 1000 330" style="width:100%;margin-top:1.4cqw" aria-label="Burn-down du plan en jours">
+    <rect x="60" y="30" width="494" height="260" fill="#ECE6DD" opacity=".55"/>
+    <text x="307" y="52" text-anchor="middle" font-size="11" letter-spacing="3" fill="#8A8580">38 JOURS ÉCOULÉS</text>
+    <text x="762" y="52" text-anchor="middle" font-size="11" letter-spacing="3" fill="#8A8580">27 JOURS AVANT L'OUVERTURE</text>
+    <g stroke="#D9D3CA" stroke-width="1"><line x1="60" y1="290" x2="970" y2="290"/><line x1="60" y1="38" x2="60" y2="290"/></g>
+    <g font-size="11" fill="#8A8580" letter-spacing="1">
+      <text x="50" y="42" text-anchor="end">420</text><text x="50" y="167" text-anchor="end">210</text><text x="50" y="293" text-anchor="end">0</text>
+      <text x="60" y="310" text-anchor="middle">J0</text><text x="151" y="310" text-anchor="middle">J7</text><text x="242" y="310" text-anchor="middle">J14</text><text x="333" y="310" text-anchor="middle">J21</text><text x="424" y="310" text-anchor="middle">J28</text><text x="515" y="310" text-anchor="middle">J35</text><text x="606" y="310" text-anchor="middle">J42</text><text x="697" y="310" text-anchor="middle">J49</text><text x="788" y="310" text-anchor="middle">J56</text><text x="879" y="310" text-anchor="middle">J63</text><text x="970" y="310" text-anchor="middle">J70</text>
+      <text x="60" y="325" text-anchor="middle" font-size="10">19/10</text><text x="424" y="325" text-anchor="middle" font-size="10">16/11</text><text x="788" y="325" text-anchor="middle" font-size="10">14/12</text>
+    </g>
+    <line x1="60" y1="38" x2="762" y2="290" stroke="#B7A99A" stroke-width="1" stroke-dasharray="4 6"/>
+    <polyline points="60,38 151,50 242,67 333,86 424,110 515,140 554,154" fill="none" stroke="#0B0B0B" stroke-width="2.2"/>
+    <line x1="554" y1="154" x2="853" y2="290" stroke="#0B0B0B" stroke-width="1.2" stroke-dasharray="2 5"/>
+    <line x1="554" y1="30" x2="554" y2="290" stroke="#7A1F23" stroke-width="1"/>
+    <circle cx="554" cy="154" r="5" fill="#7A1F23"/>
+    <text x="562" y="148" font-size="13" fill="#7A1F23">Aujourd'hui · J+38 · 227 j restants</text>
+    <g font-size="11" letter-spacing="2" fill="#1A1A1A">
+      <line x1="762" y1="30" x2="762" y2="290" stroke="#1A1A1A" stroke-width=".6"/><text x="758" y="76" text-anchor="end">GEL J+54</text>
+      <line x1="853" y1="30" x2="853" y2="290" stroke="#A9B5A0" stroke-width="1.2"/><text x="849" y="96" text-anchor="end" fill="#5E6670">FIN PROJETÉE J+61</text>
+      <line x1="905" y1="30" x2="905" y2="290" stroke="#B8975A" stroke-width="1.2"/><text x="909" y="76" fill="#B8975A">OUVERTURE</text><text x="909" y="92" fill="#B8975A">J+65</text>
+    </g>
+  </svg>
+  <div class="legend"><span><i style="background:#0B0B0B"></i>Réel</span><span><i style="background:#B7A99A"></i>Idéal jusqu'au gel</span><span><i style="background:repeating-linear-gradient(90deg,#0B0B0B 0 2px,transparent 2px 6px)"></i>Tendance</span><span><i style="background:#7A1F23"></i>Aujourd'hui</span></div>
+</section>
+
+<section id="tableau-des-etats" class="slide content" data-s="Avancement" data-src="Jira · tableau du projet ATLAS">
+  <div class="eyebrow">Avancement · Tableau des états</div>
+  <h2 class="title">Tableau des états</h2>
+  <p class="cap">Ce tableau présente, pour chaque pôle, la répartition des tickets de la version 1 selon leur état dans le tracker, arrêtée au jour du comité. La dernière colonne reprend cette répartition en barre, de l'à-faire au fermé, pour comparer les pôles d'un coup d'œil ; la ligne de total couvre l'ensemble du périmètre.</p>
+  <table class="t">
+    <thead><tr><th>Pôle</th><th class="n"><span class="dot s-afaire"></span>À faire</th><th class="n"><span class="dot s-cours"></span>En cours</th><th class="n"><span class="dot s-risque"></span>En test</th><th class="n"><span class="dot s-bloque"></span>Bloqué</th><th class="n"><span class="dot s-fait"></span>Fermé</th><th class="n">Total</th><th style="width:22%">Répartition</th></tr></thead>
+    <tbody>
+      <tr><td>Back</td><td class="n">10</td><td class="n">8</td><td class="n">6</td><td class="n">1</td><td class="n">27</td><td class="n">52</td><td><div class="stack"><span class="s-afaire" style="width:19%"></span><span class="s-cours" style="width:15%"></span><span class="s-risque" style="width:12%"></span><span class="s-bloque" style="width:2%"></span><span class="s-fait" style="width:52%"></span></div></td></tr>
+      <tr><td>Front</td><td class="n">18</td><td class="n">9</td><td class="n">4</td><td class="n">6</td><td class="n">14</td><td class="n">51</td><td><div class="stack"><span class="s-afaire" style="width:35%"></span><span class="s-cours" style="width:18%"></span><span class="s-risque" style="width:8%"></span><span class="s-bloque" style="width:12%"></span><span class="s-fait" style="width:27%"></span></div></td></tr>
+      <tr><td>SRE</td><td class="n">6</td><td class="n">4</td><td class="n">2</td><td class="n">1</td><td class="n">12</td><td class="n">25</td><td><div class="stack"><span class="s-afaire" style="width:24%"></span><span class="s-cours" style="width:16%"></span><span class="s-risque" style="width:8%"></span><span class="s-bloque" style="width:4%"></span><span class="s-fait" style="width:48%"></span></div></td></tr>
+      <tr><td>Recette</td><td class="n">7</td><td class="n">1</td><td class="n">0</td><td class="n">1</td><td class="n">5</td><td class="n">14</td><td><div class="stack"><span class="s-afaire" style="width:50%"></span><span class="s-cours" style="width:7%"></span><span class="s-bloque" style="width:7%"></span><span class="s-fait" style="width:36%"></span></div></td></tr>
+      <tr class="tot"><td>Total</td><td class="n">41</td><td class="n">22</td><td class="n">12</td><td class="n">9</td><td class="n">58</td><td class="n">142</td><td><div class="stack"><span class="s-afaire" style="width:29%"></span><span class="s-cours" style="width:15%"></span><span class="s-risque" style="width:9%"></span><span class="s-bloque" style="width:6%"></span><span class="s-fait" style="width:41%"></span></div></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="sprint-en-cours" class="slide content" data-s="Sprints" data-src="Jira · sprint 3 · page Avancement et sprints">
+  <div class="eyebrow">Sprint 3 · du 17 au 28 novembre · objectif : parcours de souscription en recette</div>
+  <h2 class="title">Sprint en cours</h2>
+  <p class="cap">Les trois tuiles donnent l'état des tickets engagés dans le sprint et la charge qui reste à réaliser, en jours. La courbe suit ce reste jour après jour sur les dix jours du sprint : la diagonale pointillée correspond au rythme idéal, et le pointillé noir prolonge la tendance jusqu'à la fin du sprint.</p>
+  <div class="grid" style="grid-template-columns: 1fr 1.9fr; margin-top: 2.2cqw; align-items: start;">
+    <div class="tiles" style="grid-template-columns: 1fr;">
+      <div class="tile" style="background:var(--noir);color:#fff;min-height:7.4cqw"><span class="k">Fermés</span><span class="v" style="font-size:3.4cqw">18 / 29</span></div>
+      <div class="tile" style="background:var(--sable);min-height:7.4cqw"><span class="k">En test</span><span class="v" style="font-size:3.4cqw">6 <small style="font-size:.35em">dont 2 bloqués</small></span></div>
+      <div class="tile" style="background:var(--sauge);min-height:7.4cqw"><span class="k">Reste</span><span class="v" style="font-size:3.4cqw">31 j</span></div>
+    </div>
+    <svg viewBox="0 0 1000 420" style="width:100%" aria-label="Burn-down du sprint en jours">
+      <rect x="60" y="20" width="600" height="340" fill="#ECE6DD" opacity=".55"/>
+      <g stroke="#D9D3CA"><line x1="60" y1="360" x2="960" y2="360"/><line x1="60" y1="20" x2="60" y2="360"/></g>
+      <g font-size="15" fill="#8A8580">
+        <text x="50" y="30" text-anchor="end">55</text><text x="50" y="365" text-anchor="end">0</text>
+        <text x="60" y="388" text-anchor="middle">J1</text><text x="160" y="388" text-anchor="middle">J2</text><text x="260" y="388" text-anchor="middle">J3</text><text x="360" y="388" text-anchor="middle">J4</text><text x="460" y="388" text-anchor="middle">J5</text><text x="560" y="388" text-anchor="middle">J6</text><text x="660" y="388" text-anchor="middle">J7</text><text x="760" y="388" text-anchor="middle">J8</text><text x="860" y="388" text-anchor="middle">J9</text><text x="960" y="388" text-anchor="middle">J10</text>
+        <text x="60" y="410" text-anchor="middle" font-size="13">17/11</text><text x="660" y="410" text-anchor="middle" font-size="13">25/11</text><text x="960" y="410" text-anchor="middle" font-size="13">28/11</text>
+      </g>
+      <line x1="60" y1="20" x2="960" y2="360" stroke="#B7A99A" stroke-dasharray="5 7"/>
+      <polyline points="60,20 160,32 260,50 360,75 460,107 560,137 660,168" fill="none" stroke="#0B0B0B" stroke-width="3"/>
+      <line x1="660" y1="168" x2="960" y2="270" stroke="#0B0B0B" stroke-width="1.5" stroke-dasharray="2 6"/>
+      <line x1="660" y1="20" x2="660" y2="360" stroke="#7A1F23"/>
+      <circle cx="660" cy="168" r="7" fill="#7A1F23"/>
+      <text x="672" y="160" font-size="17" fill="#7A1F23">J7 · 31 j restants</text>
+      <text x="955" y="262" text-anchor="end" font-size="15" fill="#5E6670">≈ 15 j non terminés à J10</text>
+      <text x="360" y="45" text-anchor="middle" font-size="14" letter-spacing="3" fill="#8A8580">7 JOURS ÉCOULÉS · 3 RESTANTS</text>
+    </svg>
+  </div>
+</section>
+
+<section id="sprints" class="slide content" data-s="Sprints" data-src="Jira · plan de sprints (plan.json)">
+  <div class="eyebrow">Sprints · Historique et vélocité</div>
+  <h2 class="title">Sprints</h2>
+  <p class="cap">Ce tableau retrace chaque sprint de la version 1 : sa période, l'objectif fixé à son lancement, la charge engagée et la charge livrée en jours, puis le taux de réalisation. La dernière colonne indique si l'objectif a été atteint, tel que constaté à la revue de sprint.</p>
+  <table class="t">
+    <thead><tr><th>Sprint</th><th>Période</th><th>Objectif</th><th class="n">Engagé (j)</th><th class="n">Livré (j)</th><th class="n">Taux</th><th>Objectif atteint</th></tr></thead>
+    <tbody>
+      <tr><td class="k">S1</td><td>20/10 → 31/10</td><td>Socle technique et authentification</td><td class="n">52</td><td class="n">41</td><td class="n">79 %</td><td><span class="pill s-cours">Partiel</span></td></tr>
+      <tr><td class="k">S2</td><td>03/11 → 14/11</td><td>Catalogue et fiche produit</td><td class="n">50</td><td class="n">49</td><td class="n">98 %</td><td><span class="pill s-ok">Oui</span></td></tr>
+      <tr><td class="k">S3</td><td>17/11 → 28/11</td><td>Parcours de souscription en recette</td><td class="n">55</td><td class="n">24*</td><td class="n">—</td><td><span class="pill s-risque">En cours</span></td></tr>
+      <tr><td class="k">S4</td><td>01/12 → 12/12</td><td>Paiement, notifications, gel</td><td class="n">54</td><td class="n">—</td><td class="n">—</td><td><span class="pill s-afaire">À venir</span></td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="font-size:.9cqw;margin-top:1.4cqw;color:var(--gris)">* À J7 du sprint. Vélocité moyenne S1-S2 : 45 jours ; capacité S4 : 50 jours.</p>
+</section>
+
+<section id="projection" class="slide content" data-s="Projection" data-src="Jira · projection.yml · page Avancement et sprints">
+  <div class="eyebrow">Avancement · Projection par pôle</div>
+  <h2 class="title">Projection</h2>
+  <p class="cap">Pour chaque pôle, ce tableau rapproche la charge totale, le reste à faire et la capacité hebdomadaire de l'équipe, tous exprimés en jours, pour en déduire une date de fin projetée. La marge compare cette date au gel du 12 décembre ; la dernière colonne nomme les sujets qui déterminent cette date.</p>
+  <table class="t">
+    <thead><tr><th>Pôle</th><th class="n">Charge (j)</th><th class="n">Reste (j)</th><th class="n">Capacité (j / sem.)</th><th>Fin projetée</th><th class="n">Marge / gel</th><th>Chemin critique</th></tr></thead>
+    <tbody>
+      <tr><td>Back</td><td class="n">160</td><td class="n">61</td><td class="n">28</td><td>08/12 · J+50</td><td class="n">+4 j</td><td>API paiement</td></tr>
+      <tr><td>Front</td><td class="n">150</td><td class="n">104</td><td class="n">24</td><td>17/12 · J+59</td><td class="n" style="color:var(--bordeaux)">−5 j</td><td>Souscription, espace client</td></tr>
+      <tr><td>SRE</td><td class="n">70</td><td class="n">36</td><td class="n">14</td><td>11/12 · J+53</td><td class="n">+1 j</td><td>Bascule DNS</td></tr>
+      <tr><td>Recette</td><td class="n">40</td><td class="n">26</td><td class="n">12</td><td>19/12 · J+61</td><td class="n">—</td><td>Dépend du front</td></tr>
+      <tr class="tot"><td>Projet</td><td class="n">420</td><td class="n">227</td><td class="n">78</td><td>19/12 · J+61</td><td class="n">4 j avant ouverture</td><td></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ Planning ═══ -->
+<section class="slide noire" data-s="Planning"><div class="kicker">Atlas · Comité de pilotage</div><h1>Planning</h1><div class="rule"></div><div class="sub">Du 19 octobre au 23 décembre</div><div class="num">02</div></section>
+
+<section id="planning" class="slide content" data-s="Planning" data-src="Planning_ATLAS.pptx · Gantt_ATLAS.xlsx">
+  <div class="eyebrow">Planning · Gantt</div>
+  <h2 class="title">Planning</h2>
+  <p class="cap">Le Gantt présente, pour chaque pôle, la période de travail prévue, de la semaine 43 à la semaine 52. La partie foncée de chaque barre correspond à ce qui est déjà réalisé, la partie claire au reste à faire ; le trait bordeaux situe le jour du comité, et les losanges marquent le gel et l'ouverture.</p>
+  <svg viewBox="0 0 1000 380" style="width:100%;margin-top:1.6cqw" aria-label="Gantt">
+    <g font-size="11" letter-spacing="3" fill="#8A8580">
+      <text x="220" y="18">OCTOBRE</text><text x="355" y="18">NOVEMBRE</text><text x="667" y="18">DÉCEMBRE</text>
+    </g>
+    <g stroke="#D9D3CA"><line x1="345" y1="8" x2="345" y2="350"/><line x1="657" y1="8" x2="657" y2="350"/></g>
+    <g font-size="10" fill="#8A8580"><text x="220" y="36">S43</text><text x="293" y="36">S44</text><text x="366" y="36">S45</text><text x="439" y="36">S46</text><text x="512" y="36">S47</text><text x="585" y="36">S48</text><text x="658" y="36">S49</text><text x="731" y="36">S50</text><text x="804" y="36">S51</text><text x="877" y="36">S52</text></g>
+    <g font-size="13" fill="#1A1A1A" letter-spacing="2">
+      <text x="0" y="72">CADRAGE</text><text x="0" y="122">BACK</text><text x="0" y="172">FRONT</text><text x="0" y="222">SRE</text><text x="0" y="272">RECETTE</text><text x="0" y="322">DÉPLOIEMENT</text>
+    </g>
+    <g stroke="#ECE6DD"><line x1="0" y1="92" x2="980" y2="92"/><line x1="0" y1="142" x2="980" y2="142"/><line x1="0" y1="192" x2="980" y2="192"/><line x1="0" y1="242" x2="980" y2="242"/><line x1="0" y1="292" x2="980" y2="292"/></g>
+    <rect x="220" y="60" width="104" height="18" fill="#0B0B0B"/>
+    <rect x="293" y="110" width="447" height="18" fill="#E9DFD1"/><rect x="293" y="110" width="277" height="18" fill="#0B0B0B"/>
+    <rect x="366" y="160" width="458" height="18" fill="#E9DFD1"/><rect x="366" y="160" width="142" height="18" fill="#7A1F23"/>
+    <rect x="324" y="210" width="520" height="18" fill="#E9DFD1"/><rect x="324" y="210" width="250" height="18" fill="#B7A99A"/>
+    <rect x="636" y="260" width="218" height="18" fill="#E9DFD1"/><rect x="636" y="260" width="26" height="18" fill="#A9B5A0"/>
+    <rect x="854" y="310" width="42" height="18" fill="#E9DFD1"/>
+    <line x1="615" y1="44" x2="615" y2="350" stroke="#7A1F23"/><text x="619" y="362" font-size="11" fill="#7A1F23" letter-spacing="2">AUJOURD'HUI J+38</text>
+    <rect x="775" y="355" width="10" height="10" transform="rotate(45 780 360)" fill="#1A1A1A"/><text x="768" y="378" text-anchor="end" font-size="11" letter-spacing="2" fill="#1A1A1A">GEL</text>
+    <rect x="891" y="355" width="10" height="10" transform="rotate(45 896 360)" fill="#B8975A"/><text x="905" y="378" font-size="11" letter-spacing="2" fill="#B8975A">OUVERTURE</text>
+  </svg>
+</section>
+
+<section id="jalons" class="slide content" data-s="Planning" data-src="Planning_ATLAS.pptx · planning.json">
+  <div class="eyebrow">Planning · Jalons</div>
+  <h2 class="title">Jalons</h2>
+  <p class="cap">La frise reprend les dates clés du projet, du jour du comité jusqu'à l'ouverture, avec pour chacune le numéro de jour compté depuis le démarrage. Le trait épais couvre la période déjà écoulée.</p>
+  <svg viewBox="0 0 1000 220" style="width:100%;margin-top:5cqw" aria-label="Frise des jalons">
+    <line x1="20" y1="100" x2="980" y2="100" stroke="#1A1A1A" stroke-width="1"/>
+    <rect x="20" y="94" width="300" height="12" fill="#1A1A1A"/>
+    <g font-weight="300">
+      <g><circle cx="320" cy="100" r="7" fill="#7A1F23"/><text x="320" y="70" text-anchor="middle" font-size="13" letter-spacing="3" fill="#8A8580">AUJOURD'HUI</text><text x="320" y="150" text-anchor="middle" font-size="18" fill="#1A1A1A">26 nov. · J+38</text></g>
+      <g><rect x="470" y="93" width="14" height="14" transform="rotate(45 477 100)" fill="#B8975A"/><text x="477" y="70" text-anchor="middle" font-size="13" letter-spacing="3" fill="#8A8580">JALON API</text><text x="477" y="150" text-anchor="middle" font-size="18" fill="#1A1A1A">5 déc. · J+47</text></g>
+      <g><rect x="630" y="93" width="14" height="14" transform="rotate(45 637 100)" fill="#1A1A1A"/><text x="637" y="70" text-anchor="middle" font-size="13" letter-spacing="3" fill="#8A8580">GEL</text><text x="637" y="150" text-anchor="middle" font-size="18" fill="#1A1A1A">12 déc. · J+54</text></g>
+      <g><rect x="780" y="93" width="14" height="14" transform="rotate(45 787 100)" fill="#A9B5A0"/><text x="787" y="70" text-anchor="middle" font-size="13" letter-spacing="3" fill="#8A8580">FIN PROJETÉE</text><text x="787" y="150" text-anchor="middle" font-size="18" fill="#1A1A1A">19 déc. · J+61</text></g>
+      <g><rect x="940" y="91" width="18" height="18" transform="rotate(45 949 100)" fill="#0B0B0B"/><text x="949" y="70" text-anchor="end" font-size="13" letter-spacing="3" fill="#8A8580">OUVERTURE</text><text x="949" y="150" text-anchor="end" font-size="18" fill="#1A1A1A">23 déc. · J+65</text></g>
+    </g>
+  </svg>
+</section>
+
+<!-- ═══ Suivi technique ═══ -->
+<section class="slide noire" data-s="Suivi technique"><div class="kicker">Atlas · Comité de pilotage</div><h1>Suivi<br>technique</h1><div class="rule"></div><div class="sub">23 sujets suivis · 5 domaines</div><div class="num">03</div></section>
+
+<section id="suivi-technique" class="slide content" data-s="Suivi technique" data-src="Notion · Suivi des sujets">
+  <div class="eyebrow">Suivi technique · Météo des domaines</div>
+  <h2 class="title">Suivi technique</h2>
+  <p class="cap">Chaque carte correspond à un domaine technique ; sa couleur traduit le statut le plus défavorable parmi les sujets qu'il regroupe, selon la légende ci-dessous. Le texte résume la situation du domaine, et la barre en pied de carte indique la part de ses sujets déjà clos.</p>
+  <div class="meteo">
+    <div class="dom s-bloque"><span class="k">Intégrations</span><span class="v">API partenaire en retard, contournement à l'étude</span><div class="stack"><span style="width:40%;background:#fff"></span><span style="width:60%;background:rgba(255,255,255,.35)"></span></div></div>
+    <div class="dom s-risque"><span class="k">Front</span><span class="v">Retard sur l'espace client, renfort en S49</span><div class="stack"><span style="width:30%;background:#1A1A1A"></span><span style="width:70%;background:rgba(0,0,0,.15)"></span></div></div>
+    <div class="dom s-risque"><span class="k">Données</span><span class="v">Volumétrie de migration à confirmer</span><div class="stack"><span style="width:55%;background:#1A1A1A"></span><span style="width:45%;background:rgba(0,0,0,.15)"></span></div></div>
+    <div class="dom s-ok"><span class="k">Infrastructure</span><span class="v">Tir de charge validé, bascule prête</span><div class="stack"><span style="width:80%;background:#1A1A1A"></span><span style="width:20%;background:rgba(0,0,0,.15)"></span></div></div>
+    <div class="dom s-ok"><span class="k">Sécurité</span><span class="v">Pentest planifié, aucun bloquant</span><div class="stack"><span style="width:70%;background:#1A1A1A"></span><span style="width:30%;background:rgba(0,0,0,.15)"></span></div></div>
+  </div>
+  <div class="legend" style="margin-top:2cqw"><span><span class="dot s-bloque"></span>Bloqué</span><span><span class="dot s-risque"></span>À risque</span><span><span class="dot s-cours"></span>En cours</span><span><span class="dot s-ok"></span>Maîtrisé</span><span>Barre : part des sujets clos</span></div>
+</section>
+
+<section id="situation-technique" class="slide content" data-s="Suivi technique" data-src="Notion · Suivi des sujets">
+  <div class="eyebrow">Suivi technique · Situation</div>
+  <h2 class="title">Situation technique</h2>
+  <p class="cap">Ce tableau détaille les sujets techniques suivis en comité, regroupés par domaine. Pour chacun, il indique le statut, la situation connue à date, le levier actionné pour la faire évoluer et l'échéance de ce levier.</p>
+  <table class="t small">
+    <thead><tr><th>Domaine</th><th>Sujet</th><th>Statut</th><th>Situation</th><th>Levier</th><th>Échéance</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Intégrations</td><td>API partenaire</td><td><span class="pill s-bloque">Bloqué</span></td><td>Livraison annoncée après le gel</td><td>Jalon intermédiaire, bouchon de contournement</td><td>05/12</td></tr>
+      <tr><td class="k">Front</td><td>Espace client</td><td><span class="pill s-risque">À risque</span></td><td>31 % livré, 6 tickets bloqués</td><td>Renfort d'un développeur en S49</td><td>12/12</td></tr>
+      <tr><td class="k">Données</td><td>Migration des contrats</td><td><span class="pill s-risque">À risque</span></td><td>Volumétrie 3× supérieure à l'estimation</td><td>Tir à blanc complet</td><td>12/12</td></tr>
+      <tr><td class="k">Infrastructure</td><td>Bascule DNS</td><td><span class="pill s-cours">En cours</span></td><td>Procédure rédigée, répétition à planifier</td><td>Répétition en préproduction</td><td>15/12</td></tr>
+      <tr><td class="k">Sécurité</td><td>Test d'intrusion</td><td><span class="pill s-ok">Maîtrisé</span></td><td>Prestataire retenu, créneau réservé</td><td>—</td><td>08/12</td></tr>
+      <tr><td class="k">Infrastructure</td><td>Tir de charge</td><td><span class="pill s-fait">Clos</span></td><td>2 000 req/s tenues, p95 à 180 ms</td><td>—</td><td>21/11</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ Risques ═══ -->
+<section class="slide noire" data-s="Risques"><div class="kicker">Atlas · Comité de pilotage</div><h1>Registre<br>des risques</h1><div class="rule"></div><div class="sub">7 risques ouverts · 2 critiques</div><div class="num">04</div></section>
+
+<section id="risques" class="slide content" data-s="Risques" data-src="Risks_ATLAS.xlsx">
+  <div class="eyebrow">Risques · Vue d'ensemble</div>
+  <h2 class="title">Risques</h2>
+  <p class="cap">La matrice positionne chaque risque ouvert selon sa probabilité, en ordonnée, et son impact, en abscisse ; la couleur de la case donne le niveau qui en résulte, du sable pour un niveau faible au bordeaux pour un niveau critique. La liste de droite reprend les risques les plus élevés, avec le levier engagé pour chacun.</p>
+  <div class="grid" style="grid-template-columns: 1fr 1.15fr; align-items: start;">
+    <div class="matrix">
+      <div class="ax ay" style="grid-row:1/5">Probabilité</div>
+      <div class="cell l2"></div><div class="cell l3"></div><div class="cell l4"><span class="chip">R-02</span></div><div class="cell l4"></div>
+      <div class="cell l2"></div><div class="cell l3"><span class="chip">R-05</span></div><div class="cell l3"></div><div class="cell l4"><span class="chip">R-01</span></div>
+      <div class="cell l1"><span class="chip">R-07</span></div><div class="cell l2"><span class="chip">R-04</span></div><div class="cell l3"><span class="chip">R-03</span></div><div class="cell l3"></div>
+      <div class="cell l1"></div><div class="cell l1"></div><div class="cell l2"><span class="chip">R-06</span></div><div class="cell l2"></div>
+      <div></div><div class="ax" style="grid-column:2/6">Impact</div>
+    </div>
+    <ol class="toplist">
+      <li><span class="id">R-01</span><span class="lb">Livraison de l'API partenaire après le gel<small>Levier : jalon intermédiaire au 05/12, bouchon de contournement</small></span><span class="pill l4">Critique</span></li>
+      <li><span class="id">R-02</span><span class="lb">Recette utilisateur compressée à une semaine<small>Levier : recette au fil de l'eau dès le sprint 3</small></span><span class="pill l4">Critique</span></li>
+      <li><span class="id">R-05</span><span class="lb">Disponibilité de l'équipe SRE en décembre<small>Levier : astreinte partagée, arbitrage au COPIL</small></span><span class="pill l3">Élevé</span></li>
+      <li><span class="id">R-03</span><span class="lb">Volumétrie de migration sous-estimée<small>Levier : tir à blanc le 12/12</small></span><span class="pill l3">Élevé</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="registre-des-risques" class="slide content" data-s="Risques" data-src="Risks_ATLAS.xlsx">
+  <div class="eyebrow">Risques · Registre</div>
+  <h2 class="title">Registre des risques</h2>
+  <p class="cap">Le registre reprend l'ensemble des risques ouverts, classés par niveau. Pour chacun figurent la tendance depuis le comité précédent, la mitigation engagée, la personne qui en est responsable et l'échéance de la prochaine action.</p>
+  <table class="t">
+    <thead><tr><th>Id</th><th>Risque</th><th>Niveau</th><th>Tendance</th><th>Mitigation</th><th>Responsable</th><th>Échéance</th></tr></thead>
+    <tbody>
+      <tr><td class="k">R-01</td><td>API partenaire livrée après le gel</td><td><span class="dot l4"></span>Critique</td><td>↑</td><td>Jalon intermédiaire, bouchon de contournement</td><td>Chef de projet</td><td>05/12</td></tr>
+      <tr><td class="k">R-02</td><td>Recette compressée à une semaine</td><td><span class="dot l4"></span>Critique</td><td>=</td><td>Recette au fil de l'eau dès S3</td><td>PO</td><td>09/12</td></tr>
+      <tr><td class="k">R-05</td><td>Disponibilité SRE en décembre</td><td><span class="dot l3"></span>Élevé</td><td>↑</td><td>Astreinte partagée</td><td>Lead SRE</td><td>COPIL</td></tr>
+      <tr><td class="k">R-03</td><td>Volumétrie de migration</td><td><span class="dot l3"></span>Élevé</td><td>↓</td><td>Tir à blanc</td><td>Lead back</td><td>12/12</td></tr>
+      <tr><td class="k">R-04</td><td>Dépendance à la bibliothèque UI</td><td><span class="dot l2"></span>Moyen</td><td>=</td><td>Version figée</td><td>Lead front</td><td>—</td></tr>
+      <tr><td class="k">R-06</td><td>Charge du support après ouverture</td><td><span class="dot l2"></span>Moyen</td><td>=</td><td>Renfort niveau 1 en janvier</td><td>Run</td><td>—</td></tr>
+      <tr><td class="k">R-07</td><td>Accès aux environnements de test</td><td><span class="dot l1"></span>Faible</td><td>↓</td><td>Demande ouverte</td><td>SRE</td><td>—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ Gouvernance ═══ -->
+<section class="slide noire" data-s="Gouvernance"><div class="kicker">Atlas · Comité de pilotage</div><h1>Gouvernance</h1><div class="rule"></div><div class="sub">RACI · interfaces · staffing · gates</div><div class="num">05</div></section>
+
+<section id="raci" class="slide content" data-s="Gouvernance" data-src="RACI_ATLAS.xlsx · onglet par rôle">
+  <div class="eyebrow">Gouvernance · RACI</div>
+  <h2 class="title">RACI</h2>
+  <p class="cap">La matrice indique, pour chaque activité clé du projet, le rôle de chaque partie prenante : celle qui réalise, celle qui approuve, celles qui sont consultées et celles qui sont tenues informées.</p>
+  <table class="t raci small" style="margin-top:1.8cqw">
+    <thead><tr><th>Activité</th><th class="n" style="text-align:center">Sponsor</th><th style="text-align:center">Chef de projet</th><th style="text-align:center">PO</th><th style="text-align:center">Lead tech</th><th style="text-align:center">SRE</th><th style="text-align:center">Partenaire</th></tr></thead>
+    <tbody>
+      <tr><td>Cadrage et périmètre</td><td class="r A">A</td><td class="r R">R</td><td class="r C">C</td><td class="r C">C</td><td class="r I">I</td><td class="r I">I</td></tr>
+      <tr><td>Planning et suivi</td><td class="r I">I</td><td class="r A">A</td><td class="r C">C</td><td class="r R">R</td><td class="r C">C</td><td class="r I">I</td></tr>
+      <tr><td>Spécifications fonctionnelles</td><td class="r I">I</td><td class="r C">C</td><td class="r A">A</td><td class="r R">R</td><td class="r I">I</td><td class="r C">C</td></tr>
+      <tr><td>Architecture</td><td class="r I">I</td><td class="r C">C</td><td class="r C">C</td><td class="r A">A</td><td class="r R">R</td><td class="r C">C</td></tr>
+      <tr><td>Recette</td><td class="r I">I</td><td class="r C">C</td><td class="r A">A</td><td class="r R">R</td><td class="r I">I</td><td class="r I">I</td></tr>
+      <tr><td>Mise en production</td><td class="r A">A</td><td class="r R">R</td><td class="r C">C</td><td class="r C">C</td><td class="r R">R</td><td class="r I">I</td></tr>
+      <tr><td>Gestion des risques</td><td class="r I">I</td><td class="r A">A</td><td class="r C">C</td><td class="r C">C</td><td class="r C">C</td><td class="r I">I</td></tr>
+    </tbody>
+  </table>
+  <div class="legend"><span><span class="dot raci R" style="background:var(--noir)"></span>Réalise</span><span><span class="dot" style="background:var(--bordeaux)"></span>Approuve</span><span><span class="dot" style="background:var(--sable)"></span>Consulté</span><span><span class="dot" style="background:var(--voile)"></span>Informé</span></div>
+</section>
+
+<section id="responsabilites-inter-equipes" class="slide content" data-s="Gouvernance" data-src="Dependances_inter-equipes_ATLAS.drawio">
+  <div class="eyebrow">Gouvernance · Dépendances et activités entre équipes</div>
+  <h2 class="title">Responsabilités inter-équipes</h2>
+  <p class="cap">Le schéma situe chaque équipe autour du pilotage du projet et montre qui travaille avec qui. Une flèche pleine relie une équipe à celle à qui elle doit un livrable ou une décision, avec l'activité correspondante ; une flèche en pointillé indique une collaboration avec un partenaire extérieur. Les blocs cerclés sont hors de l'équipe projet.</p>
+  <svg viewBox="0 0 1000 440" style="width:100%;margin-top:1.2cqw" aria-label="Dépendances entre équipes"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A1A1A"/></marker><marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A8580"/></marker></defs><g fill="none" stroke="#1A1A1A" stroke-width="1"><line x1="500" y1="56" x2="500" y2="148" marker-start="url(#ar)" marker-end="url(#ar)"/><line x1="380" y1="166" x2="262" y2="138" marker-end="url(#ar)"/><line x1="380" y1="182" x2="262" y2="226" marker-end="url(#ar)"/><line x1="380" y1="200" x2="262" y2="316" marker-end="url(#ar)"/><line x1="620" y1="166" x2="738" y2="138" marker-end="url(#ar)"/><line x1="620" y1="182" x2="738" y2="226" marker-end="url(#ar)"/><line x1="620" y1="200" x2="738" y2="316" marker-end="url(#ar)"/><line x1="262" y1="236" x2="738" y2="236" marker-end="url(#ar)"/><line x1="145" y1="166" x2="145" y2="198" marker-end="url(#ar)"/><line x1="855" y1="256" x2="855" y2="288" marker-start="url(#ar)" marker-end="url(#ar)"/><path d="M 800 198 Q 760 40 622 30" marker-end="url(#ar)"/></g><g fill="none" stroke="#8A8580" stroke-width="1" stroke-dasharray="4 4"><line x1="170" y1="256" x2="270" y2="378" marker-start="url(#ag)" marker-end="url(#ag)"/><line x1="230" y1="256" x2="480" y2="378" marker-start="url(#ag)" marker-end="url(#ag)"/><line x1="262" y1="334" x2="700" y2="378" marker-end="url(#ag)"/></g><g font-size="11.5" fill="#5E6670"><text x="510" y="108">besoins · validation</text><text x="322" y="150" text-anchor="middle">pilote</text><text x="678" y="150" text-anchor="middle">pilote</text><text x="500" y="252" text-anchor="middle">livre les incréments à recetter</text><text x="152" y="186">détecteurs</text><text x="862" y="276">plan de test</text><text x="790" y="70">procès-verbal de recette</text><text x="300" y="300" fill="#8A8580">intégration des API</text><text x="560" y="350" fill="#8A8580">transfert du run</text></g><rect x="380" y="0" width="240" height="56" fill="#E9DFD1"/><text x="500.0" y="25.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Client</text><text x="500.0" y="43.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">besoins · validation</text><rect x="380" y="148" width="240" height="66" fill="#0B0B0B"/><text x="500.0" y="178.0" text-anchor="middle" font-size="15" fill="#FFFFFF">Pilotage</text><text x="500.0" y="196.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#FFFFFF" opacity=".75">chef de projet · TEM / TPM</text><rect x="30" y="110" width="232" height="56" fill="#ECE6DD"/><text x="146.0" y="135.0" text-anchor="middle" font-size="15" fill="#1A1A1A">IA</text><text x="146.0" y="153.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">détecteurs · score</text><rect x="30" y="200" width="232" height="56" fill="#B7A99A"/><text x="146.0" y="225.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Développement</text><text x="146.0" y="243.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">4 devs · développement, intégration</text><rect x="30" y="290" width="232" height="56" fill="#ECE6DD"/><text x="146.0" y="315.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Infra &amp; SRE</text><text x="146.0" y="333.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">environnements · déploiement</text><rect x="738" y="110" width="232" height="56" fill="#ECE6DD"/><text x="854.0" y="135.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Cyber</text><text x="854.0" y="153.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">revue de sécurité</text><rect x="738" y="200" width="232" height="56" fill="#A9B5A0"/><text x="854.0" y="225.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Recette</text><text x="854.0" y="243.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">tests · matrice IADT</text><rect x="738" y="290" width="232" height="56" fill="#ECE6DD"/><text x="854.0" y="315.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Qualité</text><text x="854.0" y="333.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">plan qualité · conformité</text><rect x="160" y="378" width="210" height="54" fill="none" stroke="#1A1A1A" stroke-width="1.2"/><text x="265.0" y="402.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Partenaire A</text><text x="265.0" y="420.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">API de souscription</text><rect x="390" y="378" width="210" height="54" fill="none" stroke="#1A1A1A" stroke-width="1.2"/><text x="495.0" y="402.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Partenaire B</text><text x="495.0" y="420.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">données de référence</text><rect x="620" y="378" width="210" height="54" fill="none" stroke="#1A1A1A" stroke-width="1.2"/><text x="725.0" y="402.0" text-anchor="middle" font-size="15" fill="#1A1A1A">Infogérant</text><text x="725.0" y="420.0" text-anchor="middle" font-size="11" letter-spacing="1" fill="#1A1A1A" opacity=".75">run après ouverture</text></svg>
+</section>
+
+<section id="responsabilites-inter-equipes-hierarchie" class="slide content" data-s="Gouvernance" data-src="Dependances_inter-equipes_ATLAS.drawio">
+  <div class="eyebrow">Gouvernance · Variante hiérarchique</div>
+  <h2 class="title">Responsabilités inter-équipes</h2>
+  <p class="cap">Le schéma range les profils par niveau de responsabilité : plus un profil porte d'activités en responsable ou en approbateur au RACI, nombre indiqué par la pastille, plus il est placé haut. Les flèches descendent à angle droit, du profil qui pilote ou qui doit un livrable vers celui qui en dépend, et les échanges entre équipes de même niveau passent à l'horizontale, sur le côté, pour ne jamais croiser les autres liens.</p>
+  <svg viewBox="0 0 1000 330" style="width:100%;margin-top:1.4cqw" aria-label="Responsabilités inter-équipes, vue hiérarchique"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1A1A1A"/></marker><marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8A8580"/></marker><marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A1A1A"/></marker></defs><g stroke="#1A1A1A" stroke-width="1"><path d="M 532 66 V 96 H 252 V 127" fill="none" marker-end="url(#ah)"/><path d="M 532 66 V 96 H 572 V 127" fill="none" marker-end="url(#ah)"/><path d="M 532 66 V 96 H 812 V 127" fill="none" marker-end="url(#ah)"/><path d="M 252 180 V 212 H 92 V 245" fill="none" marker-end="url(#ah)"/><path d="M 252 180 V 212 H 252 V 245" fill="none" stroke-dasharray="4 4" stroke="#8A8580" marker-end="url(#ag)"/><path d="M 252 180 V 212 H 412 V 245" fill="none" stroke-dasharray="4 4" stroke="#8A8580" marker-end="url(#ag)"/><path d="M 572 180 V 212 H 572 V 245" fill="none" marker-end="url(#ah)"/><path d="M 812 180 V 212 H 732 V 245" fill="none" marker-end="url(#ah)"/><path d="M 812 180 V 212 H 892 V 245" fill="none" stroke-dasharray="4 4" stroke="#8A8580" marker-end="url(#ag)"/><path d="M 327.0 154.0 H 496.0" fill="none" marker-end="url(#ah)"/><path d="M 607.0 40.0 H 800" fill="none" marker-start="url(#ab)" marker-end="url(#ab)"/></g><g font-size="11" fill="#5E6670"><text x="412.0" y="148.0" text-anchor="middle">livre les incréments</text><text x="703.5" y="34.0" text-anchor="middle">besoins · validation</text><text x="538" y="90">pilote</text><text x="258" y="206">intègre</text><text x="578" y="206">s'appuie sur</text><text x="818" y="206">fait valider · transfère</text></g><rect x="457.0" y="14" width="150" height="52" fill="#0B0B0B"/><circle cx="597.0" cy="24" r="8" fill="#B8975A"/><text x="597.0" y="27.5" text-anchor="middle" font-size="10" fill="#fff">6</text><text x="532" y="37" text-anchor="middle" font-size="14" fill="#FFFFFF">Pilotage</text><text x="532" y="54" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#FFFFFF" opacity=".75">chef de projet · TEM / TPM</text><rect x="800.0" y="14" width="150" height="52" fill="#E9DFD1"/><text x="875" y="37" text-anchor="middle" font-size="14" fill="#1A1A1A">Client</text><text x="875" y="54" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">besoins · validation</text><rect x="177.0" y="128" width="150" height="52" fill="#B7A99A"/><circle cx="317.0" cy="138" r="8" fill="#0B0B0B"/><text x="317.0" y="141.5" text-anchor="middle" font-size="10" fill="#fff">4</text><text x="252" y="151" text-anchor="middle" font-size="14" fill="#1A1A1A">Développement</text><text x="252" y="168" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">4 devs · intégration</text><rect x="497.0" y="128" width="150" height="52" fill="#A9B5A0"/><circle cx="637.0" cy="138" r="8" fill="#0B0B0B"/><text x="637.0" y="141.5" text-anchor="middle" font-size="10" fill="#fff">3</text><text x="572" y="151" text-anchor="middle" font-size="14" fill="#1A1A1A">Recette</text><text x="572" y="168" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">tests · matrice IADT</text><rect x="737.0" y="128" width="150" height="52" fill="#ECE6DD"/><circle cx="877.0" cy="138" r="8" fill="#0B0B0B"/><text x="877.0" y="141.5" text-anchor="middle" font-size="10" fill="#fff">3</text><text x="812" y="151" text-anchor="middle" font-size="14" fill="#1A1A1A">Infra &amp; SRE</text><text x="812" y="168" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">environnements · run</text><rect x="17.0" y="246" width="150" height="52" fill="#ECE6DD"/><circle cx="157.0" cy="256" r="8" fill="#0B0B0B"/><text x="157.0" y="259.5" text-anchor="middle" font-size="10" fill="#fff">1</text><text x="92" y="269" text-anchor="middle" font-size="14" fill="#1A1A1A">IA</text><text x="92" y="286" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">détecteurs · score</text><rect x="177.0" y="246" width="150" height="52" fill="none" stroke="#1A1A1A" stroke-width="1.2"/><text x="252" y="269" text-anchor="middle" font-size="14" fill="#1A1A1A">Partenaire A</text><text x="252" y="286" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">API de souscription</text><rect x="337.0" y="246" width="150" height="52" fill="none" stroke="#1A1A1A" stroke-width="1.2"/><text x="412" y="269" text-anchor="middle" font-size="14" fill="#1A1A1A">Partenaire B</text><text x="412" y="286" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">données de référence</text><rect x="497.0" y="246" width="150" height="52" fill="#ECE6DD"/><circle cx="637.0" cy="256" r="8" fill="#0B0B0B"/><text x="637.0" y="259.5" text-anchor="middle" font-size="10" fill="#fff">1</text><text x="572" y="269" text-anchor="middle" font-size="14" fill="#1A1A1A">Qualité</text><text x="572" y="286" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">plan qualité</text><rect x="657.0" y="246" width="150" height="52" fill="#ECE6DD"/><circle cx="797.0" cy="256" r="8" fill="#0B0B0B"/><text x="797.0" y="259.5" text-anchor="middle" font-size="10" fill="#fff">1</text><text x="732" y="269" text-anchor="middle" font-size="14" fill="#1A1A1A">Cyber</text><text x="732" y="286" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">revue de sécurité</text><rect x="817.0" y="246" width="150" height="52" fill="none" stroke="#1A1A1A" stroke-width="1.2"/><text x="892" y="269" text-anchor="middle" font-size="14" fill="#1A1A1A">Infogérant</text><text x="892" y="286" text-anchor="middle" font-size="10.5" letter-spacing=".5" fill="#1A1A1A" opacity=".75">run après ouverture</text><g font-size="10.5" fill="#8A8580" letter-spacing="1"><circle cx="8" cy="318" r="7" fill="#0B0B0B"/><text x="8" y="321.5" text-anchor="middle" fill="#fff" font-size="9">n</text><text x="22" y="322">activités portées par le profil (R ou A au RACI), qui fixent son niveau</text><line x1="420" y1="318" x2="450" y2="318" stroke="#1A1A1A"/><text x="458" y="322">pilote ou doit un livrable</text><line x1="640" y1="318" x2="670" y2="318" stroke="#8A8580" stroke-dasharray="4 4"/><text x="678" y="322">partenaire extérieur</text></g></svg>
+</section>
+
+<section id="staffing" class="slide content" data-s="Gouvernance" data-src="Staffing_plan_ATLAS.xlsx">
+  <div class="eyebrow">Gouvernance · Du trimestre en cours aux trois suivants</div>
+  <h2 class="title">Staffing</h2>
+  <p class="cap">Le tableau donne, pour chaque ressource, sa part de temps prévue sur le projet à chaque trimestre, en équivalent temps plein ; le trimestre en cours est signalé en noir. Une ligne « à staffer » marque un besoin sans personne nommée. Les deux dernières lignes totalisent les effectifs et les convertissent en jours, sur une base de soixante jours ouvrés par trimestre.</p>
+  <table class="t small staff">
+    <thead><tr><th>Ressource</th><th>Rôle</th><th class="cur">T4 2026 · en cours</th><th>T1 2027</th><th>T2 2027</th><th>T3 2027</th></tr></thead>
+    <tbody>
+      <tr><td>Camille Martin</td><td class="k">Chef de projet</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td><td class="e1">0,5</td></tr>
+      <tr><td>Julien Robert</td><td class="k">TEM / TPM</td><td class="e2">1</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td></tr>
+      <tr><td>Sarah Petit</td><td class="k">Product owner</td><td class="e2">1</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td></tr>
+      <tr><td>Léa Durand</td><td class="k">Engineering manager</td><td class="e2">1</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td></tr>
+      <tr><td>Hugo Bernard</td><td class="k">Développeur back</td><td class="e2">1</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td></tr>
+      <tr><td>Nina Moreau</td><td class="k">Développeuse back</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td><td class="e0">—</td></tr>
+      <tr><td>Tom Girard</td><td class="k">Développeur front</td><td class="e2">1</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td></tr>
+      <tr class="tbd"><td>À staffer</td><td class="k">Développeur front</td><td class="e0">—</td><td class="e2">1</td><td class="e2">1</td><td class="e0">—</td></tr>
+      <tr><td>Yanis Faure</td><td class="k">SRE</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td><td class="e1">0,5</td></tr>
+      <tr><td>Emma Roux</td><td class="k">Recette (SPV)</td><td class="e1">0,5</td><td class="e2">1</td><td class="e2">1</td><td class="e1">0,5</td></tr>
+      <tr><td>Paul Lefèvre</td><td class="k">Qualité</td><td class="e1">0,5</td><td class="e1">0,5</td><td class="e1">0,5</td><td class="e1">0,5</td></tr>
+      <tr class="tot"><td>Total (ETP)</td><td></td><td>9</td><td>10,5</td><td>9</td><td>4,5</td></tr>
+      <tr class="tot2"><td>Capacité (j)</td><td></td><td>540</td><td>630</td><td>540</td><td>270</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="gate-2" class="slide content" data-s="Gouvernance" data-src="Notion · checklist GATE 2">
+  <div class="eyebrow">Gouvernance · Gate 2 · Prêt pour la recette</div>
+  <h2 class="title">Gate 2</h2>
+  <p class="cap">La gate 2 conditionne le démarrage de la recette. Le chiffre de gauche rapporte les critères remplis au nombre total de critères ; la liste détaille chacun d'eux avec son état et le rôle qui le porte. Le passage est décidé en comité.</p>
+  <div class="grid" style="grid-template-columns: 1fr 2.4fr; align-items: start;">
+    <div><div class="kpi" style="font-size:9cqw">7<span style="font-size:.4em;color:var(--gris)">/9</span></div><p class="lead" style="margin-top:1.4cqw">Décision au comité du <b>5 décembre</b>.</p></div>
+    <table class="t small" style="margin-top:0">
+      <tbody>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Environnement de recette disponible</td><td class="k">SRE</td></tr>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Jeux de données anonymisés</td><td class="k">Données</td></tr>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Cahier de recette validé</td><td class="k">PO</td></tr>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Tir de charge concluant</td><td class="k">SRE</td></tr>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Aucune anomalie bloquante ouverte</td><td class="k">Lead tech</td></tr>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Plan de bascule rédigé</td><td class="k">SRE</td></tr>
+        <tr><td><span class="pill s-fait">Fait</span></td><td>Registre des risques à jour</td><td class="k">Chef de projet</td></tr>
+        <tr><td><span class="pill s-risque">En cours</span></td><td>Parcours de souscription complet</td><td class="k">Front</td></tr>
+        <tr><td><span class="pill s-bloque">Manque</span></td><td>API partenaire en préproduction</td><td class="k">Partenaire</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ Comptes rendus ═══ -->
+<section class="slide noire" data-s="Comptes rendus"><div class="kicker">Atlas · Comité de pilotage</div><h1>Comptes<br>rendus</h1><div class="rule"></div><div class="sub">Weekly · CR partenaire · Ordre du jour</div><div class="num">06</div></section>
+
+<section id="weekly-report" class="slide content" data-s="Weekly report" data-src="Notion · page de suivi, section Weekly report · weekly-reports/2026-W48.md">
+  <div class="eyebrow">Weekly report · Semaine du 23/11 - CR du 27/11</div>
+  <h2 class="title">Weekly report</h2>
+  <p class="cap">Rendu exact du bloc hebdomadaire de la page de suivi Notion, tel que le produit le générateur weekly-report : les activités réalisées regroupées par thème, les difficultés et points d'attention issus du suivi des sujets, puis le plan d'action classé par criticité face au gel et à l'ouverture.</p>
+  <div class="wk">
+    <div><h3>Activités réalisées</h3><ul>
+      <li><b>Pilotage :</b><ul><li>Planning technique mis à jour au 26/11</li><li>Registre des risques revu : R-01 relevé à critique</li><li>Checklist gate 2 : 7 critères sur 9</li></ul></li>
+      <li><b>Build :</b><ul><li>Parcours de souscription livré en recette</li><li>Tir de charge validé à 2 000 requêtes par seconde</li></ul></li>
+      <li><b>Partenaires :</b><ul><li>Point hebdo : jalon intermédiaire obtenu au 05/12</li><li>Contrat d'interface v2 reçu en relecture</li></ul></li>
+    </ul></div>
+    <div><h3>Difficultés / Points d'attention</h3><ul>
+      <li><b>API partenaire :</b> production annoncée après le gel<ul><li>bouchon de contournement en cours</li></ul></li>
+      <li><b>Front :</b> 6 tickets bloqués sur l'espace client</li>
+      <li><b>SRE :</b> astreinte de décembre non couverte</li>
+      <li><b>Migration :</b> volumétrie trois fois supérieure à l'estimation</li>
+    </ul></div>
+    <div><h3>Plan d'action - sujets à cadrer et faire avancer</h3><ul>
+      <li><b>Critique avant le gel :</b><ul><li>Sécuriser le jalon API du 05/12 - point hebdo partenaire</li><li>Débloquer l'espace client - renfort front en S49</li></ul></li>
+      <li><b>Avant l'ouverture :</b><ul><li>Arbitrer l'astreinte SRE - décision au COPIL</li><li>Répéter la bascule DNS - créneau en préproduction</li><li>Lancer le tir à blanc de migration - le 12/12</li></ul></li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="compte-rendu-partenaire" class="slide content" data-s="CR partenaire" data-src="Notion · page Partenaire · CR du 25/11">
+  <div class="eyebrow">Compte rendu · Point partenaire du 25 novembre</div>
+  <h2 class="title">Compte rendu partenaire</h2>
+  <p class="cap">Rendu exact du mail produit par le générateur partner-report après le point avec le partenaire : objet, introduction, un paragraphe par sujet avec sa situation et une seule prochaine étape dont le jalon est en gras, puis la conclusion. Rien n'est envoyé ; ce texte est celui que l'on copie dans la messagerie.</p>
+  <div class="mail">
+    <div class="obj"><span>Objet</span>Atlas x Partenaire - Point hebdo, suivi du 25/11</div>
+    <p>Bonjour à tous,</p>
+    <p>Merci pour le point d'aujourd'hui. Voici où en est chaque sujet et la suite.</p>
+    <div class="subj">
+      <div><h4>Livraison de l'API</h4><p>La version de production est annoncée pour le 15/12, après notre gel du 12/12.</p><p>Prochaine étape : vous livrez une version intermédiaire en préproduction <b>le 05/12</b>.</p></div>
+      <div><h4>Contrat d'interface</h4><p>La version 2 intègre les champs de souscription demandés.</p><p>Prochaine étape : vous nous transmettez le document final <b>d'ici le 28/11</b>.</p></div>
+      <div><h4>Accès à la préproduction</h4><p>Les flux sont ouverts de votre côté ; il manque l'ouverture de nos IP.</p><p>Prochaine étape : nous ouvrons les IP et confirmons par mail <b>le 02/12</b>.</p></div>
+      <div><h4>Comptes de test</h4><p>La liste des trois comptes est validée des deux côtés.</p><p>Prochaine étape : aucune, ce point est clos.</p></div>
+    </div>
+    <p>Merci de nous confirmer ces points et ces délais, et n'hésitez pas à les ajuster si besoin.</p>
+    <p>Bien cordialement,<br>Camille</p>
+  </div>
+</section>
+
+<section id="ordre-du-jour" class="slide content" data-s="Ordre du jour" data-src="Notion · page Comité de pilotage du 26/11">
+  <div class="eyebrow">Ordre du jour · Comité de pilotage · 26 novembre · 1 h</div>
+  <h2 class="title">Ordre du jour</h2>
+  <p class="cap">L'ordre du jour liste les points du comité dans leur ordre de passage, avec la personne qui présente chacun d'eux et le temps qui lui est consacré. Les points qui appellent une décision sont signalés comme tels.</p>
+  <table class="t" style="margin-top:2.6cqw">
+    <tbody>
+      <tr><td class="k" style="width:6cqw">01</td><td>Avancement et projection de fin</td><td class="k">Chef de projet</td><td class="n">10 min</td></tr>
+      <tr><td class="k">02</td><td>Risques critiques : API partenaire, recette</td><td class="k">Chef de projet</td><td class="n">15 min</td></tr>
+      <tr><td class="k">03</td><td><b>Décision</b> · astreinte SRE de décembre</td><td class="k">Sponsor</td><td class="n">10 min</td></tr>
+      <tr><td class="k">04</td><td><b>Décision</b> · périmètre V1.1</td><td class="k">PO</td><td class="n">15 min</td></tr>
+      <tr><td class="k">05</td><td><b>Décision</b> · préparation de la gate 2</td><td class="k">Sponsor</td><td class="n">5 min</td></tr>
+      <tr><td class="k">06</td><td>Points divers</td><td class="k">—</td><td class="n">5 min</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ Mon weekly report (real material: W48 prompts + git of the plugin) ═══ -->
+<section class="slide noire" data-s="Weekly report" data-p="pm-framework"><div class="kicker">Weekly report · Maximilien</div><h1>Semaine 48</h1><div class="rule"></div><div class="sub">Du 23 au 29 novembre 2026 · pm-framework</div><div class="num">S48</div></section>
+
+<section id="weekly-report-2" class="slide content" data-s="Weekly report" data-p="pm-framework" data-src="Notion · page de suivi, section Weekly report · weekly-reports/2026-W48.md">
+  <div class="eyebrow">Weekly report · Semaine du 23/11 - CR du 26/11</div>
+  <h2 class="title">Weekly report</h2>
+  <p class="cap">Rendu exact du bloc publié dans la page de suivi Notion et archivé dans weekly-reports/2026-W48.md : les trois sections du générateur weekly-report, dans le même ordre, avec les mêmes puces imbriquées par thème. La matière vient des demandes de la semaine et des commits du plugin.</p>
+  <div class="wk">
+    <div><h3>Activités réalisées</h3><ul>
+      <li><b>Plugin pm-framework :</b><ul><li>Planning technique dans le gabarit PowerPoint de l'entreprise</li><li>Skill technical-planning et guide d'utilisation complet</li><li>Guide web : catalogue filtrable, 36 captures, prompts à copier</li><li>Agenda de réunion ; weekly publié dans la page de suivi</li><li>RACI Excel complète ; setup générique, sans SINBAD en dur</li></ul></li>
+      <li><b>Omi :</b><ul><li>Générateur et routine omi-sync vers Notion perso</li><li>Synthèse des conversations de travail</li></ul></li>
+      <li><b>Audit et harmonisation :</b><ul><li>Audit du code, des routines et des livrables</li><li>Plan d'harmonisation en six phases</li><li>Charte des slides : maquette 16:9, logo client, skill slide-style</li></ul></li>
+    </ul></div>
+    <div><h3>Difficultés / Points d'attention</h3><ul>
+      <li><b>Routines :</b> jamais enregistrées dans les tâches planifiées<ul><li>aucun routines.yml de mission</li></ul></li>
+      <li><b>omi-sync :</b> en attente des jetons et des bases Notion perso</li>
+      <li><b>Risques :</b> cinq formats sans modèle commun</li>
+      <li><b>Moteur :</b> SINBAD encore en dur dans 17 scripts</li>
+    </ul></div>
+    <div><h3>Plan d'action - sujets à cadrer et faire avancer</h3><ul>
+      <li><b>Avant la prochaine démo :</b><ul><li>Valider la charte des slides - maquette en relecture</li><li>Nettoyer le code par lots - liste à cocher</li></ul></li>
+      <li><b>Dans le mois :</b><ul><li>Harmoniser les 10 routines - gabarit unique, preflight</li><li>Piloter risques et avancement - HTML, PPTX, XLSX</li></ul></li>
+      <li><b>Quand les accès sont prêts :</b><ul><li>Activer omi-sync - jetons et bases Notion</li></ul></li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ═══ Architecture ═══ -->
+<section class="slide noire" data-s="Architecture"><div class="kicker">Atlas · Comité de pilotage</div><h1>Architecture</h1><div class="rule"></div><div class="sub">Vue d'ensemble</div><div class="num">07</div></section>
+
+<section id="architecture" class="slide content" data-s="Architecture" data-src="architecture_ATLAS.html · vues draw.io">
+  <div class="eyebrow">Architecture · Vue d'ensemble</div>
+  <h2 class="title">Architecture</h2>
+  <p class="cap">Le schéma présente les quatre couches de la solution, des canaux utilisés par les clients jusqu'aux données. Les blocs en aplat sont construits dans le projet ; le bloc cerclé de bordeaux est un service externe dont le projet dépend, relié en pointillé.</p>
+  <svg viewBox="0 0 1000 340" style="width:100%;margin-top:1.6cqw" aria-label="Schéma d'architecture">
+    <g font-size="12" letter-spacing="3" fill="#8A8580"><text x="0" y="48">CANAUX</text><text x="0" y="128">EXPOSITION</text><text x="0" y="208">SERVICES</text><text x="0" y="288">DONNÉES</text></g>
+    <g font-size="15" fill="#1A1A1A">
+      <rect x="170" y="20" width="250" height="48" fill="#E9DFD1"/><text x="295" y="50" text-anchor="middle">Site web</text>
+      <rect x="440" y="20" width="250" height="48" fill="#E9DFD1"/><text x="565" y="50" text-anchor="middle">Application mobile</text>
+      <rect x="170" y="100" width="520" height="48" fill="#0B0B0B"/><text x="430" y="130" text-anchor="middle" fill="#fff">BFF · passerelle d'API</text>
+      <rect x="170" y="180" width="160" height="48" fill="#B7A99A"/><text x="250" y="210" text-anchor="middle">Souscription</text>
+      <rect x="350" y="180" width="160" height="48" fill="#B7A99A"/><text x="430" y="210" text-anchor="middle">Paiement</text>
+      <rect x="530" y="180" width="160" height="48" fill="#B7A99A"/><text x="610" y="210" text-anchor="middle">Notifications</text>
+      <rect x="170" y="260" width="250" height="48" fill="#A9B5A0"/><text x="295" y="290" text-anchor="middle">Base contrats</text>
+      <rect x="440" y="260" width="250" height="48" fill="#A9B5A0"/><text x="565" y="290" text-anchor="middle">Entrepôt analytique</text>
+      <rect x="770" y="180" width="200" height="48" fill="none" stroke="#7A1F23" stroke-width="1.5"/><text x="870" y="210" text-anchor="middle" fill="#7A1F23">API partenaire</text>
+    </g>
+    <g stroke="#1A1A1A" stroke-width="1"><line x1="430" y1="68" x2="430" y2="100"/><line x1="430" y1="148" x2="430" y2="180"/><line x1="250" y1="148" x2="250" y2="180"/><line x1="610" y1="148" x2="610" y2="180"/><line x1="250" y1="228" x2="250" y2="260"/><line x1="610" y1="228" x2="610" y2="260"/><line x1="690" y1="204" x2="770" y2="204" stroke="#7A1F23" stroke-dasharray="4 4"/></g>
+  </svg>
+</section>
+
+<script>
+  // Same chrome on every slide: logo (white on black, black wordmark on content), footer, page number.
+  const LOGO = "logos/";
+  document.querySelectorAll(".slide").forEach((s, i) => {
+    const dark = s.classList.contains("noire");
+    if (!s.classList.contains("cover")) {
+      const img = document.createElement("img");
+      img.className = dark ? "logo-n" : "logo-c";
+      img.src = LOGO + (dark ? "client-blanc.png" : "client-noir-texte.png");
+      img.alt = "Logo client";
+      s.prepend(img);
+    }
+    const f = document.createElement("div");
+    f.className = "foot";
+    const src = s.dataset.src ? `<a class="src" href="#" title="Ouvrir la source">Source · ${s.dataset.src} ↗</a>` : "";
+    f.innerHTML = `<span>${s.dataset.p || "Atlas"} · ${s.dataset.s || ""}</span>${src}<span>${String(i + 1).padStart(2, "0")}</span>`;
+    s.append(f);
+  });
+</script>
+</body>
+</html>
