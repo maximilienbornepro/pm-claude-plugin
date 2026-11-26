@@ -60,6 +60,31 @@ BUREAUX = [
 ]
 
 
+# Connecteurs par service : (bureau, libellé, motifs du nom d'outil MCP). Le libellé est ce qui s'affiche
+# et s'allume ; le nom exact de l'outil passe dans la bulle.
+CONNECTEURS = [
+    ("jira", "Atlassian (Jira, Confluence)", ["*Jira*", "*Confluence*", "*Atlassian*", "*atlassian*", "*Compass*", "*Teamwork*"]),
+    ("notion", "Notion", ["*notion-*"]),
+    ("notion", "Omi", ["*omi-memory*"]),
+    ("notion", "Slack", ["*slack*"]),
+    ("office", "Microsoft 365", ["*sharepoint*", "*outlook*", "*teams_*", "*get_me*", "*read_resource*", "*search_people*",
+                                 "*find_meeting*", "*get_granted_scopes*"]),
+    ("office", "Google Drive", ["*_file*", "*shared_drive*", "*list_recent_files*", "*request_access*"]),
+    ("studio", "Navigateur", ["*Claude_Browser*", "*claude-in-chrome*"]),
+    ("studio", "Figma", ["*figma*", "*83325d23*"]),
+    ("studio", "Visualisation", ["*visualize*", "*easel*"]),
+    ("pilotage", "Tâches planifiées", ["*scheduled-tasks*"]),
+    ("accueil", "App Claude", ["*ccd_*"]),
+]
+
+
+def connector_of(name):
+    for bureau, label, pats in CONNECTEURS:
+        if any(fnmatch.fnmatch(name, p) for p in pats):
+            return bureau, label
+    return None, None
+
+
 def _gen_names():
     spec = importlib.util.spec_from_file_location("pmf_pm", ROOT / "framework" / "pm.py")
     pm = importlib.util.module_from_spec(spec)
@@ -80,6 +105,7 @@ def catalogue():
         for kind, name in items:
             if any(fnmatch.fnmatch(f"{kind}:{name}", pat) for pat in b["postes"]) and (kind, name) not in placed:
                 postes.append({"kind": kind, "name": name}); placed.add((kind, name))
+        postes += [{"kind": "connector", "name": lab} for bid, lab, _ in CONNECTEURS if bid == b["id"]]
         team = [a for a in b["agents"] if a in agents or b["id"] in ("accueil", "renforts")]
         out.append({**{k: b[k] for k in ("id", "label", "sub")}, "agents": team, "postes": postes})
     rest = [{"kind": k, "name": n} for k, n in items if (k, n) not in placed]
@@ -94,6 +120,11 @@ def bureau_of(ev):
     """Bureau d'un événement : celui de l'agent appelé, sinon celui du poste utilisé."""
     if ev.get("kind") == "agent":
         return AGENT_BUREAU.get(ev.get("name"), "renforts")
+    if ev.get("kind") == "connector":
+        bid, lab = connector_of(ev.get("name", ""))
+        if bid:
+            ev["conn"] = lab
+            return bid
     key = f"{ev.get('kind')}:{ev.get('name')}"
     for b in BUREAUX:
         if any(fnmatch.fnmatch(key, pat) for pat in b["postes"]):
@@ -179,7 +210,7 @@ h1{font:200 30px var(--sans)}.eyebrow{color:var(--gris);font-size:13px}
 .bubble:after{content:"";position:absolute;top:100%;left:14px;border:6px solid transparent;border-top-color:var(--rouge)}
 .postes{display:flex;flex-wrap:wrap;gap:4px}
 .p{font-size:11px;padding:2px 7px;background:var(--ivoire);border:1px solid var(--filet);color:#4a4643;transition:all .25s}
-.p.k-skill{border-style:solid}.p.k-generator{border-style:dashed}.p.k-routine{border-style:dotted}.p.k-connector,.p.k-tool{background:#fff}
+.p.k-skill{border-style:solid}.p.k-generator{border-style:dashed}.p.k-routine{border-style:dotted}.p.k-connector{background:#fff;border-color:var(--taupe)}.p.k-tool{background:#fff;color:var(--gris)}
 .p.on{background:var(--rouge);border:1px solid var(--rouge);color:#fff;font-weight:400;transform:scale(1.15);box-shadow:0 0 0 3px rgba(214,40,40,.3);animation:pulse 1s ease-in-out infinite;position:relative;z-index:2}
 .p.recent{background:var(--sable)}
 aside h3{font:400 13px var(--sans);border-bottom:1px solid var(--encre);padding-bottom:8px;margin-bottom:8px}
@@ -192,6 +223,7 @@ aside h3{font:400 13px var(--sans);border-bottom:1px solid var(--encre);padding-
 .now.show{display:flex}.now b{font-weight:500}.now .k{font-size:12px;opacity:.85;text-transform:none}.now .sep{opacity:.6}
 .legend{grid-column:1/-1;display:flex;gap:18px;font-size:12px;color:var(--gris)}
 .legend .p{pointer-events:none}
+.grp:has(.postes:empty){display:none}
 .none{font-size:11px;color:var(--gris)}
 #demo{margin-left:12px;font:300 12px var(--sans);background:none;border:1px solid var(--encre);padding:2px 10px;cursor:pointer}
 #demo:hover{background:var(--encre);color:#fff}
@@ -202,7 +234,7 @@ aside h3{font:400 13px var(--sans);border-bottom:1px solid var(--encre);padding-
 <main><div class="plan" id="plan"></div></main>
 <aside><h3>Fil des actions</h3><ul class="feed" id="feed"></ul></aside>
 <div class="legend"><span><span class="p k-skill">skill</span></span><span><span class="p k-generator">générateur</span></span>
-<span><span class="p k-routine">routine</span></span><span><span class="p k-connector">connecteur ou outil</span></span>
+<span><span class="p k-routine">routine</span></span><span><span class="p k-connector">connecteur</span></span><span><span class="p k-tool">outil</span></span>
 <span><span class="p on">en cours</span></span><span><span class="p recent">utilisé pour cette demande</span></span></div>
 </div>
 <script>
@@ -216,12 +248,13 @@ function build(){
     <h2>${esc(b.label)} <span class="n" id="n-${b.id}"></span></h2><div class="sub">${esc(b.sub)}</div>
     <div class="lbl">Agents</div><div class="team" id="t-${b.id}">${b.agents.length?"":'<span class="none">pas d\'agent dédié : Claude principal y travaille</span>'}${b.agents.map(a=>`
       <div class="agent" data-a="${esc(a)}"><div class="av" title="${esc(a)}">${esc(ini(a))}</div><div class="nm">${esc(a)}</div></div>`).join("")}</div>
-    <div class="lbl">Skills</div><div class="postes" id="p-${b.id}">${b.postes.map(p=>`
-      <span class="p k-${p.kind}" data-k="${p.kind}:${esc(p.name)}" title="${p.kind}">${esc(p.name)}</span>`).join("")}</div>
+    ${GROUPS.map(([k, lab]) => `<div class="grp"><div class="lbl">${lab}</div><div class="postes" id="p-${b.id}-${k}">${b.postes.filter(p=>p.kind===k).map(p=>`
+      <span class="p k-${p.kind}" data-k="${p.kind}:${esc(p.name)}" title="${p.kind}">${esc(p.name)}</span>`).join("")}</div></div>`).join("")}
    </section>`).join("");
 }
+const GROUPS = [["skill","Skills"],["generator","Générateurs"],["routine","Routines"],["connector","Connecteurs"],["tool","Outils"]];
 function poste(bureau, kind, name){
-  const box = document.getElementById("p-"+bureau); if(!box) return null;
+  const box = document.getElementById("p-"+bureau+"-"+kind); if(!box) return null;
   let el = box.querySelector(`[data-k="${CSS.escape(kind+":"+name)}"]`);
   if(!el){ el = document.createElement("span"); el.className = "p k-"+kind; el.dataset.k = kind+":"+name;
            el.textContent = short(kind, name); el.title = name; box.appendChild(el); }
@@ -241,7 +274,7 @@ function render(s){
   document.querySelectorAll(".p.recent").forEach(e=>e.classList.remove("recent"));
   CAT.forEach(b => { const c = s.counts[b.id]; document.getElementById("n-"+b.id).textContent = c ? c+" action"+(c>1?"s":"") : ""; });
   const pTs = s.prompt ? s.prompt.ts : "";
-  s.feed.filter(e => e.ev==="start" && e.ts >= pTs && e.kind!=="agent").forEach(e => { const el = poste(e.bureau, e.kind, e.name); if(el) el.classList.add("recent"); });
+  s.feed.filter(e => e.ev==="start" && e.ts >= pTs && e.kind!=="agent").forEach(e => { const el = poste(e.bureau, e.kind, e.conn || e.name); if(el) el.classList.add("recent"); });
   s.active.forEach(e => {
     document.getElementById("r-"+e.bureau)?.classList.add("on");
     const who = e.kind==="agent" ? e.name : (e.agent || "claude");
@@ -249,14 +282,14 @@ function render(s){
     const a = agentEl(whoB, who);
     if(a){ a.classList.add("on"); const bb=document.createElement("div"); bb.className="bubble";
       bb.textContent = e.kind==="agent" ? (e.detail || "au travail") : `${short(e.kind,e.name)}${e.detail? " · "+e.detail:""}`.slice(0,60); a.appendChild(bb); }
-    if(e.kind!=="agent"){ const p = poste(e.bureau, e.kind, e.name); p && p.classList.add("on"); }
+    if(e.kind!=="agent"){ const p = poste(e.bureau, e.kind, e.conn || e.name); p && p.classList.add("on"); }
     if(whoB !== e.bureau) document.getElementById("r-"+whoB)?.classList.add("on");
   });
   const now = document.getElementById("now");
   if(s.active.length){ now.classList.add("show");
     now.innerHTML = s.active.slice(-3).reverse().map(e => {
       const who = e.kind==="agent" ? e.name : (e.agent||"claude");
-      const what = e.kind==="agent" ? "agent appelé" : short(e.kind,e.name);
+      const what = e.kind==="agent" ? "agent appelé" : (e.conn ? e.conn+" · "+short(e.kind,e.name) : short(e.kind,e.name));
       return `<span>En cours : <b>${esc(who)}</b> <span class="sep">→</span> <b>${esc(what)}</b> <span class="k">${esc(e.kind)} · ${esc(CAT.find(b=>b.id===e.bureau)?.label||"")}${e.running===false?" · terminé":""}</span></span>`;
     }).join('<span class="sep">|</span>');
   } else { now.classList.remove("show"); now.innerHTML = ""; }
