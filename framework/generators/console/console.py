@@ -4,7 +4,8 @@
 Contrairement à l'artefact (figé), cette console lit l'état à chaque requête :
 
   /        la console du PLUGIN  : commandes (pm list), templates, décisions, modifications par jour (git) ;
-  /projet  la console du PROJET  : activité par jour (usage.log du projet) + état des portes (gate).
+  /projet  la console du PROJET  : activité par jour (usage.log du projet) + état des portes (gate) ;
+  /agence  l'AGENCE en direct     : quel agent utilise quel skill / générateur / connecteur (activity.log).
 
 Deux interfaces distinctes : le plugin (générique, portable) d'un côté ; le projet qui l'appelle de l'autre.
 Stdlib uniquement (http.server), identité Adservio. Lecture seule : il n'écrit rien.
@@ -25,6 +26,8 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
 sys.path.insert(0, str(ROOT / "framework" / "generators" / "gate"))
 import templates as TPL          # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agence as AG              # noqa: E402
 
 CSS = """
 :root{color-scheme:light;--blanc:#fff;--neige:#f5f5f7;--bordure:#e8e8e8;--noir:#1d1d1f;--corps:#6e6e73;
@@ -212,7 +215,7 @@ def page_projet(mission, project_root):
 
 def _shell(active, body):
     nav = (f'<div class="nav"><a href="/" class="{"on" if active=="plugin" else ""}">Plugin</a>'
-           f'<a href="/projet" class="{"on" if active=="projet" else ""}">Projet</a></div>')
+           f'<a href="/projet" class="{"on" if active=="projet" else ""}">Projet</a><a href="/agence">Agence</a></div>')
     title = "pm-framework, console" if active == "plugin" else "Projet, console"
     return (f'<!doctype html><html lang="fr"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -226,13 +229,21 @@ def make_handler(mission, project_root):
 
         def do_GET(self):
             path = self.path.split("?")[0]
+            ctype = "text/html; charset=utf-8"
             try:
-                html_doc = page_projet(mission, project_root) if path.rstrip("/") == "/projet" else page_plugin()
-                data = html_doc.encode("utf-8")
+                if path == "/agence/state.json":
+                    data = json.dumps(AG.state(project_root), ensure_ascii=False).encode("utf-8")
+                    ctype = "application/json; charset=utf-8"
+                elif path.rstrip("/") == "/agence":
+                    data = AG.page().encode("utf-8")
+                else:
+                    html_doc = page_projet(mission, project_root) if path.rstrip("/") == "/projet" else page_plugin()
+                    data = html_doc.encode("utf-8")
             except Exception as e:  # fail-soft : jamais de 500 opaque
                 data = f"<pre>erreur console : {html.escape(str(e))}</pre>".encode("utf-8")
             self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Type", ctype)
+            self.send_header("Cache-Control", "no-store")
             self.send_header("Content-Length", str(len(data)))
             self.end_headers()
             self.wfile.write(data)
