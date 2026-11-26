@@ -7,8 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "cockpit"))
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "init"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "direction" / "generators" / "cockpit"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "direction" / "generators" / "init"))
 os.environ["PMF_PROFILES"] = str(ROOT / "profiles")   # profil demo du framework
 import cockpit as C  # noqa: E402
 import init as I     # noqa: E402

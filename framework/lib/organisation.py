@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import yamlmin  # noqa: E402
+import paths  # noqa: E402
 
 
 def load():
@@ -27,15 +28,39 @@ def components():
     pm = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(pm)
     gens = set(pm.GEN)
-    gens |= {p.parent.name for p in (ROOT / "framework" / "generators").glob("*/SKILL.md")
-             if "exec: skill" in p.read_text(encoding="utf-8")}  # skill-only generators (meeting-agenda...)
+    gens |= {n for n, p in paths.all("generators").items()
+             if (p / "SKILL.md").exists() and "exec: skill" in (p / "SKILL.md").read_text(encoding="utf-8")}
     return {
         "generators": gens,
-        "skills": {p.parent.name for p in (ROOT / "framework" / "skills").glob("*/SKILL.md")},
-        "agents": {p.stem for p in (ROOT / "framework" / "agents").glob("*.md")},
-        "routines": {p.parent.name for p in (ROOT / "framework" / "routines").glob("*/SKILL.md")},
-        "hooks": {p.stem for p in (ROOT / "framework" / "hooks").glob("*.py") if not p.stem.startswith("_")},
+        "skills": {n for n, p in paths.all("skills").items() if (p / "SKILL.md").exists()},
+        "agents": set(paths.all("agents")),
+        "routines": {n for n, p in paths.all("routines").items() if (p / "SKILL.md").exists()},
+        "hooks": {p.stem for p in paths.HOOKS.glob("*.py") if not p.stem.startswith("_")},
     }
+
+
+def misplaced():
+    """Components whose folder is not the department organisation.yml assigns them to."""
+    spec = importlib.util.spec_from_file_location("pmf_pm", ROOT / "framework" / "pm.py")
+    pm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pm)
+    errs = []
+    for (kind, n), want in assignments().items():
+        if kind == "hooks" or want == "renforts":
+            continue
+        if kind == "generators" and n in pm.GEN:
+            p = ROOT / pm.GEN[n][0]
+            if "lib" in p.parts:          # tones lives in framework/lib (shared code)
+                continue
+            p = p.parent
+        else:
+            p = paths.find(kind, n)
+        if p is None:
+            continue                      # reported by check() as a missing component
+        have = paths.department_of(p)
+        if have != want:
+            errs.append(f"organisation : {kind[:-1]} « {n} » rangé dans {have}, rattaché à {want} (organisation.yml)")
+    return errs
 
 
 def assignments(org=None):
@@ -77,7 +102,7 @@ def check():
                 if (t, n) in seen and seen[(t, n)] != d["id"]:
                     errs.append(f"organisation : {t[:-1]} « {n} » rattaché à deux départements ({seen[(t, n)]}, {d['id']})")
                 seen[(t, n)] = d["id"]
-    return errs
+    return errs + misplaced()
 
 
 def _first_sentence(path):
@@ -99,7 +124,7 @@ def catalogue_md():
     def gdesc(n):
         if n in pm.GEN:
             return pm.GEN[n][1]
-        return _first_sentence(ROOT / "framework" / "generators" / n / "SKILL.md")
+        return _first_sentence(paths.find("generators", n) / "SKILL.md")
 
     def rows(kind, names):
         out = []
@@ -107,12 +132,12 @@ def catalogue_md():
             if kind == "generators":
                 d = gdesc(n)
             elif kind == "skills":
-                d = _first_sentence(ROOT / "framework" / "skills" / n / "SKILL.md")
+                d = _first_sentence(paths.find("skills", n) / "SKILL.md")
             elif kind == "agents":
-                p = ROOT / "framework" / "agents" / f"{n}.md"
-                d = _first_sentence(p) if p.exists() else "agent générique de Claude Code"
+                p = paths.find("agents", n)
+                d = _first_sentence(p) if p else "agent générique de Claude Code"
             else:
-                d = _first_sentence(ROOT / "framework" / "routines" / n / "SKILL.md")
+                d = _first_sentence(paths.find("routines", n) / "SKILL.md")
             label = org["types"][{"generators": "generator", "skills": "skill", "agents": "agent", "routines": "routine"}[kind]]["label"]
             out.append(f"| `{n}` | {label} | {d} |")
         return out

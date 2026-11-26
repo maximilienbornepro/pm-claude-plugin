@@ -4,9 +4,15 @@ Définitions **génériques et config-driven** des routines planifiées du frame
 **source de vérité** : la tâche réellement enregistrée dans l'app n'est qu'un **pointeur mince** vers
 `framework/routines/<name>/SKILL.md`. On édite le fichier du projet, jamais la copie de l'app.
 
+**Où vivent les routines** : chacune est rangée dans son département,
+`framework/departements/<dep>/routines/<name>/SKILL.md` (voir `framework/ORGANISATION.md`).
+`framework/routines/<name>/SKILL.md` est une **adresse stable** : un pointeur d'une ligne vers ce
+dossier, gardé pour que les tâches enregistrées n'aient jamais à changer. On édite le SKILL du
+département, jamais le pointeur.
+
 Deux couches, comme le reste du framework :
 
-- **le SKILL générique** (`framework/routines/<name>/SKILL.md`) : le déroulé et les garde-fous, sans
+- **le SKILL générique** (`framework/departements/<dep>/routines/<name>/SKILL.md`) : le déroulé et les garde-fous, sans
   aucune valeur de mission ;
 - **la config de mission** (`profiles/<mission>/routines.yml`) : horaire, générateurs enchaînés,
   identifiants, chemins, périmètre des écritures. Gabarit commenté : `routines.example.yml` ; exemple
@@ -14,7 +20,7 @@ Deux couches, comme le reste du framework :
 
 Changer de mission = remplir `routines.yml`, pas toucher aux SKILL ni au code.
 
-**Nom des routines** : le **SKILL générique** vit dans `framework/routines/<name>/` (nom anglais, sans
+**Nom des routines** : le **SKILL générique** vit dans `framework/departements/<dep>/routines/<name>/` (nom anglais, sans
 préfixe, portable) et son frontmatter porte `name: <name>` = nom du dossier. L'**instance de mission** -
 la clé dans `profiles/<mission>/routines.yml` et la tâche enregistrée dans l'app - est **préfixée du nom
 du projet** (`<projet>-<name>`) et porte `skill: <name>` qui pointe vers le SKILL générique. Ainsi les

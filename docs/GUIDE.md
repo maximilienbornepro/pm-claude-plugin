@@ -256,7 +256,7 @@ viennent du suivi des sujets ; le titre de chaque slide dit **le message clé**.
 dans l'emplacement titre de la mise en page (logo, police, pied de page de l'entreprise), le contenu est
 recalé dans la zone utile.
 
-Skill complet : `/pm-framework:technical-planning` (`framework/skills/technical-planning/SKILL.md`).
+Skill complet : `/pm-framework:technical-planning` (`framework/departements/planification/skills/technical-planning/SKILL.md`).
 
 ### 5.2 La page d'avancement et le plan de sprints
 
@@ -274,7 +274,7 @@ Jalons, avancement V1 et par pôle, burn-down, plan de sprints avec charge par p
 Règle : la page suit Jira pour les tickets, **pas pour le texte** : tout déplacement de tickets
 s'accompagne de la réécriture du texte des sprints, dans le même passage.
 
-Contrat de données et design réutilisable : `framework/generators/plan/` (`CONTRACT.md`,
+Contrat de données et design réutilisable : `framework/departements/planification/generators/plan/` (`CONTRACT.md`,
 `plan_design.tmpl.html`, `render.py --example`).
 
 ### 5.3 Le schéma d'architecture interactif

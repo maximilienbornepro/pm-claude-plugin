@@ -1,6 +1,6 @@
 # Rédaction - catalogue des tons et règles d'écriture (générique)
 
-Les **tons** sont des skills dans `framework/skills/`. Le **ton par livrable et par agent** est déclaré dans
+Les **tons** sont des skills dans `framework/charte/skills/`. Le **ton par livrable et par agent** est déclaré dans
 `profiles/<mission>/pipeline.yml` (`deliverables.<x>.tone`, table `agents`). `set_tone.py` aligne le champ
 `skills:` de chaque agent sur cette table. On **propose le ton avant d'écrire** un contenu.
 
@@ -9,7 +9,7 @@ conventions de tickets, glossaire) vit dans le **profil**, pas ici. Cette page n
 
 ## Les tons de base
 
-| Skill (`framework/skills/`) | Pour quoi | Voix |
+| Skill (`framework/charte/skills/`) | Pour quoi | Voix |
 |---|---|---|
 | `voice-deliverable` | livrables projet, tickets, pages de référence | sobre, factuel, structuré |
 | `voice-maximilien` | suivi, CR internes, écrits à la 1re personne | « on » pour l'équipe, « je » pour ses engagements, phrases avec un verbe |

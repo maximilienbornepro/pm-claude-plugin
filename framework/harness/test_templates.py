@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "scaffold"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "direction" / "generators" / "scaffold"))
 os.environ["PMF_PROFILES"] = str(ROOT / "profiles")
 import templates as T  # noqa: E402
 import scaffold_notion as SN  # noqa: E402

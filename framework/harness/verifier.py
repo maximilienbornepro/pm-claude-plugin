@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
 import profile as prof          # noqa: E402
 import generator_meta as gm     # noqa: E402
+import paths                    # noqa: E402
 
 COSTS = {"heavy-local", "light"}
 STATUTS = {"draft", "stable"}
@@ -53,7 +54,7 @@ def main():
     # SKILL-ONLY (meta `exec: skill`, ex. notion-planning : pur connecteur, aucun script `pm run`) est
     # legitime sans entree GEN ; on valide quand meme sa meta.
     dirs_utilises = {Path(t[0]).parent.name for t in GEN.values()}
-    for gd in sorted((ROOT / "framework" / "generators").iterdir()):
+    for gd in sorted(paths.all("generators").values()):
         if not gd.is_dir() or gd.name.startswith(("_", ".")) or gd.name == "__pycache__":
             continue
         d = gd.name
@@ -98,7 +99,7 @@ def main():
             err(f"{cmd} : mcp_deps inconnu(s) {sorted(inconnus)} (admis : {sorted(CONNECTEURS)})")
         # A2 : un generateur qui ecrit de l'Office doit renvoyer au DEROULE COMMUN (pointeur, pas copie)
         if meta.get("writes") == "office":
-            txt = (ROOT / "framework" / "generators" / d / "SKILL.md").read_text(encoding="utf-8")
+            txt = (paths.find("generators", d) / "SKILL.md").read_text(encoding="utf-8")
             if "_deroule-office" not in txt:
                 err(f"{cmd} : writes=office mais ne renvoie pas au deroule commun (_deroule-office.md)")
 

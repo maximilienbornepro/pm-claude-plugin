@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "slack"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "communication" / "generators" / "slack"))
 import read_slack as S  # noqa: E402
 
 

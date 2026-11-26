@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/onboarding_hint.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/onboarding_hint.py\"",
             "timeout": 10
           }
         ]
@@ -17,13 +17,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/garde_office.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/garde_office.py\"",
             "timeout": 10,
             "statusMessage": "Garde-fou ecriture Office synchronisee"
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/garde_suppression.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/garde_suppression.py\"",
             "timeout": 10,
             "statusMessage": "Garde-fou suppression/deplacement (Drive synchronise)"
           }
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/pas_ecraser_jira.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/pas_ecraser_jira.py\"",
             "timeout": 30,
             "statusMessage": "Controle anti-ecrasement (description Jira)"
           }
@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/garde_suppression.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/garde_suppression.py\"",
             "timeout": 10,
             "statusMessage": "Garde-fou deplacement de page Notion (notifie)"
           }
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_usage.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/journal_usage.py\"",
             "timeout": 10,
             "statusMessage": "Journal d'usage (skills/agents)"
           }
@@ -66,7 +66,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_activite.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/journal_activite.py\"",
             "timeout": 5
           }
         ],
@@ -79,7 +79,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/archi_kit.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/archi_kit.py\"",
             "timeout": 150,
             "statusMessage": "Kit du generateur d'archi (zip) a jour"
           }
@@ -89,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_activite.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/journal_activite.py\"",
             "timeout": 5
           }
         ],
@@ -101,7 +101,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/hooks/journal_activite.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/framework/garde-fous/journal_activite.py\"",
             "timeout": 5
           }
         ]

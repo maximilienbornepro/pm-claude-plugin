@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "gate"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "direction" / "generators" / "gate"))
 import yamlmin          # noqa: E402
 import gate as G        # noqa: E402
 

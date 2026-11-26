@@ -16,10 +16,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import profile as prof  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-# Les tons = les skills de redaction du framework (dossiers de framework/skills/) : decouverte
-# dynamique, aucune liste de tons codee en dur -> portable d'une mission a l'autre.
-_SKILLS = ROOT / "framework" / "skills"
-TONES = {p.name for p in _SKILLS.iterdir() if p.is_dir()} if _SKILLS.is_dir() else set()
+# Les tons = les skills du framework (charte et departements) : decouverte dynamique, aucune liste
+# de tons codee en dur -> portable d'une mission a l'autre.
+import paths  # noqa: E402
+TONES = set(paths.all("skills"))
 
 
 def _frontmatter(text):
@@ -47,18 +47,18 @@ def desired(current, tone):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("mission")
-    ap.add_argument("--agents-dir", default=str(ROOT / "framework" / "agents"))
+    ap.add_argument("--agents-dir", default=None, help="un seul dossier d'agents (defaut : tous les departements)")
     ap.add_argument("--apply", action="store_true")
     args = ap.parse_args()
 
     agents = prof.load(args.mission)["pipeline"].get("agents", {})
-    adir = Path(args.agents_dir)
-    print(f"Mission {args.mission} - agents dir: {adir}\n")
+    found = ({p.stem: p for p in Path(args.agents_dir).glob("*.md")} if args.agents_dir else paths.all("agents"))
+    print(f"Mission {args.mission} - agents : {args.agents_dir or 'framework/departements/*/agents'}\n")
 
     changed = 0
     for name, tone in agents.items():
-        f = adir / f"{name}.md"
-        if not f.exists():
+        f = found.get(name)
+        if f is None:
             print(f"  [absent]  {name:24s} ton visé: {tone}  (pas de fichier d'agent)")
             continue
         text = f.read_text(encoding="utf-8")

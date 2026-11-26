@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "framework" / "lib"))
-sys.path.insert(0, str(ROOT / "framework" / "generators" / "trace-audit"))
+sys.path.insert(0, str(ROOT / "framework" / "departements" / "suivi" / "generators" / "trace-audit"))
 os.environ["PMF_PROFILES"] = str(ROOT / "profiles")   # profil demo du framework
 import trace_audit as T  # noqa: E402
 

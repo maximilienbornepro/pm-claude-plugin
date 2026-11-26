@@ -18,7 +18,7 @@ Toute action qui ecrit quelque part suit ce patron :
 
 ## 2. Garde-fous
 
-### a) Hooks bloquants (`framework/hooks/`)
+### a) Hooks bloquants (`framework/garde-fous/`)
 Le vrai filet : executes par le harness, independants de la bonne volonte.
 
 | Hook | Evenement | Role | Etat |
@@ -47,7 +47,7 @@ locale = quelqu'un est dedans -> on n'ecrit pas, on transmet a la personne qui a
 Avant toute action **notifiante ou irreversible** (Jira, Notion, Drive, mail) :
 montrer le contenu exact / un diff, attendre la validation. Jamais de `@` reel, de
 partage, de deplacement de page qui notifie. Carte des notifications par generateur
-(ex. `framework/generators/scaffold/NOTIFICATIONS.md`).
+(ex. `framework/departements/direction/generators/scaffold/NOTIFICATIONS.md`).
 
 ## 3. Contexte
 

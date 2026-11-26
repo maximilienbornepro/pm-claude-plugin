@@ -1,7 +1,22 @@
 # Organisation du plugin
 
 Le plugin s'organise comme un **PMO**, par **métier** (un livrable, un responsable), et cette organisation
-suit **le fonctionnement réel de Claude Code**. Le référentiel unique est `framework/organisation.yml` ; le
+suit **le fonctionnement réel de Claude Code**. L'arborescence est la même que l'organisation :
+
+```
+framework/
+  departements/<département>/   un dossier par métier, avec son README
+    generators/                 machines (pm run <nom>)
+    skills/                     classeurs
+    agents/                     collègues (sous-agents)
+    routines/                   chefs de garde (tâches planifiées)
+  charte/                       charte et tons (transverse) : skills/, generators/
+  garde-fous/                   hooks, et le déroulé commun d'écriture Office
+  routines/<nom>/SKILL.md       pointeurs vers les routines, pour les tâches déjà enregistrées
+  lib/  harness/  assets/       socle commun (code partagé, tests, logos)
+```
+
+Les scripts ne codent jamais un chemin de composant en dur : ils passent par `framework/lib/paths.py`. Le référentiel unique est `framework/organisation.yml` ; le
 catalogue `framework/SKILLS.md` en est généré, le vérificateur le contrôle, l'écran « agence » de la console
 l'affiche.
 
@@ -10,12 +25,12 @@ l'affiche.
 | Dans le plugin | Dans Claude Code | Dans l'agence |
 |---|---|---|
 | — | Claude principal : seul à réfléchir, décider et te répondre | **Chef de projet** |
-| skill (`framework/skills`) | mode d'emploi que Claude charge et suit lui-même (outil `Skill`) | **Classeur** |
-| générateur (`pm run <nom>`) | script lancé par Claude via Bash, résultat déterministe | **Machine** |
-| agent (`framework/agents`) | sous-agent : brief, contexte propre, rapport (outil `Agent`) ; le seul vrai collègue | **Collègue** |
+| skill (`skills/`) | mode d'emploi que Claude charge et suit lui-même (outil `Skill`) | **Classeur** |
+| générateur (`generators/`, `pm run <nom>`) | script lancé par Claude via Bash, résultat déterministe | **Machine** |
+| agent (`agents/`) | sous-agent : brief, contexte propre, rapport (outil `Agent`) ; le seul vrai collègue | **Collègue** |
 | connecteur MCP | service externe appelé par celui qui travaille | **Service partagé** |
-| hook (`framework/hooks`) | script automatique autour d'une action ; peut la bloquer | **Garde-fou** |
-| routine (`framework/routines`) | tâche planifiée : une autre session, à heure fixe | **Chef de garde** |
+| hook (`framework/garde-fous/`) | script automatique autour d'une action ; peut la bloquer | **Garde-fou** |
+| routine (`routines/`) | tâche planifiée : une autre session, à heure fixe | **Chef de garde** |
 
 Conséquences : un skill ne « travaille » jamais seul (c'est toujours Claude, ou un sous-agent, qui suit le
 classeur) ; un département sans agent dédié n'est pas vide, c'est Claude principal qui y travaille ; un
@@ -40,11 +55,13 @@ Le détail composant par composant est dans `framework/SKILLS.md`.
 
 ## Ajouter un composant
 
-1. Le créer à sa place habituelle (générateur, skill, agent, routine ou hook).
-2. Le rattacher à **un** département dans `framework/organisation.yml` (ou à la charte, aux garde-fous).
+1. Le créer dans le dossier de son département (`framework/departements/<dep>/<type>/`), dans
+   `framework/charte/` ou dans `framework/garde-fous/`.
+2. Le rattacher à ce **même** département dans `framework/organisation.yml`.
 3. `python3 framework/lib/organisation.py --catalogue` régénère `framework/SKILLS.md`.
 4. `python3 framework/harness/verifier.py` doit passer : il échoue si un composant n'est rattaché nulle part,
-   s'il l'est deux fois, ou si un rattachement vise un composant qui n'existe pas.
+   s'il l'est deux fois, s'il est rangé dans un autre département que son rattachement, ou si un
+   rattachement vise un composant qui n'existe pas.
 
 ## Manques que cette organisation montre
 

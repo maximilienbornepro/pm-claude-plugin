@@ -50,7 +50,7 @@ et `framework/harness/test_a1.py` tournent **dans `publish.sh`** : refus de publ
 fin des « skills en double / dérive » découverts trop tard.
 
 ## DM-013 - Déroulé d'écriture Office factorisé (A2)  *(17/10/2026)*
-`framework/generators/_deroule-office.md` écrit la procédure d'écriture Office **une seule fois** ;
+`framework/garde-fous/_deroule-office.md` écrit la procédure d'écriture Office **une seule fois** ;
 `deck-gate`/`risks`/`raci` y pointent (meta `writes: office`) au lieu de la dupliquer. Le lint **refuse** un
 `writes: office` qui ne renvoie pas au déroulé (anti-dérive). **Pourquoi :** corriger un garde-fou d'écriture
 à un seul endroit.
@@ -61,7 +61,7 @@ d'entrée `GEN`. Déclaré `exec: skill` dans sa meta ; le lint exempte les skil
 d'orphelin tout en validant leur meta.
 
 ## DM-015 - Trace d'usage par hook (A7)  *(18/10/2026)*
-`framework/hooks/journal_usage.py` (PreToolUse sur `Skill|Agent|Task`) journalise chaque invocation de skill
+`framework/garde-fous/journal_usage.py` (PreToolUse sur `Skill|Agent|Task`) journalise chaque invocation de skill
 et d'agent dans `<projet>/.claude/usage.log` (JSON par ligne), sans jamais bloquer. **Pourquoi :** savoir plus
 tard ce qui n'est plus utilisé. Les runs de générateurs via `pm run` sont le plus souvent déclenchés par un
 skill/une routine, donc déjà couverts.
